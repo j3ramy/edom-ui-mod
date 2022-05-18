@@ -1,4 +1,3 @@
-
 package de.j3ramy.edom.Utils;
 
 public class URLs {
