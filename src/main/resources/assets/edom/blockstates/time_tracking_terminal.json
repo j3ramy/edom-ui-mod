@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "edom:block/time_tracking_terminal",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "edom:block/time_tracking_terminal"
+    },
+    "facing=south": {
+      "model": "edom:block/time_tracking_terminal",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "edom:block/time_tracking_terminal",
+      "y": 270
+    }
+  }
+}

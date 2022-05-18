@@ -1,0 +1,38 @@
+{
+  "item.edom.credit_card": "Credit Card",
+  "item.edom.id_card": "Id Card",
+  "item.edom.one_euro": "One Euro",
+  "item.edom.two_euro": "Two Euro",
+  "item.edom.five_euro": "Five Euro",
+  "item.edom.ten_euro": "Ten Euro",
+  "item.edom.twenty_euro": "Twenty Euro",
+  "item.edom.fifty_euro": "Fifty Euro",
+  "item.edom.onehundred_euro": "Onehundred Euro",
+  "item.edom.twohundred_euro": "Twohundred Euro",
+  "item.edom.fivehundred_euro": "Fivehundred Euro",
+
+  "item.edom.police_gloves": "Police Gloves",
+  "item.edom.first_aid_kit": "First Aid Kit",
+  "item.edom.service_card": "Service Card",
+  "item.edom.fire_hose": "Fire Hose",
+
+  "block.edom.atm": "ATM",
+  "block.edom.money_changer": "Money Changer",
+  "block.edom.firealarm": "Fire Alarm",
+  "block.edom.boundary_stone": "Boundary Stone",
+  "block.edom.mailbox": "Mailbox",
+  "block.edom.first_aid_cabinet": "First Aid Cabinet",
+  "block.edom.fire_hose_box": "Fire Hose Box",
+  "block.edom.time_tracking_terminal": "Time Tracking Terminal",
+
+  "tooltip.edom.firealarm": "Press \u00A79Shift\u00A7r for more information",
+  "tooltip.edom.firealarm_shift": "Radius: 5x5x4, Duration: 80s",
+
+  "screen.edom.atm": "ATM",
+  "screen.edom.money_changer": "Money Changer",
+
+  "itemGroup.economy": "Edom Economy",
+  "itemGroup.safety": "Edom Safety",
+  "itemGroup.city": "Edom City",
+  "itemGroup.police": "Edom Police"
+}

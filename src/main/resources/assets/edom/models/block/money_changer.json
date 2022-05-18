@@ -1,0 +1,8 @@
+{
+  "parent": "block/orientable",
+  "textures":{
+    "top": "minecraft:block/white_concrete",
+    "front": "edom:block/money_changer",
+    "side": "minecraft:block/white_concrete"
+  }
+}

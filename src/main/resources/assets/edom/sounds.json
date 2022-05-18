@@ -1,0 +1,30 @@
+{
+  "firealarm": {
+    "category": "blocks",
+    "subtitle": "edom.firealarm",
+    "sounds": [
+      "edom:firealarm"
+    ]
+  },
+  "atm_withdraw": {
+    "category": "blocks",
+    "subtitle": "edom.atm_withdraw",
+    "sounds": [
+      "edom:atm_withdraw"
+    ]
+  },
+  "atm_deposit": {
+    "category": "blocks",
+    "subtitle": "edom.atm_deposit",
+    "sounds": [
+      "edom:atm_deposit"
+    ]
+  },
+  "time_tracking_terminal": {
+    "category": "blocks",
+    "subtitle": "edom.time_tracking_terminal",
+    "sounds": [
+      "edom:time_tracking_terminal"
+    ]
+  }
+}
