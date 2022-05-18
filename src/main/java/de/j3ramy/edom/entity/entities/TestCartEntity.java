@@ -5,6 +5,7 @@ import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
+import net.minecraft.entity.monster.piglin.PiglinBruteEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.world.World;
@@ -17,6 +18,10 @@ public class TestCartEntity extends AbstractMinecartEntity {
         System.out.println("CREATED");
     }
 
+    public TestCartEntity(EntityType<TestCartEntity> type, World world) {
+        super(type, world);
+    }
+
     @Override
     public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -25,11 +30,6 @@ public class TestCartEntity extends AbstractMinecartEntity {
     @Override
     public Type getMinecartType() {
         return Type.RIDEABLE;
-    }
-
-    @Override
-    public EntitySize getSize(Pose p_213305_1_) {
-        return new EntitySize(0.98F, 0.7F, true);
     }
 
     @Override

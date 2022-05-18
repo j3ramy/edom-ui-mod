@@ -12,14 +12,15 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.RegistryObject;
 
 public class TestCartItem extends Item {
 
-    private final EntityType<?> cartType;
+    private final RegistryObject<?> registryObject;
 
-    public TestCartItem(EntityType<?> type, Item.Properties properties) {
+    public TestCartItem(RegistryObject<?> registryObject, Item.Properties properties) {
         super(properties);
-        this.cartType = type;
+        this.registryObject = registryObject;
     }
 
     @Override
@@ -41,7 +42,7 @@ public class TestCartItem extends Item {
                     yOffset = 0.5D;
                 }
 
-                TestCartEntity cart = new TestCartEntity(this.cartType, world, (double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.0625D + yOffset, (double) blockpos.getZ() + 0.5D);
+                TestCartEntity cart = new TestCartEntity((EntityType<?>) this.registryObject.get(), world, (double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.0625D + yOffset, (double) blockpos.getZ() + 0.5D);
 
                 if (itemstack.hasDisplayName()) {
                     cart.setCustomName(itemstack.getDisplayName());

@@ -1,9 +1,16 @@
 package de.j3ramy.edom.item;
 
 import de.j3ramy.edom.EdomMod;
+import de.j3ramy.edom.entity.ModEntityTypes;
+import de.j3ramy.edom.entity.entities.TestCartEntity;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
+import net.minecraft.entity.item.minecart.MinecartEntity;
+import net.minecraft.entity.monster.piglin.PiglinBruteEntity;
+import net.minecraft.entity.passive.DolphinEntity;
 import net.minecraft.item.Item;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -29,7 +36,8 @@ public class ModItems {
     public static final RegistryObject<Item> SERVICE_CARD = ITEMS.register("service_card", () -> new ServiceCard(new Item.Properties().group(ModItemGroup.EDOM_CITY_GROUP).maxStackSize(1)));
     public static final RegistryObject<Item> FIRE_HOSE = ITEMS.register("fire_hose", () -> new FireHose(new Item.Properties().group(ModItemGroup.EDOM_SAFETY_GROUP).maxStackSize(1)));
 
-    public static final RegistryObject<Item> TEST_CART = ITEMS.register("test_cart", () -> new TestCartItem(EntityType.MINECART, new Item.Properties().group(ModItemGroup.EDOM_SAFETY_GROUP).maxStackSize(1)));
+    //private static final EntityType<TestCartEntity> TEST_CART_ENTITY_TYPE = DeferredRegister.create(Registry.ENTITY_TYPE, "test_cart", EntityType.Builder.<TestCartEntity>create(TestCartEntity::new, EntityClassification.MISC).size(0.98F, 0.7F));
+    public static final RegistryObject<Item> TEST_CART = ITEMS.register("test_cart", () -> new TestCartItem(ModEntityTypes.TEST_CART, new Item.Properties().group(ModItemGroup.EDOM_SAFETY_GROUP).maxStackSize(1)));
 
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);
