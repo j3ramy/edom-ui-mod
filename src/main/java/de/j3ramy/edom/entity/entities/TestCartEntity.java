@@ -1,5 +1,6 @@
 package de.j3ramy.edom.entity.entities;
 
+import de.j3ramy.edom.entity.ModEntityTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
@@ -10,7 +11,8 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class TestCartEntity extends AbstractMinecartEntity {
 
     public TestCartEntity(World world, double x, double y, double z) {
-        super(EntityType.MINECART, world, x, y, z);
+        super(ModEntityTypes.TEST_CART.get(), world, x, y, z);
+        //super(EntityType.MINECART, world, x, y, z);
     }
 
     @Override
