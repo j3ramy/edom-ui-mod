@@ -8,14 +8,17 @@ import net.minecraft.util.ResourceLocation;
 
 public class TestCartRenderer<T extends TestCartEntity> extends MinecartRenderer<T> {
 
-    private static final ResourceLocation TEXTURE_LOC = new ResourceLocation(EdomMod.MOD_ID,"textures/entity/minecart.png");
+    private static final ResourceLocation TEXTURE_LOC = new ResourceLocation("textures/entity/minecart.png");
 
     public TestCartRenderer(EntityRendererManager manager) {
         super(manager);
+        this.shadowSize = 0.7F;
     }
 
     @Override
     public ResourceLocation getEntityTexture(T p_110775_1_) {
         return TEXTURE_LOC;
     }
+
+
 }

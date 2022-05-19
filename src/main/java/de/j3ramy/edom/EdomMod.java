@@ -90,9 +90,10 @@ public class EdomMod
             RenderTypeLookup.setRenderLayer(ModBlocks.FIRE_HOSE_BOX.get(), RenderType.getCutout());
             RenderTypeLookup.setRenderLayer(ModBlocks.TIME_TRACKING_TERMINAL.get(), RenderType.getCutout());
 
-            //Register entities
-            RenderingRegistry.registerEntityRenderingHandler((EntityType<TestCartEntity>)ModEntityTypes.TEST_CART.get(), TestCartRenderer::new);
         });
+
+        //Register entities
+        RenderingRegistry.registerEntityRenderingHandler((EntityType<TestCartEntity>)ModEntityTypes.TEST_CART.get(), TestCartRenderer::new);
     }
 
     /*

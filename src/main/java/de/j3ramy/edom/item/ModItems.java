@@ -36,8 +36,7 @@ public class ModItems {
     public static final RegistryObject<Item> SERVICE_CARD = ITEMS.register("service_card", () -> new ServiceCard(new Item.Properties().group(ModItemGroup.EDOM_CITY_GROUP).maxStackSize(1)));
     public static final RegistryObject<Item> FIRE_HOSE = ITEMS.register("fire_hose", () -> new FireHose(new Item.Properties().group(ModItemGroup.EDOM_SAFETY_GROUP).maxStackSize(1)));
 
-    //private static final EntityType<TestCartEntity> TEST_CART_ENTITY_TYPE = DeferredRegister.create(Registry.ENTITY_TYPE, "test_cart", EntityType.Builder.<TestCartEntity>create(TestCartEntity::new, EntityClassification.MISC).size(0.98F, 0.7F));
-    public static final RegistryObject<Item> TEST_CART = ITEMS.register("test_cart", () -> new TestCartItem(ModEntityTypes.TEST_CART, new Item.Properties().group(ModItemGroup.EDOM_SAFETY_GROUP).maxStackSize(1)));
+    public static final RegistryObject<Item> TEST_CART = ITEMS.register("test_cart", () -> new TestCartItem(new Item.Properties().group(ModItemGroup.COASTER_GROUP).maxStackSize(1)));
 
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);

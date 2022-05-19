@@ -3,6 +3,7 @@ package de.j3ramy.edom.item;
 import de.j3ramy.edom.block.ModBlocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
 public class ModItemGroup {
 
@@ -35,6 +36,14 @@ public class ModItemGroup {
         @Override
         public ItemStack createIcon() {
             return new ItemStack(ModItems.ID_CARD.get());
+        }
+    };
+
+    public static final ItemGroup COASTER_GROUP = new ItemGroup("coaster"){
+
+        @Override
+        public ItemStack createIcon() {
+            return new ItemStack(Items.RAIL);
         }
     };
 }
