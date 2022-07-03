@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "edom:item/one_euro"
+    "layer0": "economy:item/one_euro"
   }
 }

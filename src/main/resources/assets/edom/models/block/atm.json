@@ -2,7 +2,7 @@
   "parent": "block/orientable",
   "textures":{
     "top": "minecraft:block/white_concrete",
-    "front": "edom:block/atm",
+    "front": "economy:block/atm",
     "side": "minecraft:block/white_concrete"
   }
 }

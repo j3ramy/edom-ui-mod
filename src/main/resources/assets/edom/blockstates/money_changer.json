@@ -1,18 +1,18 @@
 {
   "variants": {
     "facing=east": {
-      "model": "edom:block/money_changer",
+      "model": "economy:block/money_changer",
       "y": 90
     },
     "facing=north": {
-      "model": "edom:block/money_changer"
+      "model": "economy:block/money_changer"
     },
     "facing=south": {
-      "model": "edom:block/money_changer",
+      "model": "economy:block/money_changer",
       "y": 180
     },
     "facing=west": {
-      "model": "edom:block/money_changer",
+      "model": "economy:block/money_changer",
       "y": 270
     }
   }

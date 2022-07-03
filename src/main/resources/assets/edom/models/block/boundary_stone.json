@@ -1,8 +1,0 @@
-{
-  "parent": "block/orientable",
-  "textures":{
-    "top": "edom:block/boundary_stone",
-    "front": "minecraft:block/stone",
-    "side": "minecraft:block/stone"
-  }
-}

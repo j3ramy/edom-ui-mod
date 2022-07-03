@@ -1,18 +1,18 @@
 {
   "variants": {
     "facing=east": {
-      "model": "edom:block/atm",
+      "model": "economy:block/atm",
       "y": 90
     },
     "facing=north": {
-      "model": "edom:block/atm"
+      "model": "economy:block/atm"
     },
     "facing=south": {
-      "model": "edom:block/atm",
+      "model": "economy:block/atm",
       "y": 180
     },
     "facing=west": {
-      "model": "edom:block/atm",
+      "model": "economy:block/atm",
       "y": 270
     }
   }
