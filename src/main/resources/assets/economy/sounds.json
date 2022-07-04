@@ -3,7 +3,7 @@
     "category": "blocks",
     "subtitle": "economy.atm_withdraw",
     "sounds": [
-      "edom:atm_withdraw"
+      "economy:atm_withdraw"
     ]
   },
   "atm_deposit": {

@@ -2,6 +2,7 @@ package de.j3ramy.economy.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.AtmContainer;
 import de.j3ramy.economy.item.*;
 import de.j3ramy.economy.tileentity.AtmTile;
@@ -19,7 +20,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 public class AtmScreen extends ContainerScreen<AtmContainer> {
 
-    private final ResourceLocation GUI = new ResourceLocation(de.j3ramy.economy.EconomyMod.MOD_ID, "textures/gui/atm_gui.png");
+    private final ResourceLocation GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/atm_gui.png");
     private final PlayerEntity player = Minecraft.getInstance().player;
     AtmTile te;
 
@@ -65,6 +66,9 @@ public class AtmScreen extends ContainerScreen<AtmContainer> {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+
+        this.playerInventoryTitleX = 1000;
+        this.titleX = 1000;
 
         drawString(matrixStack, Minecraft.getInstance().fontRenderer, info, 159, 95, infoColor);
 

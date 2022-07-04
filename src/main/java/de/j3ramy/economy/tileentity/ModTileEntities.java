@@ -16,6 +16,9 @@ public class ModTileEntities {
     public static RegistryObject<TileEntityType<MoneyChangerTile>> MONEY_CHANGER_TILE = TILE_ENTITIES.register("money_changer_tile", () -> TileEntityType.Builder.create(
             MoneyChangerTile::new, ModBlocks.MONEY_CHANGER.get()).build(null));
 
+    public static RegistryObject<TileEntityType<CreditCardPrinterTile>> CREDIT_CARD_PRINTER_TILE = TILE_ENTITIES.register("credit_card_printer_tile", () -> TileEntityType.Builder.create(
+            CreditCardPrinterTile::new, ModBlocks.CREDIT_CART_PRINTER.get()).build(null));
+
     public static void register(IEventBus eventBus){
         TILE_ENTITIES.register(eventBus);
     }

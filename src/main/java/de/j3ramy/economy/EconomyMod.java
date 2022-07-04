@@ -4,10 +4,15 @@ import de.j3ramy.economy.block.ModBlocks;
 import de.j3ramy.economy.container.ModContainers;
 import de.j3ramy.economy.events.ModSoundEvents;
 import de.j3ramy.economy.item.ModItems;
+import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.screen.AtmScreen;
+import de.j3ramy.economy.screen.CreditCardScreen;
+import de.j3ramy.economy.screen.CreditCartPrinterScreen;
 import de.j3ramy.economy.screen.MoneyChangerScreen;
 import de.j3ramy.economy.tileentity.ModTileEntities;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -19,7 +24,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @Mod(EconomyMod.MOD_ID)
 public class EconomyMod
 {
-    public static final String MOD_ID = "edom";
+    public static final String MOD_ID = "economy";
 
     // Directly reference a log4j logger.
     //private static final Logger LOGGER = LogManager.getLogger();
@@ -27,6 +32,9 @@ public class EconomyMod
     public EconomyMod() {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        //Network registrieren
+        Network.registerMessages();
 
         //Items registrieren
         ModItems.register(modEventBus);
@@ -64,7 +72,10 @@ public class EconomyMod
         event.enqueueWork(() -> {
             ScreenManager.registerFactory(ModContainers.ATM_STORAGE_CONTAINER.get(), AtmScreen::new);
             ScreenManager.registerFactory(ModContainers.MONEY_CHANGER_CONTAINER.get(), MoneyChangerScreen::new);
+            ScreenManager.registerFactory(ModContainers.CREDIT_CARD_CONTAINER.get(), CreditCardScreen::new);
+            ScreenManager.registerFactory(ModContainers.CREDIT_CARD_PRINTER_CONTAINER.get(), CreditCartPrinterScreen::new);
 
+            RenderTypeLookup.setRenderLayer(ModBlocks.CREDIT_CART_PRINTER.get(), RenderType.getCutout());
         });
 
     }

@@ -24,6 +24,9 @@ public class ModBlocks {
     public static final RegistryObject<Block> MONEY_CHANGER = registerBlock("money_changer", () ->
             new MoneyChangerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(-1f)));
 
+    public static final RegistryObject<Block> CREDIT_CART_PRINTER = registerBlock("credit_card_printer", () ->
+            new CreditCardPrinterBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid()));
+
 
     public static void register(IEventBus eventBus){
         BLOCKS.register(eventBus);

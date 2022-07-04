@@ -26,6 +26,9 @@ public class MoneyChangerScreen extends ContainerScreen<MoneyChangerContainer> {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
 
+        this.playerInventoryTitleX = 1000;
+        this.titleX = 1000;
+
         //this.addButton(new Button(240, 104, 60, 18, new StringTextComponent("Wechseln"), (onclick) -> {
         //    te.changeMoney();
         //}));

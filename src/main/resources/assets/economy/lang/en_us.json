@@ -1,5 +1,6 @@
 {
   "item.economy.credit_card": "Credit Card",
+  "item.economy.blank_credit_card": "Blank Credit Card",
   "item.economy.id_card": "Id Card",
   "item.economy.one_euro": "One Euro",
   "item.economy.two_euro": "Two Euro",
@@ -13,9 +14,18 @@
 
   "block.economy.atm": "ATM",
   "block.economy.money_changer": "Money Changer",
+  "block.economy.credit_card_printer": "Credit Card Printer",
 
-  "screen.economy.atm": "ATM",
-  "screen.economy.money_changer": "Money Changer",
+  "screen.economy.placeholder.owner": "Account Owner",
 
-  "itemGroup.economy": "economy Economy"
+  "screen.economy.label.accNr": "Account Number:",
+  "screen.economy.label.validity": "Validity:",
+  "screen.economy.label.pin": "PIN:",
+
+  "screen.economy.button.save": "Save",
+
+  "screen.economy.heading.credit_cart_printer": "Card Printer",
+
+  "itemGroup.economy": "Edom Economy"
+
 }
