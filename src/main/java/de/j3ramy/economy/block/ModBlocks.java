@@ -27,6 +27,9 @@ public class ModBlocks {
     public static final RegistryObject<Block> CREDIT_CART_PRINTER = registerBlock("credit_card_printer", () ->
             new CreditCardPrinterBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid()));
 
+    public static final RegistryObject<Block> SERVER = registerBlock("server", () ->
+            new ServerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f)));
+
 
     public static void register(IEventBus eventBus){
         BLOCKS.register(eventBus);

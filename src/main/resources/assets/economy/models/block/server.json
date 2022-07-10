@@ -1,0 +1,8 @@
+{
+  "parent": "block/orientable",
+  "textures":{
+    "top": "minecraft:block/gray_concrete",
+    "front": "economy:block/server",
+    "side": "minecraft:block/gray_concrete"
+  }
+}

@@ -5,10 +5,7 @@ import de.j3ramy.economy.container.ModContainers;
 import de.j3ramy.economy.events.ModSoundEvents;
 import de.j3ramy.economy.item.ModItems;
 import de.j3ramy.economy.network.Network;
-import de.j3ramy.economy.screen.AtmScreen;
-import de.j3ramy.economy.screen.CreditCardScreen;
-import de.j3ramy.economy.screen.CreditCartPrinterScreen;
-import de.j3ramy.economy.screen.MoneyChangerScreen;
+import de.j3ramy.economy.screen.*;
 import de.j3ramy.economy.tileentity.ModTileEntities;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
@@ -74,6 +71,7 @@ public class EconomyMod
             ScreenManager.registerFactory(ModContainers.MONEY_CHANGER_CONTAINER.get(), MoneyChangerScreen::new);
             ScreenManager.registerFactory(ModContainers.CREDIT_CARD_CONTAINER.get(), CreditCardScreen::new);
             ScreenManager.registerFactory(ModContainers.CREDIT_CARD_PRINTER_CONTAINER.get(), CreditCartPrinterScreen::new);
+            ScreenManager.registerFactory(ModContainers.SERVER_CONTAINER.get(), ServerScreen::new);
 
             RenderTypeLookup.setRenderLayer(ModBlocks.CREDIT_CART_PRINTER.get(), RenderType.getCutout());
         });

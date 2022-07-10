@@ -4,6 +4,7 @@ import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.tileentity.AtmTile;
 import de.j3ramy.economy.tileentity.CreditCardPrinterTile;
 import de.j3ramy.economy.tileentity.MoneyChangerTile;
+import de.j3ramy.economy.tileentity.ServerTile;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -43,6 +44,12 @@ public class ModContainers {
             () -> IForgeContainerType.create(((windowId, inv, data) -> {
 
                 return new CreditCardPrinterContainer(windowId, inv, (CreditCardPrinterTile) inv.player.getEntityWorld().getTileEntity(data.readBlockPos()));
+            })));
+
+    public static final RegistryObject<ContainerType<ServerContainer>> SERVER_CONTAINER = CONTAINERS.register("server_container",
+            () -> IForgeContainerType.create(((windowId, inv, data) -> {
+
+                return new ServerContainer(windowId, (ServerTile) inv.player.getEntityWorld().getTileEntity(data.readBlockPos()));
             })));
 
     public static void register(IEventBus eventBus){
