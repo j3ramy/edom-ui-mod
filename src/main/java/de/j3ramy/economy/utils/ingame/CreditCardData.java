@@ -1,4 +1,4 @@
-package de.j3ramy.economy.utils;
+package de.j3ramy.economy.utils.ingame;
 
 import java.time.LocalDate;
 import java.util.Random;

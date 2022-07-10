@@ -7,13 +7,14 @@
 package de.j3ramy.economy.gui.elements;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.j3ramy.economy.utils.Color;
+import de.j3ramy.economy.utils.screen.Color;
 import de.j3ramy.economy.utils.screen.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.awt.*;
 
@@ -38,7 +39,7 @@ public class DropDown extends net.minecraft.client.gui.widget.button.Button {
     private boolean isUnfolded;
 
 
-    public DropDown(String[] options, int x, int y, int width, int height, String placeholder){
+    public DropDown(@NotNull String[] options, int x, int y, int width, int height, String placeholder){
         super(x, y, width, height, new StringTextComponent(""), (onPress) ->{});
 
         this.mousePosition = new Point();

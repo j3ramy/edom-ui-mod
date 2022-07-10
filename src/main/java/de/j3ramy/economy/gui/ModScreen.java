@@ -1,6 +1,7 @@
 package de.j3ramy.economy.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import de.j3ramy.economy.events.ModEvents;
 import de.j3ramy.economy.gui.elements.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
@@ -18,6 +19,8 @@ public class ModScreen extends Screen {
 
     public ModScreen(ITextComponent titleIn) {
         super(titleIn);
+
+        ModEvents.screens.add(this);
     }
 
     @Override
@@ -56,6 +59,7 @@ public class ModScreen extends Screen {
     }
 
     public void onClick(){
+
         for(DropDown dropDown : this.dropDowns){
             dropDown.onClick();
         }

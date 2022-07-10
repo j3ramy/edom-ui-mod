@@ -2,12 +2,11 @@ package de.j3ramy.economy.network;
 
 import de.j3ramy.economy.item.ModItems;
 import de.j3ramy.economy.tileentity.CreditCardPrinterTile;
-import de.j3ramy.economy.utils.CreditCardData;
+import de.j3ramy.economy.utils.ingame.CreditCardData;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;

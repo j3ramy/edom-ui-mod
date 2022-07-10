@@ -1,4 +1,4 @@
-package de.j3ramy.economy.utils;
+package de.j3ramy.economy.utils.screen;
 
 public class Color {
     public static final int GREEN = 1826359;

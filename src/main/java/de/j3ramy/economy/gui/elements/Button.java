@@ -6,7 +6,7 @@ package de.j3ramy.economy.gui.elements;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.j3ramy.economy.utils.screen.GuiUtils;
-import de.j3ramy.economy.utils.Color;
+import de.j3ramy.economy.utils.screen.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.util.text.ITextComponent;

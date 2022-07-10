@@ -1,10 +1,7 @@
 package de.j3ramy.economy.container;
 
-import de.j3ramy.economy.utils.CreditCardData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
-
-import javax.annotation.Nullable;
 
 public class CreditCardContainer extends Container {
 

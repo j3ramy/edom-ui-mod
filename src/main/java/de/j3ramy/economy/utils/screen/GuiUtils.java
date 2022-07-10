@@ -13,7 +13,7 @@ public class GuiUtils {
     }
 
     public static StringTextComponent getFormattedLabel(int maxWordLength, String s){
-        if(s == null)
+        if(s == null || s.length() == 0)
             return new StringTextComponent("");
 
         if(s.length() >= maxWordLength){

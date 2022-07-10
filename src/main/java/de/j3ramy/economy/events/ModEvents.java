@@ -8,20 +8,27 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mod.EventBusSubscriber(modid = EconomyMod.MOD_ID)
 public class ModEvents {
 
+    public static List<ModScreen> screens = new ArrayList<>();
+
     @SubscribeEvent
     public static void onMouseClickEvent(GuiScreenEvent.MouseClickedEvent event){
-        if(event.getButton() == 0  && Minecraft.getInstance().currentScreen instanceof ServerScreen){ // 0 = Left mouse button
-            ((ServerScreen)Minecraft.getInstance().currentScreen).getScreen().onClick();
+        for(ModScreen screen : ModEvents.screens){
+            if(event.getButton() == 0  && Minecraft.getInstance().currentScreen instanceof ServerScreen){ // 0 = Left mouse button
+                screen.onClick();
+            }
         }
     }
 
     @SubscribeEvent
     public static void onMouseScrollEvent(GuiScreenEvent.MouseScrollEvent event){
-        if(Minecraft.getInstance().currentScreen instanceof ServerScreen){
-            ((ServerScreen)Minecraft.getInstance().currentScreen).getScreen().onScroll((int) event.getScrollDelta());
+        for(ModScreen screen : ModEvents.screens){
+            screen.onScroll((int) event.getScrollDelta());
         }
     }
 }

@@ -1,10 +1,10 @@
-package de.j3ramy.economy.utils;
+package de.j3ramy.economy.utils.ingame.server;
 
-import net.minecraft.client.gui.screen.MainMenuScreen;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.ArrayList;
 
 public class Server {
 
@@ -13,19 +13,17 @@ public class Server {
         CUSTOM
     }
 
-    private boolean isOn;
-    private final boolean isSet;
     private final ServerType serverType;
     private final String ip;
     private final BlockPos pos;
     private Database db;
+    private boolean isOn;
+    private boolean isSet;
 
-    public Server(ServerType serverType, String ip, BlockPos pos, String customDbName){
+    public Server(ServerType serverType, String ip, BlockPos pos){
         this.serverType = serverType;
         this.ip = ip;
         this.pos = pos;
-
-        this.db = new Database(customDbName);
 
         this.isOn = false;
         this.isSet = true;
@@ -36,9 +34,7 @@ public class Server {
         this.ip = nbt.getString("ip");
         this.pos = NBTUtil.readBlockPos(nbt.getCompound("pos"));
         this.db = new Database(nbt.getCompound("db"));
-
         this.isOn = false;
-        this.isSet = true;
     }
 
     public CompoundNBT getData(){
@@ -54,8 +50,8 @@ public class Server {
         return nbt;
     }
 
-    public void addDatabase(CompoundNBT nbt){
-        this.db = new Database(nbt);
+    public void initDatabase(String dbName){
+        this.db = new Database(dbName);
     }
 
     public void deleteDatabase(){
@@ -79,7 +75,7 @@ public class Server {
     }
 
     public boolean isSet(){
-        return this.isSet;
+        return !this.getIp().isEmpty();
     }
 
     public ServerType getServerType() {
