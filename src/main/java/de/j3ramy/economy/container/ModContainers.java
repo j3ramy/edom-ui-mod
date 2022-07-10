@@ -31,26 +31,17 @@ public class ModContainers {
                 BlockPos pos = data.readBlockPos();
                 World world = inv.player.getEntityWorld();
 
-                return new MoneyChangerContainer(windowId, world, pos, inv, inv.player, (MoneyChangerTile) world.getTileEntity(pos));
+                return new MoneyChangerContainer(windowId, inv, inv.player, (MoneyChangerTile) world.getTileEntity(pos));
             })));
 
     public static final RegistryObject<ContainerType<CreditCardContainer>> CREDIT_CARD_CONTAINER = CONTAINERS.register("credit_card_container",
-            () -> IForgeContainerType.create(((windowId, inv, data) -> {
-
-                return new CreditCardContainer(windowId);
-            })));
+            () -> IForgeContainerType.create(((windowId, inv, data) -> new CreditCardContainer(windowId))));
 
     public static final RegistryObject<ContainerType<CreditCardPrinterContainer>> CREDIT_CARD_PRINTER_CONTAINER = CONTAINERS.register("credit_card_printer_container",
-            () -> IForgeContainerType.create(((windowId, inv, data) -> {
-
-                return new CreditCardPrinterContainer(windowId, inv, (CreditCardPrinterTile) inv.player.getEntityWorld().getTileEntity(data.readBlockPos()));
-            })));
+            () -> IForgeContainerType.create(((windowId, inv, data) -> new CreditCardPrinterContainer(windowId, inv, (CreditCardPrinterTile) inv.player.getEntityWorld().getTileEntity(data.readBlockPos())))));
 
     public static final RegistryObject<ContainerType<ServerContainer>> SERVER_CONTAINER = CONTAINERS.register("server_container",
-            () -> IForgeContainerType.create(((windowId, inv, data) -> {
-
-                return new ServerContainer(windowId, (ServerTile) inv.player.getEntityWorld().getTileEntity(data.readBlockPos()));
-            })));
+            () -> IForgeContainerType.create(((windowId, inv, data) -> new ServerContainer(windowId, (ServerTile) inv.player.getEntityWorld().getTileEntity(data.readBlockPos())))));
 
     public static void register(IEventBus eventBus){
         CONTAINERS.register(eventBus);

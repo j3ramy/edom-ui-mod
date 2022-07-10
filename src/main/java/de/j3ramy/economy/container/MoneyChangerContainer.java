@@ -9,8 +9,6 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -22,7 +20,7 @@ public class MoneyChangerContainer extends Container {
     private final PlayerEntity playerEntity;
     private final IItemHandler playerInventory;
 
-    public MoneyChangerContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player, MoneyChangerTile tile){
+    public MoneyChangerContainer(int windowId, PlayerInventory playerInventory, PlayerEntity player, MoneyChangerTile tile){
         super(ModContainers.MONEY_CHANGER_CONTAINER.get(), windowId);
 
         this.tileEntity = tile;

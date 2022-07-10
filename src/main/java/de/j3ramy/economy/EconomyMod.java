@@ -1,11 +1,17 @@
+/*
+IDEEN:
+- Drucker mit Papier für Dokumente zum Ausdrucken
+
+ */
+
 package de.j3ramy.economy;
 
 import de.j3ramy.economy.block.ModBlocks;
 import de.j3ramy.economy.container.ModContainers;
 import de.j3ramy.economy.events.ModSoundEvents;
+import de.j3ramy.economy.gui.screen.*;
 import de.j3ramy.economy.item.ModItems;
 import de.j3ramy.economy.network.Network;
-import de.j3ramy.economy.screen.*;
 import de.j3ramy.economy.tileentity.ModTileEntities;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;

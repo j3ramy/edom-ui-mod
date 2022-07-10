@@ -4,23 +4,23 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
-
 public class Server {
 
-    public enum ServerType{
+    public enum DBType{
         BANK,
+        EMAIL,
+        KEKW,
         CUSTOM
     }
 
-    private final ServerType serverType;
+    private final DBType serverType;
     private final String ip;
     private final BlockPos pos;
     private Database db;
     private boolean isOn;
     private boolean isSet;
 
-    public Server(ServerType serverType, String ip, BlockPos pos){
+    public Server(DBType serverType, String ip, BlockPos pos){
         this.serverType = serverType;
         this.ip = ip;
         this.pos = pos;
@@ -30,7 +30,7 @@ public class Server {
     }
 
     public Server(CompoundNBT nbt){
-        this.serverType = ServerType.values()[nbt.getInt("serverType")];
+        this.serverType = DBType.values()[nbt.getInt("serverType")];
         this.ip = nbt.getString("ip");
         this.pos = NBTUtil.readBlockPos(nbt.getCompound("pos"));
         this.db = new Database(nbt.getCompound("db"));
@@ -76,10 +76,6 @@ public class Server {
 
     public boolean isSet(){
         return !this.getIp().isEmpty();
-    }
-
-    public ServerType getServerType() {
-        return this.serverType;
     }
 
     public String getIp() {

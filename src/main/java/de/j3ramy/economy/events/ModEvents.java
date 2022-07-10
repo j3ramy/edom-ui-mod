@@ -1,8 +1,8 @@
 package de.j3ramy.economy.events;
 
 import de.j3ramy.economy.EconomyMod;
-import de.j3ramy.economy.gui.ModScreen;
-import de.j3ramy.economy.screen.ServerScreen;
+import de.j3ramy.economy.gui.screen.ModScreen;
+import de.j3ramy.economy.gui.screen.ServerScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,4 +31,13 @@ public class ModEvents {
             screen.onScroll((int) event.getScrollDelta());
         }
     }
+
+    /*
+    @SubscribeEvent
+    public static void onMouseScrollEvent(GuiScreenEvent.MouseDragEvent event){
+        System.out.println(event.getMouseX() + " | " + event.getMouseY());
+    }
+
+     */
+
 }

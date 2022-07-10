@@ -79,12 +79,12 @@ public class MoneyChangerBlock extends HorizontalBlock {
 
             @Override
             public Container createMenu(int i, PlayerInventory playerInv, PlayerEntity playerEntity) {
-                return new MoneyChangerContainer(i, world, pos, playerInv, playerEntity, tileEntity);
+                return new MoneyChangerContainer(i, playerInv, playerEntity, tileEntity);
             }
 
             @Override
             public ITextComponent getDisplayName() {
-                return new TranslationTextComponent("screen.edom.money_changer");
+                return new TranslationTextComponent("");
             }
         };
     }

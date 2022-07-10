@@ -1,4 +1,4 @@
-package de.j3ramy.economy.screen;
+package de.j3ramy.economy.gui.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;

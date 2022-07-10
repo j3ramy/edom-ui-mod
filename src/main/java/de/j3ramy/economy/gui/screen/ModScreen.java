@@ -1,4 +1,4 @@
-package de.j3ramy.economy.gui;
+package de.j3ramy.economy.gui.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.j3ramy.economy.events.ModEvents;

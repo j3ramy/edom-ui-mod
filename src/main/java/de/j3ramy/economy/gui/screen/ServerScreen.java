@@ -1,16 +1,14 @@
-package de.j3ramy.economy.screen;
+package de.j3ramy.economy.gui.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.ServerContainer;
-import de.j3ramy.economy.gui.ModScreen;
 import de.j3ramy.economy.gui.elements.Button;
 import de.j3ramy.economy.gui.elements.CenteredHorizontalLine;
 import de.j3ramy.economy.gui.elements.DropDown;
 import de.j3ramy.economy.network.CSPacketSendServerData;
 import de.j3ramy.economy.network.Network;
-import de.j3ramy.economy.utils.ingame.server.Entry;
 import de.j3ramy.economy.utils.ingame.server.Server;
 import de.j3ramy.economy.utils.screen.Color;
 import net.minecraft.client.Minecraft;
@@ -23,21 +21,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-import java.util.ArrayList;
-
 public class ServerScreen extends ContainerScreen<ServerContainer> {
 
     private final ResourceLocation GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/server_gui.png");
     private final ModScreen setUpScreen;
     private final ModScreen overviewScreen;
-
-    public ModScreen getSetUpScreen() {
-        return this.setUpScreen;
-    }
-    public ModScreen getOverviewScreen() {
-        return this.overviewScreen;
-    }
-
     private final int TEXTURE_WIDTH = 256;
     private final int TEXTURE_HEIGHT = 148;
 
@@ -46,7 +34,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
     private enum ServerScreenState{
         SET_UP,
-        OVERVIEW,
+        OVERVIEW
     }
 
     private ServerScreenState screenState = ServerScreenState.SET_UP;
@@ -54,11 +42,6 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     public void setServer(Server server) {
         this.server = server;
     }
-
-
-    private TextFieldWidget ipField = new TextFieldWidget(this.font, 0 ,0 ,0 ,0 , new StringTextComponent(""));
-    private DropDown typeDropDown = new DropDown(new String[0], 0, 0, 0, 0, "");
-    private Button saveButton = new Button(0, 0, 0, 0, 0, new StringTextComponent(""), (click)->{});
 
 
     public ServerScreen(ServerContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
@@ -77,6 +60,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.yOffset = this.height / 2 - 75;
 
         this.initSetUpScreen();
+        this.initOverviewScreen();
     }
 
     @Override
@@ -102,17 +86,11 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                 this.ipField.render(matrixStack, mouseX, mouseY, partialTicks);
                 break;
             case OVERVIEW:
-                System.out.println("Server: " + this.server.getIp());
-                System.out.println("DB: " + this.server.getDatabase().getName());
-                System.out.println("Table: " + this.server.getDatabase().getTable("Table1").getName() + " | Entry: " + this.server.getDatabase().getTable("Table1").getEntry(0).getColumnsContent());
-                System.out.println("Table: " + this.server.getDatabase().getTable("Table1").getName() + " | Entry: " + this.server.getDatabase().getTable("Table1").getEntry(1).getColumnsContent());
-                System.out.println("Table: " + this.server.getDatabase().getTable("Table2").getName() + " | Entry: " + this.server.getDatabase().getTable("Table2").getEntry(0).getColumnsContent());
-                System.out.println("----------------------------------------------------------");
+                this.renderOverviewScreen(matrixStack, mouseX, mouseY, partialTicks);
+                this.updateOverviewScreen();
                 break;
 
         }
-
-        //render mod screen class
     }
 
     @Override
@@ -123,8 +101,35 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.blit(matrixStack, this.xOffset, this.yOffset, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
+    //region SET UP SCREEN
+    public void initOverviewScreen(){
+
+    }
+
+    private void renderOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
+        this.overviewScreen.render(matrixStack, mouseX, mouseY, partialTicks);
+
+        /*
+        this.setUpScreen.render(matrixStack, mouseX, mouseY, partialTicks);
+        drawCenteredString(matrixStack, this.font, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.server_setup").getString(),
+                (this.width / 2),
+                (this.yOffset + 20),
+                Color.WHITE);
+
+         */
+
+    }
+
+    private void updateOverviewScreen(){
+
+    }
+    //endregion
 
     //region SET UP SCREEN
+    private TextFieldWidget ipField = new TextFieldWidget(this.font, 0 ,0 ,0 ,0 , new StringTextComponent(""));
+    private DropDown typeDropDown = new DropDown(new String[0], 0, 0, 0, 0, "");
+    private Button saveButton = new Button(0, 0, 0, 0, 0, new StringTextComponent(""), (click)->{});
+
     public void initSetUpScreen(){
         this.setUpScreen.centeredHorizontalLines.add(new CenteredHorizontalLine(this.width, this.yOffset + 32, 150, Color.WHITE_HEX));
 
@@ -136,65 +141,21 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.ipField.setMaxStringLength(15);
         this.children.add(this.ipField);
 
-        String[] options = new String[Server.ServerType.values().length];
-        for(int i = 0; i < Server.ServerType.values().length; i++){
-            options[i] = Server.ServerType.values()[i].toString();
+        String[] options = new String[Server.DBType.values().length];
+        for(int i = 0; i < Server.DBType.values().length; i++){
+            options[i] = Server.DBType.values()[i].toString();
         }
         this.setUpScreen.dropDowns.add(this.typeDropDown = new DropDown(options, this.width / 2 - 45, this.yOffset + 70, 90, 18, "Preset"));
-
-        /*
-        this.screen.scrollableList.add(this.scrollableList = new ScrollableList( 10, 100, 100, 60, 20));
-        this.scrollableList.addToList("Test1", true, (onClick) -> {System.out.println("Test1");});
-        this.scrollableList.addToList("Test2", false, (onClick) -> {System.out.println("Test2");});
-        this.scrollableList.addToList("Test3", true, (onClick) -> {System.out.println("Test3");});
-        this.scrollableList.addToList("Test4", true, (onClick) -> {System.out.println("Test4");});
-        this.scrollableList.addToList("Test5", true, (onClick) -> {System.out.println("Test5");});
-        this.scrollableList.addToList("Test6", true, (onClick) -> {System.out.println("Test6");});
-        this.scrollableList.addToList("Test7", true, (onClick) -> {System.out.println("Test7");});
-        this.scrollableList.addToList("Test8", true, (onClick) -> {System.out.println("Test8");});
-
-         */
 
         this.setUpScreen.buttons.add(this.saveButton = new Button(0, this.width / 2 - 30, this.yOffset + 100, 60, 14,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onPress) ->{
 
             Server server = new Server(
-                    Server.ServerType.valueOf(this.typeDropDown.getSelectedText()),
+                    Server.DBType.valueOf(this.typeDropDown.getSelectedText()),
                     this.ipField.getText().replace(' ', '_').toLowerCase(),
                     this.container.tileEntity.getPos());
 
             server.initDatabase("db_" + this.typeDropDown.getSelectedText().toLowerCase());
-
-
-            ArrayList<String> attributes = new ArrayList<>();
-            attributes.add("Vorname");
-            attributes.add("Nachname");
-            attributes.add("Alter");
-            server.getDatabase().createTable("Table1", attributes);
-
-            ArrayList<String> columnContent = new ArrayList<>();
-            columnContent.add("Jaimy");
-            columnContent.add("Seidel");
-            columnContent.add("22");
-            server.getDatabase().getTable("Table1").insert(new Entry(columnContent));
-
-            ArrayList<String> columnContent2 = new ArrayList<>();
-            columnContent2.add("Robert");
-            columnContent2.add("Eberhard");
-            columnContent2.add("90");
-            server.getDatabase().getTable("Table1").insert(new Entry(columnContent2));
-
-            ArrayList<String> attributes1 = new ArrayList<>();
-            attributes1.add("Kontostand");
-            attributes1.add("Kontonummer");
-            attributes1.add("Inhaber");
-            server.getDatabase().createTable("Table2", attributes1);
-
-            ArrayList<String> columnContent1 = new ArrayList<>();
-            columnContent1.add("38,00 €");
-            columnContent1.add("123456789");
-            columnContent1.add("Jaimy Seidel");
-            server.getDatabase().getTable("Table2").insert(new Entry(columnContent1));
 
             this.setServer(server);
             Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server));
