@@ -1,6 +1,7 @@
 package de.j3ramy.economy.events;
 
 import de.j3ramy.economy.EconomyMod;
+import de.j3ramy.economy.gui.screen.ComputerScreen;
 import de.j3ramy.economy.gui.screen.ModScreen;
 import de.j3ramy.economy.gui.screen.ServerScreen;
 import net.minecraft.client.Minecraft;
@@ -20,6 +21,10 @@ public class ModEvents {
     public static void onMouseClickEvent(GuiScreenEvent.MouseClickedEvent event){
         for(ModScreen screen : ModEvents.screens){
             if(event.getButton() == 0  && Minecraft.getInstance().currentScreen instanceof ServerScreen){ // 0 = Left mouse button
+                screen.onClick();
+            }
+
+            if(event.getButton() == 0  && Minecraft.getInstance().currentScreen instanceof ComputerScreen){ // 0 = Left mouse button
                 screen.onClick();
             }
         }

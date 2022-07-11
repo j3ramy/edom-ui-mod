@@ -51,6 +51,9 @@ public class DropDown extends net.minecraft.client.gui.widget.button.Button {
         this.setMessage(GuiUtils.getFormattedLabel(this.maxWordLength, this.placeholder));
     }
 
+    public boolean isOptionSelected(){
+        return this.selectedIndex != -1;
+    }
 
     public boolean isDisabled(boolean isDisabled) {
         this.isDisabled = isDisabled;

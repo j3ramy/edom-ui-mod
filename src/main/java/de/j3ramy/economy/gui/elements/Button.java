@@ -21,8 +21,6 @@ public class Button extends net.minecraft.client.gui.widget.button.Button {
     public static final int BORDER_COLOR_HOVER = DEFAULT_COLOR;
     public static final int BORDER_THICKNESS = 1;
     public static final int TEXT_Y_OFFSET = 4;
-
-    private final int id;
     private final Point mousePosition;
     private boolean isDisabled = false;
 
@@ -31,15 +29,10 @@ public class Button extends net.minecraft.client.gui.widget.button.Button {
         return this.isDisabled;
     }
 
-    public Button(int id, int x, int y, int width, int height, ITextComponent title, Button.IPressable onPress){
+    public Button(int x, int y, int width, int height, ITextComponent title, Button.IPressable onPress){
         super(x, y, width, height, title, onPress);
 
-        this.id = id;
         this.mousePosition = new Point();
-    }
-
-    public int getId() {
-        return this.id;
     }
 
     public String getText(){

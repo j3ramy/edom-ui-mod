@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import de.j3ramy.economy.events.ModEvents;
 import de.j3ramy.economy.gui.elements.*;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +17,8 @@ public class ModScreen extends Screen {
     public final List<HorizontalLine> horizontalLines = new ArrayList<>();
     public final List<CenteredHorizontalLine> centeredHorizontalLines = new ArrayList<>();
 
-    public ModScreen(ITextComponent titleIn) {
-        super(titleIn);
+    public ModScreen() {
+        super(new StringTextComponent(""));
 
         ModEvents.screens.add(this);
     }
@@ -85,14 +85,5 @@ public class ModScreen extends Screen {
         for(ScrollableList scrollableList : this.scrollableList){
             scrollableList.onScroll(scrollDelta);
         }
-    }
-
-    public void clearScreen(){
-        this.popUpWindows.clear();
-        this.buttons.clear();
-        this.dropDowns.clear();
-        this.scrollableList.clear();
-        this.horizontalLines.clear();
-        this.centeredHorizontalLines.clear();
     }
 }

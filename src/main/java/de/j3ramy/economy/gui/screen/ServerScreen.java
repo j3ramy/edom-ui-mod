@@ -47,8 +47,8 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     public ServerScreen(ServerContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
 
-        this.setUpScreen = new ModScreen(titleIn);
-        this.overviewScreen = new ModScreen(titleIn);
+        this.setUpScreen = new ModScreen();
+        this.overviewScreen = new ModScreen();
     }
 
 
@@ -129,7 +129,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     //region SET UP SCREEN
     private TextFieldWidget ipField = new TextFieldWidget(this.font, 0 ,0 ,0 ,0 , new StringTextComponent(""));
     private DropDown typeDropDown = new DropDown(new String[0], 0, 0, 0, 0, "");
-    private Button saveButton = new Button(0, 0, 0, 0, 0, new StringTextComponent(""), (click)->{});
+    private Button saveButton = new Button(0, 0, 0, 0, new StringTextComponent(""), (click)->{});
 
     public void initSetUpScreen(){
         this.setUpScreen.centeredHorizontalLines.add(new CenteredHorizontalLine(this.width, this.yPos + 32, 150, Color.WHITE_HEX));
@@ -148,7 +148,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         }
         this.setUpScreen.dropDowns.add(this.typeDropDown = new DropDown(options, this.width / 2 - 45, this.yPos + 70, 90, 18, "Preset"));
 
-        this.setUpScreen.buttons.add(this.saveButton = new Button(0, this.width / 2 - 30, this.yPos + 100, 60, 14,
+        this.setUpScreen.buttons.add(this.saveButton = new Button(this.width / 2 - 30, this.yPos + 100, 60, 14,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onPress) ->{
 
             Server server = new Server(

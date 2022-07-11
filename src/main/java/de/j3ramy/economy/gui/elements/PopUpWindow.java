@@ -53,7 +53,7 @@ public class PopUpWindow extends Screen {
         this.leftPos = screen.width / 2 - WIDTH / 2;
         this.topPos = screen.height / 2 - HEIGHT / 2;
 
-        this.closeButton = new Button(0, screen.width / 2 - BUTTON_WIDTH / 2, topPos + 65, BUTTON_WIDTH, BUTTON_HEIGHT,
+        this.closeButton = new Button(screen.width / 2 - BUTTON_WIDTH / 2, topPos + 65, BUTTON_WIDTH, BUTTON_HEIGHT,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.close_popup"), (click) -> {
             this.hide();
         });
