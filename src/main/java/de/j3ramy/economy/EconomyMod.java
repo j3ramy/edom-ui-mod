@@ -78,6 +78,7 @@ public class EconomyMod
             ScreenManager.registerFactory(ModContainers.CREDIT_CARD_CONTAINER.get(), CreditCardScreen::new);
             ScreenManager.registerFactory(ModContainers.CREDIT_CARD_PRINTER_CONTAINER.get(), CreditCartPrinterScreen::new);
             ScreenManager.registerFactory(ModContainers.SERVER_CONTAINER.get(), ServerScreen::new);
+            ScreenManager.registerFactory(ModContainers.COMPUTER_CONTAINER.get(), ComputerScreen::new);
 
             RenderTypeLookup.setRenderLayer(ModBlocks.CREDIT_CART_PRINTER.get(), RenderType.getCutout());
         });

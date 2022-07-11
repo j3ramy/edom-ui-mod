@@ -19,9 +19,11 @@ public class ModTileEntities {
     public static RegistryObject<TileEntityType<CreditCardPrinterTile>> CREDIT_CARD_PRINTER_TILE = TILE_ENTITIES.register("credit_card_printer_tile", () -> TileEntityType.Builder.create(
             CreditCardPrinterTile::new, ModBlocks.CREDIT_CART_PRINTER.get()).build(null));
 
-
     public static RegistryObject<TileEntityType<ServerTile>> SERVER_TILE = TILE_ENTITIES.register("server_tile", () -> TileEntityType.Builder.create(
             ServerTile::new, ModBlocks.SERVER.get()).build(null));
+
+    public static RegistryObject<TileEntityType<ComputerTile>> COMPUTER_TILE = TILE_ENTITIES.register("computer_tile", () -> TileEntityType.Builder.create(
+            ComputerTile::new, ModBlocks.SERVER.get()).build(null));
 
     public static void register(IEventBus eventBus){
         TILE_ENTITIES.register(eventBus);

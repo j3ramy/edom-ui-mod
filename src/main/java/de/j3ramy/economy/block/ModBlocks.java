@@ -30,6 +30,9 @@ public class ModBlocks {
     public static final RegistryObject<Block> SERVER = registerBlock("server", () ->
             new ServerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f)));
 
+    public static final RegistryObject<Block> COMPUTER = registerBlock("computer", () ->
+            new ComputerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f)));
+
 
     public static void register(IEventBus eventBus){
         BLOCKS.register(eventBus);

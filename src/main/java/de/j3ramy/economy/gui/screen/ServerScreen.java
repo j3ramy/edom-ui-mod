@@ -23,14 +23,14 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class ServerScreen extends ContainerScreen<ServerContainer> {
 
-    private final ResourceLocation GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/server_gui.png");
+    private final ResourceLocation GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/screen_gui.png");
     private final ModScreen setUpScreen;
     private final ModScreen overviewScreen;
     private final int TEXTURE_WIDTH = 256;
     private final int TEXTURE_HEIGHT = 148;
 
-    public int xOffset;
-    public int yOffset;
+    public int xPos;
+    public int yPos;
 
     private enum ServerScreenState{
         SET_UP,
@@ -56,8 +56,8 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     public void init(Minecraft minecraft, int width, int height) {
         super.init(minecraft, width, height);
 
-        this.xOffset = (this.width / 2) - (TEXTURE_WIDTH / 2);
-        this.yOffset = this.height / 2 - 75;
+        this.xPos = (this.width / 2) - (TEXTURE_WIDTH / 2);
+        this.yPos = this.height / 2 - 75;
 
         this.initSetUpScreen();
         this.initOverviewScreen();
@@ -71,14 +71,15 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
         this.screenState = this.server.isSet() ? ServerScreenState.OVERVIEW : ServerScreenState.SET_UP;
 
-        //Draw server title heading
+        //draw server title heading
         GlStateManager.pushMatrix();
         GlStateManager.scalef(.5f, .5f, .5f);
         String titleText = new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.server").getString();
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, titleText + ((this.screenState != ServerScreenState.SET_UP) ? " | " + this.server.getIp() : ""),
-                (this.xOffset + 4) * 2, (this.yOffset + 4) * 2, Color.WHITE);
+                (this.xPos + 4) * 2, (this.yPos + 4) * 2, Color.WHITE);
         GlStateManager.popMatrix();
 
+        //draw screen
         switch(this.screenState){
             case SET_UP:
                 this.renderSetUpScreen(matrixStack, mouseX, mouseY, partialTicks);
@@ -98,7 +99,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         assert this.minecraft != null;
         this.minecraft.getTextureManager().bindTexture(GUI);
 
-        this.blit(matrixStack, this.xOffset, this.yOffset, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+        this.blit(matrixStack, this.xPos, this.yPos, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
     //region SET UP SCREEN
@@ -113,7 +114,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.setUpScreen.render(matrixStack, mouseX, mouseY, partialTicks);
         drawCenteredString(matrixStack, this.font, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.server_setup").getString(),
                 (this.width / 2),
-                (this.yOffset + 20),
+                (this.yPos + 20),
                 Color.WHITE);
 
          */
@@ -131,10 +132,10 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     private Button saveButton = new Button(0, 0, 0, 0, 0, new StringTextComponent(""), (click)->{});
 
     public void initSetUpScreen(){
-        this.setUpScreen.centeredHorizontalLines.add(new CenteredHorizontalLine(this.width, this.yOffset + 32, 150, Color.WHITE_HEX));
+        this.setUpScreen.centeredHorizontalLines.add(new CenteredHorizontalLine(this.width, this.yPos + 32, 150, Color.WHITE_HEX));
 
         //add ip text field
-        this.ipField = new TextFieldWidget(this.font, this.width / 2 - 45, this.yOffset + 43, 90, 18, new StringTextComponent(""));
+        this.ipField = new TextFieldWidget(this.font, this.width / 2 - 45, this.yPos + 43, 90, 18, new StringTextComponent(""));
         this.ipField.setText(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".placeholder.ip").getString());
         this.ipField.setCanLoseFocus(true);
         this.ipField.setTextColor(Color.WHITE);
@@ -145,9 +146,9 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         for(int i = 0; i < Server.DBType.values().length; i++){
             options[i] = Server.DBType.values()[i].toString();
         }
-        this.setUpScreen.dropDowns.add(this.typeDropDown = new DropDown(options, this.width / 2 - 45, this.yOffset + 70, 90, 18, "Preset"));
+        this.setUpScreen.dropDowns.add(this.typeDropDown = new DropDown(options, this.width / 2 - 45, this.yPos + 70, 90, 18, "Preset"));
 
-        this.setUpScreen.buttons.add(this.saveButton = new Button(0, this.width / 2 - 30, this.yOffset + 100, 60, 14,
+        this.setUpScreen.buttons.add(this.saveButton = new Button(0, this.width / 2 - 30, this.yPos + 100, 60, 14,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onPress) ->{
 
             Server server = new Server(
@@ -168,7 +169,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.setUpScreen.render(matrixStack, mouseX, mouseY, partialTicks);
         drawCenteredString(matrixStack, this.font, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.server_setup").getString(),
                 (this.width / 2),
-                (this.yOffset + 20),
+                (this.yPos + 20),
                 Color.WHITE);
     }
 

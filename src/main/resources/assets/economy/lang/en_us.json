@@ -16,6 +16,7 @@
   "block.economy.money_changer": "Money Changer",
   "block.economy.credit_card_printer": "Credit Card Printer",
   "block.economy.server": "Server",
+  "block.economy.computer": "Computer",
 
   "screen.economy.placeholder.owner": "Account Owner",
   "screen.economy.placeholder.ip": "IP Address",
