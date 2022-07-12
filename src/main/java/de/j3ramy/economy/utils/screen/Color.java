@@ -1,6 +1,9 @@
 package de.j3ramy.economy.utils.screen;
 
 public class Color {
+    //https://www.rapidtables.com/convert/number/hex-to-decimal.html
+
+    //Color for text
     public static final int GREEN = 1826359;
     public static final int YELLOW = 16184069;
     public static final int RED = 16123141;
