@@ -3,6 +3,7 @@ package de.j3ramy.economy.utils.screen;
 import net.minecraft.util.text.StringTextComponent;
 
 public class GuiUtils {
+    public static final int LETTER_SIZE = 6;
     public enum FontSize{
         DEFAULT,
         SMALL

@@ -15,6 +15,7 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = EconomyMod.MOD_ID)
 public class ModEvents {
 
+    public static String CLIPBOARD_CONTENT = "";
     public static List<ModScreen> screens = new ArrayList<>();
 
     @SubscribeEvent
@@ -26,6 +27,16 @@ public class ModEvents {
 
             if(event.getButton() == 0  && Minecraft.getInstance().currentScreen instanceof ComputerScreen){ // 0 = Left mouse button
                 screen.onClick();
+            }
+
+            //right click
+            if(event.getButton() == 1  && Minecraft.getInstance().currentScreen instanceof ServerScreen){ // 0 = Left mouse button
+                screen.onRightClick();
+            }
+
+            if(event.getButton() == 0  && Minecraft.getInstance().currentScreen instanceof ComputerScreen){ // 0 = Left mouse button
+                screen.onClick();
+                screen.onRightClick();
             }
         }
     }

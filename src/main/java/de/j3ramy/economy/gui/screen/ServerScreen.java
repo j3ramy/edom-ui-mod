@@ -4,14 +4,16 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.ServerContainer;
-import de.j3ramy.economy.gui.elements.Button;
-import de.j3ramy.economy.gui.elements.CenteredHorizontalLine;
-import de.j3ramy.economy.gui.elements.DropDown;
+import de.j3ramy.economy.gui.widgets.Button;
+import de.j3ramy.economy.gui.widgets.CenteredHorizontalLine;
+import de.j3ramy.economy.gui.widgets.DropDown;
+import de.j3ramy.economy.gui.widgets.ScrollableTable;
 import de.j3ramy.economy.network.CSPacketSendServerData;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.ingame.server.Server;
 import de.j3ramy.economy.utils.screen.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.entity.player.PlayerInventory;
@@ -61,6 +63,8 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
         this.initSetUpScreen();
         this.initOverviewScreen();
+
+
     }
 
     @Override
@@ -101,24 +105,44 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
         this.blit(matrixStack, this.xPos, this.yPos, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
-
+    ScrollableTable table;
     //region SET UP SCREEN
     public void initOverviewScreen(){
+
+        String[] attributes = new String[]{"First Name", "Last Name", "Age", "City", "Date Of Birth", "Email"};
+        this.overviewScreen.tables.add(table = new ScrollableTable(this.xPos + 5, this.yPos + 15, 245, 100, 10, attributes, true));
+        table.addRow(new String[]{"1Jaimy", "Seidel", "22", "Edom", "19.10.1999", "jaimy.seidel@web.de"}, true, Color.DARK_GRAY_HEX, (click)->{
+            System.out.println("TEST");
+        });
+        table.addRow(new String[]{"2Jaimy", "Seidel", "22", "Edom", "19.10.1999", "jaimy.seidel@web.de"}, true, Color.DARK_GRAY_HEX, (click)->{
+            System.out.println("TEST");
+        });
+        table.addRow(new String[]{"3Jaimy", "Seidel", "22", "Edom", "19.10.1999", "jaimy.seidel@web.de"}, true, Color.DARK_GRAY_HEX, (click)->{
+            System.out.println("TEST");
+        });
+        table.addRow(new String[]{"4Jaimy", "Seidel", "22", "Edom", "19.10.1999", "jaimy.seidel@web.de"}, true, Color.DARK_GRAY_HEX, (click)->{
+            System.out.println("TEST");
+        });
+        table.addRow(new String[]{"5Jaimy", "Seidel", "22", "Edom", "19.10.1999", "jaimy.seidel@web.de"}, true, Color.DARK_GRAY_HEX, (click)->{
+            System.out.println("TEST");
+        });
+        table.addRow(new String[]{"6Jaimy", "Seidel", "22", "Edom", "19.10.1999", "jaimy.seidel@web.de"}, true, Color.DARK_GRAY_HEX, (click)->{
+            System.out.println("TEST");
+        });
+        table.addRow(new String[]{"7Jaimy", "Seidel", "22", "Edom", "19.10.1999", "jaimy.seidel@web.de"}, true, Color.DARK_GRAY_HEX, (click)->{
+            System.out.println("TEST");
+        });
+        table.addRow(new String[]{"8Jaimy", "Seidel", "22", "Edom", "19.10.1999", "jaimy.seidel@web.de"}, true, Color.DARK_GRAY_HEX, (click)->{
+            System.out.println("TEST");
+        });
+        table.addRow(new String[]{"9Jaimy", "Seidel", "22", "Edom", "19.10.1999", "jaimy.seidel@web.de"}, true, Color.DARK_GRAY_HEX, (click)->{
+            System.out.println("TEST");
+        });
 
     }
 
     private void renderOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
         this.overviewScreen.render(matrixStack, mouseX, mouseY, partialTicks);
-
-        /*
-        this.setUpScreen.render(matrixStack, mouseX, mouseY, partialTicks);
-        drawCenteredString(matrixStack, this.font, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.server_setup").getString(),
-                (this.width / 2),
-                (this.yPos + 20),
-                Color.WHITE);
-
-         */
-
     }
 
     private void updateOverviewScreen(){

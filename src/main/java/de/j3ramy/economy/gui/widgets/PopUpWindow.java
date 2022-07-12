@@ -3,7 +3,7 @@
 * - Custom screen parent class
 * */
 
-package de.j3ramy.economy.gui.elements;
+package de.j3ramy.economy.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;

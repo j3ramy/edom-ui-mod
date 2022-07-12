@@ -2,7 +2,7 @@ package de.j3ramy.economy.gui.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.j3ramy.economy.events.ModEvents;
-import de.j3ramy.economy.gui.elements.*;
+import de.j3ramy.economy.gui.widgets.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -13,6 +13,8 @@ public class ModScreen extends Screen {
     public final List<PopUpWindow> popUpWindows = new ArrayList<>();
     public final List<Button> buttons = new ArrayList<>();
     public final List<DropDown> dropDowns = new ArrayList<>();
+    public final List<Tooltip> tooltips = new ArrayList<>();
+    public final List<ScrollableTable> tables = new ArrayList<>();
     public final List<ScrollableList> scrollableList = new ArrayList<>();
     public final List<HorizontalLine> horizontalLines = new ArrayList<>();
     public final List<CenteredHorizontalLine> centeredHorizontalLines = new ArrayList<>();
@@ -32,10 +34,20 @@ public class ModScreen extends Screen {
             button.render(matrixStack, mouseX, mouseY, partialTicks);
         }
 
+        for(Tooltip tooltip : this.tooltips){
+            tooltip.render(matrixStack, mouseX, mouseY);
+        }
+
         for(DropDown dropDown : this.dropDowns){
             dropDown.updateMousePosition(mouseX, mouseY);
             dropDown.render(matrixStack, mouseX, mouseY, partialTicks);
             dropDown.update();
+        }
+
+        for(ScrollableTable table : this.tables){
+            table.updateMousePosition(mouseX, mouseY);
+            table.render(matrixStack, mouseX, mouseY, partialTicks);
+            table.update();
         }
 
         for(ScrollableList scrollableList : this.scrollableList){
@@ -68,12 +80,22 @@ public class ModScreen extends Screen {
             scrollableList.onClick();
         }
 
+        for(ScrollableTable scrollableTable : this.tables){
+            scrollableTable.onClick();
+        }
+
         for(Button button : this.buttons){
             button.onClick();
         }
 
         for(PopUpWindow popUpWindow : this.popUpWindows){
             popUpWindow.onClick();
+        }
+    }
+
+    public void onRightClick(){
+        for(ScrollableTable scrollableTable : this.tables){
+            scrollableTable.onRightClick();
         }
     }
 
@@ -84,6 +106,10 @@ public class ModScreen extends Screen {
 
         for(ScrollableList scrollableList : this.scrollableList){
             scrollableList.onScroll(scrollDelta);
+        }
+
+        for(ScrollableTable scrollableTable : this.tables){
+            scrollableTable.onScroll(scrollDelta);
         }
     }
 }

@@ -4,25 +4,17 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.ComputerContainer;
-import de.j3ramy.economy.container.ServerContainer;
-import de.j3ramy.economy.gui.elements.Button;
-import de.j3ramy.economy.gui.elements.CenteredHorizontalLine;
-import de.j3ramy.economy.gui.elements.DropDown;
-import de.j3ramy.economy.network.CSPacketSendServerData;
-import de.j3ramy.economy.network.Network;
+import de.j3ramy.economy.gui.widgets.Button;
+import de.j3ramy.economy.gui.widgets.DropDown;
 import de.j3ramy.economy.utils.ingame.server.Server;
 import de.j3ramy.economy.utils.screen.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-
-import javax.annotation.Nullable;
 
 public class ComputerScreen extends ContainerScreen<ComputerContainer> {
 

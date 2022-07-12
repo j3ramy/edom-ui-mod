@@ -5,11 +5,13 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.CreditCardPrinterContainer;
+import de.j3ramy.economy.events.ModEvents;
 import de.j3ramy.economy.network.CSPacketSendCreditCardData;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.screen.Color;
 import de.j3ramy.economy.utils.ingame.CreditCardData;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.CheckboxButton;
@@ -156,6 +158,14 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
     public void resize(Minecraft minecraft, int width, int height) {
         String s = this.ownerField.getText();
         this.ownerField.setText(s);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if(button == 0 && this.ownerField.isFocused() && this.ownerField.canWrite())
+            this.ownerField.setText(ModEvents.CLIPBOARD_CONTENT);
+
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
