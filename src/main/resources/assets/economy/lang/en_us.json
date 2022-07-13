@@ -20,11 +20,11 @@
 
   "screen.economy.placeholder.owner": "Account Owner",
   "screen.economy.placeholder.ip": "IP Address",
+  "screen.economy.placeholder.search": "Search query",
 
   "screen.economy.label.accNr": "Account Number:",
   "screen.economy.label.validity": "Validity:",
   "screen.economy.label.pin": "PIN:",
-
 
   "screen.economy.button.save": "Save",
   "screen.economy.button.close_popup": "Close",
@@ -32,6 +32,12 @@
   "screen.economy.heading.credit_cart_printer": "Card Printer",
   "screen.economy.heading.server": "Server Control Terminal v1.0",
   "screen.economy.heading.server_setup": "Server Setup",
+
+  "screen.economy.tooltip.create_table": "Create Table",
+  "screen.economy.tooltip.drop_table": "Drop Table",
+  "screen.economy.tooltip.create_entry": "Create Entry",
+  "screen.economy.tooltip.delete_entry": "Delete Entry",
+  "screen.economy.tooltip.update_entry": "Update Entry",
 
   "itemGroup.economy": "Edom Economy"
 
