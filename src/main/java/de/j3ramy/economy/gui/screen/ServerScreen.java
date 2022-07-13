@@ -10,6 +10,7 @@ import de.j3ramy.economy.network.CSPacketSendServerData;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.ingame.server.Server;
 import de.j3ramy.economy.utils.screen.Color;
+import de.j3ramy.economy.utils.screen.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -106,7 +107,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
     //region SET UP SCREEN
     public void initOverviewScreen(){
-
+        this.overviewScreen.addButton(new Button(0, 0, 100, 20, new StringTextComponent(GuiUtils.removeVowels("Hällo")), (c)->{}));
     }
 
     private void renderOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){

@@ -50,12 +50,12 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.xPos = (this.width / 2) - (TEXTURE_WIDTH / 2);
         this.yPos = this.height / 2 - 75;
 
-        this.screen.buttons.add(this.button = new Button(this.xPos + 10, this.yPos, 100, 20, new TranslationTextComponent("screen.economy.button.save"), (onclick)->{
+        this.screen.addButton(this.button = new Button(this.xPos + 10, this.yPos, 100, 20, new TranslationTextComponent("screen.economy.button.save"), (onclick)->{
             System.out.println("Selected Option: " + this.dropDown.getSelectedText());
         }));
 
         String[] options = new String[]{"Option A", "Option B", "Option C"};
-        this.screen.dropDowns.add(this.dropDown = new DropDown(options, this.xPos, this.yPos + 50, 100, 20, "Choose Option"));
+        this.screen.addDropDown(this.dropDown = new DropDown(options, this.xPos, this.yPos + 50, 100, 20, "Choose Option"));
     }
 
     @Override

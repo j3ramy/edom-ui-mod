@@ -26,7 +26,7 @@ public class GuiUtils {
         return new StringTextComponent(s);
     }
 
-    public String removeVowels(String s){
+    public static String removeVowels(String s){
         if(s.contains("ö"))
             s = s.replace("ö", "oe");
 

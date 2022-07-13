@@ -31,7 +31,7 @@ public class ModScreen extends Screen {
         this.dropDowns.add(dropDown);
     }
 
-    public void addPopUpWindow(Tooltip tooltip){
+    public void addTooltip(Tooltip tooltip){
         this.tooltips.add(tooltip);
     }
 
