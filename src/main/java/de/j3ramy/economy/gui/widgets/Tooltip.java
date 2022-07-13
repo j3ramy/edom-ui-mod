@@ -2,14 +2,14 @@ package de.j3ramy.economy.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-import de.j3ramy.economy.utils.screen.Color;
-import de.j3ramy.economy.utils.screen.GuiUtils;
+import de.j3ramy.economy.utils.Color;
+import de.j3ramy.economy.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 
 public class Tooltip {
 
-    private String content = "";
+    private String content;
     public boolean isVisible = true;
 
     public Tooltip(String content){
@@ -21,7 +21,7 @@ public class Tooltip {
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY){
-        if(this.isVisible && !this.content.isEmpty()){
+        if(this.isVisible && this.content != null && !this.content.isEmpty()){
             //border
             AbstractGui.fill(matrixStack,
                     mouseX - 3,

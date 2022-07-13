@@ -7,11 +7,12 @@ import de.j3ramy.economy.container.ServerContainer;
 import de.j3ramy.economy.gui.widgets.Button;
 import de.j3ramy.economy.gui.widgets.CenteredHorizontalLine;
 import de.j3ramy.economy.gui.widgets.DropDown;
+import de.j3ramy.economy.gui.widgets.Tooltip;
 import de.j3ramy.economy.network.CSPacketSendServerData;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.ingame.server.Server;
-import de.j3ramy.economy.utils.screen.Color;
-import de.j3ramy.economy.utils.screen.GuiUtils;
+import de.j3ramy.economy.utils.Color;
+import de.j3ramy.economy.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -103,15 +104,15 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.blit(matrixStack, this.xPos, this.yPos, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
-    //region SET UP SCREEN
+    //region OVERVIEW SCREEN
     public void initOverviewScreen(){
-        this.overviewScreen.addButton(new Button(0, 0, 100, 20, new StringTextComponent(GuiUtils.removeVowels("Österreich")), (c)->{}));
+
     }
 
     private void renderOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
         this.overviewScreen.render(matrixStack, mouseX, mouseY, partialTicks);
 
-
+        this.overviewScreen.addTooltip(new Tooltip("Test"));
     }
 
     private void updateOverviewScreen(){

@@ -6,7 +6,7 @@ import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.ComputerContainer;
 import de.j3ramy.economy.gui.widgets.*;
 import de.j3ramy.economy.utils.ingame.server.Server;
-import de.j3ramy.economy.utils.screen.Color;
+import de.j3ramy.economy.utils.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -114,14 +114,14 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     }
 
     private void initTooltips(){
-        this.screen.addTooltip(createTableButtonTooltip = new Tooltip(TooltipText("create_table")));
-        this.screen.addTooltip(dropTableButtonTooltip = new Tooltip(TooltipText("drop_table")));
-        this.screen.addTooltip(createEntryButtonTooltip = new Tooltip(TooltipText("create_entry")));
-        this.screen.addTooltip(deleteEntryButtonTooltip = new Tooltip(TooltipText("delete_entry")));
-        this.screen.addTooltip(updateEntryButtonTooltip = new Tooltip(TooltipText("update_entry")));
+        this.screen.addTooltip(createTableButtonTooltip = new Tooltip(this.getTranslationText("create_table")));
+        this.screen.addTooltip(dropTableButtonTooltip = new Tooltip(this.getTranslationText("drop_table")));
+        this.screen.addTooltip(createEntryButtonTooltip = new Tooltip(this.getTranslationText("create_entry")));
+        this.screen.addTooltip(deleteEntryButtonTooltip = new Tooltip(this.getTranslationText("delete_entry")));
+        this.screen.addTooltip(updateEntryButtonTooltip = new Tooltip(this.getTranslationText("update_entry")));
     }
 
-    private String TooltipText(String translationKey){
+    private String getTranslationText(String translationKey){
         return new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip." + translationKey).getString();
     }
 

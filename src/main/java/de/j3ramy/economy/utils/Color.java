@@ -1,4 +1,4 @@
-package de.j3ramy.economy.utils.screen;
+package de.j3ramy.economy.utils;
 
 public class Color {
     //https://www.rapidtables.com/convert/number/hex-to-decimal.html

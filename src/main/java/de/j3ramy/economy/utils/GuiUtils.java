@@ -1,23 +1,23 @@
-package de.j3ramy.economy.utils.screen;
+package de.j3ramy.economy.utils;
 
 import net.minecraft.util.text.StringTextComponent;
 
 public class GuiUtils {
-    public static final int LETTER_SIZE = 6;
+    public static final int LETTER_SIZE = 5;
     public enum FontSize{
         DEFAULT,
         SMALL
     }
 
     public static int getCenteredTextOffset(int length){
-        return (length / 2 * 5) + 2;
+        return (length / 2 * LETTER_SIZE) + 2;
     }
 
     public static StringTextComponent getFormattedLabel(int maxWordLength, String s){
         if(s == null || s.length() == 0)
             return new StringTextComponent("");
 
-        if(s.length() >= maxWordLength){
+        if(s.length() > maxWordLength){
             String s1 = s.substring(0, s.length() - (s.length() - maxWordLength));
             s1 += "...";
             return new StringTextComponent(s1);
@@ -26,7 +26,7 @@ public class GuiUtils {
         return new StringTextComponent(s);
     }
 
-    private float getScalingPositionMultiplier(float scaleFactor){
+    public static float getScalingPositionMultiplier(float scaleFactor){
         return 1 / scaleFactor;
     }
 

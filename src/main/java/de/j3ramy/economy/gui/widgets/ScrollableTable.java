@@ -8,9 +8,8 @@ package de.j3ramy.economy.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-import de.j3ramy.economy.events.ModEvents;
-import de.j3ramy.economy.utils.screen.Color;
-import de.j3ramy.economy.utils.screen.GuiUtils;
+import de.j3ramy.economy.utils.Color;
+import de.j3ramy.economy.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
@@ -18,8 +17,6 @@ import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.List;
 

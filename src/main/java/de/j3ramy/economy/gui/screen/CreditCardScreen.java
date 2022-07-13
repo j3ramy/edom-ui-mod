@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.CreditCardContainer;
-import de.j3ramy.economy.utils.screen.Color;
+import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.ingame.CreditCardData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
