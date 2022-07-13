@@ -161,14 +161,6 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if(button == 0 && this.ownerField.isFocused() && this.ownerField.canWrite())
-            this.ownerField.setText(ModEvents.CLIPBOARD_CONTENT);
-
-        return super.mouseClicked(mouseX, mouseY, button);
-    }
-
-    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == 256) {
             assert this.minecraft != null;

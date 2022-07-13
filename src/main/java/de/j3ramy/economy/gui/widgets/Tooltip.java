@@ -10,7 +10,7 @@ import net.minecraft.client.gui.AbstractGui;
 public class Tooltip {
 
     private String content;
-    private boolean isVisible = true;
+    public boolean isVisible = true;
 
     public Tooltip(String content){
         this.content = content;
@@ -18,10 +18,6 @@ public class Tooltip {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public boolean isVisible() {
-        return this.isVisible;
     }
 
     public void show(){
@@ -33,7 +29,7 @@ public class Tooltip {
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY){
-        if(this.isVisible()){
+        if(this.isVisible){
             //border
             AbstractGui.fill(matrixStack,
                     mouseX - 3,
@@ -53,6 +49,7 @@ public class Tooltip {
             GlStateManager.pushMatrix();
             GlStateManager.scalef(.5f, .5f, .5f);
             Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.content, (mouseX + 1) * 2, (mouseY - 6) * 2, Color.WHITE);
-            GlStateManager.popMatrix();        }
+            GlStateManager.popMatrix();
+        }
     }
 }

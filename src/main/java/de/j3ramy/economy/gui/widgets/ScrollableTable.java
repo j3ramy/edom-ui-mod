@@ -140,13 +140,6 @@ public class ScrollableTable extends Button {
         }
     }
 
-    public void onRightClick(){
-        if(this.getHoveredRow() != null){
-            ModEvents.CLIPBOARD_CONTENT = this.getHoveredRow().getHoveredColumnText();
-        }
-
-    }
-
     public void clear(){
         this.contentFields.clear();
     }

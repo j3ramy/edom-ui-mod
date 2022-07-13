@@ -93,12 +93,6 @@ public class ModScreen extends Screen {
         }
     }
 
-    public void onRightClick(){
-        for(ScrollableTable scrollableTable : this.tables){
-            scrollableTable.onRightClick();
-        }
-    }
-
     public void onScroll(int scrollDelta){
         for(DropDown dropDown : this.dropDowns){
             dropDown.onScroll(scrollDelta);

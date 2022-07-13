@@ -38,7 +38,7 @@ public class PopUpWindow extends Screen {
     private final ContainerScreen<?> screen;
     private final Button closeButton;
 
-    private PopUpType type;
+    private PopUpType type = PopUpType.DEFAULT;
     private String title;
     private String content;
     private boolean isClosed;
