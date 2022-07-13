@@ -10,14 +10,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModScreen extends Screen {
-    public final List<PopUpWindow> popUpWindows = new ArrayList<>();
-    public final List<Button> buttons = new ArrayList<>();
-    public final List<DropDown> dropDowns = new ArrayList<>();
-    public final List<Tooltip> tooltips = new ArrayList<>();
-    public final List<ScrollableTable> tables = new ArrayList<>();
-    public final List<ScrollableList> scrollableList = new ArrayList<>();
-    public final List<HorizontalLine> horizontalLines = new ArrayList<>();
-    public final List<CenteredHorizontalLine> centeredHorizontalLines = new ArrayList<>();
+    private final List<PopUpWindow> popUpWindows = new ArrayList<>();
+    private final List<Button> buttons = new ArrayList<>();
+    private final List<DropDown> dropDowns = new ArrayList<>();
+    private final List<Tooltip> tooltips = new ArrayList<>();
+    private final List<ScrollableTable> tables = new ArrayList<>();
+    private final List<ScrollableList> scrollableList = new ArrayList<>();
+    private final List<HorizontalLine> horizontalLines = new ArrayList<>();
+    private final List<CenteredHorizontalLine> centeredHorizontalLines = new ArrayList<>();
+
+    public void addPopUpWindow(PopUpWindow popUpWindow){
+        this.popUpWindows.add(popUpWindow);
+    }
+
+    public void addButton(Button button){
+        this.buttons.add(button);
+    }
+
+    public void addDropDown(DropDown dropDown){
+        this.dropDowns.add(dropDown);
+    }
+
+    public void addPopUpWindow(Tooltip tooltip){
+        this.tooltips.add(tooltip);
+    }
+
+    public void addTable(ScrollableTable table){
+        this.tables.add(table);
+    }
+
+    public void addList(ScrollableList scrollableList){
+        this.scrollableList.add(scrollableList);
+    }
+
+    public void addHorizontalLine(HorizontalLine horizontalLine){
+        this.horizontalLines.add(horizontalLine);
+    }
+
+    public void addCenteredHorizontalLines(CenteredHorizontalLine centeredHorizontalLine){
+        this.centeredHorizontalLines.add(centeredHorizontalLine);
+    }
 
     public ModScreen() {
         super(new StringTextComponent(""));

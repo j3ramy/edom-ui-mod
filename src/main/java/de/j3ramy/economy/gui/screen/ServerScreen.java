@@ -112,14 +112,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     private void renderOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
         this.overviewScreen.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        Tooltip tooltip;
-        this.overviewScreen.tooltips.add(tooltip = new Tooltip("Content"));
 
-        Rectangle rect = new Rectangle(0, 0, 100, 100);
-        if(rect.contains(new Point(mouseX, mouseY)))
-            tooltip.show();
-        else
-            tooltip.hide();
     }
 
     private void updateOverviewScreen(){
@@ -133,7 +126,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     private Button saveButton = new Button(0, 0, 0, 0, new StringTextComponent(""), (click)->{});
 
     public void initSetUpScreen(){
-        this.setUpScreen.centeredHorizontalLines.add(new CenteredHorizontalLine(this.width, this.yPos + 32, 150, Color.WHITE_HEX));
+        this.setUpScreen.addCenteredHorizontalLines(new CenteredHorizontalLine(this.width, this.yPos + 32, 150, Color.WHITE_HEX));
 
         //add ip text field
         this.ipField = new TextFieldWidget(this.font, this.width / 2 - 45, this.yPos + 43, 90, 18, new StringTextComponent(""));
@@ -147,9 +140,9 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         for(int i = 0; i < Server.DBType.values().length; i++){
             options[i] = Server.DBType.values()[i].toString();
         }
-        this.setUpScreen.dropDowns.add(this.typeDropDown = new DropDown(options, this.width / 2 - 45, this.yPos + 70, 90, 18, "Preset"));
+        this.setUpScreen.addDropDown(this.typeDropDown = new DropDown(options, this.width / 2 - 45, this.yPos + 70, 90, 18, "Preset"));
 
-        this.setUpScreen.buttons.add(this.saveButton = new Button(this.width / 2 - 30, this.yPos + 100, 60, 14,
+        this.setUpScreen.addButton(this.saveButton = new Button(this.width / 2 - 30, this.yPos + 100, 60, 14,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onPress) ->{
 
             Server server = new Server(

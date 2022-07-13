@@ -1,6 +1,7 @@
 /*
 * UPDATE LATER:
 * - Two Font Sizes (as in GuiUtils) for button text
+* - Umlaute äüö im Button anzeigen
 * */
 package de.j3ramy.economy.gui.widgets;
 

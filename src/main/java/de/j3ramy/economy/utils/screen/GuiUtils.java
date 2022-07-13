@@ -25,4 +25,26 @@ public class GuiUtils {
 
         return new StringTextComponent(s);
     }
+
+    public String removeVowels(String s){
+        if(s.contains("ö"))
+            s = s.replace("ö", "oe");
+
+        if(s.contains("Ö"))
+            s = s.replace("Ö", "Oe");
+
+        if(s.contains("ä"))
+            s = s.replace("ä", "ae");
+
+        if(s.contains("Ä"))
+            s = s.replace("Ä", "Ae");
+
+        if(s.contains("ü"))
+            s = s.replace("ü", "ue");
+
+        if(s.contains("Ü"))
+            s = s.replace("Ü", "Ue");
+
+        return s;
+    }
 }
