@@ -4,15 +4,15 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.ServerContainer;
-import de.j3ramy.economy.gui.widgets.*;
 import de.j3ramy.economy.gui.widgets.Button;
+import de.j3ramy.economy.gui.widgets.CenteredHorizontalLine;
+import de.j3ramy.economy.gui.widgets.DropDown;
 import de.j3ramy.economy.network.CSPacketSendServerData;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.ingame.server.Server;
 import de.j3ramy.economy.utils.screen.Color;
 import de.j3ramy.economy.utils.screen.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.entity.player.PlayerInventory;
@@ -21,8 +21,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-
-import java.awt.*;
 
 public class ServerScreen extends ContainerScreen<ServerContainer> {
 
@@ -107,7 +105,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
     //region SET UP SCREEN
     public void initOverviewScreen(){
-        this.overviewScreen.addButton(new Button(0, 0, 100, 20, new StringTextComponent(GuiUtils.removeVowels("Hällo")), (c)->{}));
+        this.overviewScreen.addButton(new Button(0, 0, 100, 20, new StringTextComponent(GuiUtils.removeVowels("Österreich")), (c)->{}));
     }
 
     private void renderOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){

@@ -9,7 +9,7 @@ import net.minecraft.client.gui.AbstractGui;
 
 public class Tooltip {
 
-    private String content;
+    private String content = "";
     public boolean isVisible = true;
 
     public Tooltip(String content){
@@ -20,16 +20,8 @@ public class Tooltip {
         this.content = content;
     }
 
-    public void show(){
-        this.isVisible = true;
-    }
-
-    public void hide(){
-        this.isVisible = false;
-    }
-
     public void render(MatrixStack matrixStack, int mouseX, int mouseY){
-        if(this.isVisible){
+        if(this.isVisible && !this.content.isEmpty()){
             //border
             AbstractGui.fill(matrixStack,
                     mouseX - 3,

@@ -26,6 +26,10 @@ public class GuiUtils {
         return new StringTextComponent(s);
     }
 
+    private float getScalingPositionMultiplier(float scaleFactor){
+        return 1 / scaleFactor;
+    }
+
     public static String removeVowels(String s){
         if(s.contains("ö"))
             s = s.replace("ö", "oe");
