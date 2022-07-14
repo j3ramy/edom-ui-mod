@@ -25,19 +25,32 @@
   "screen.economy.label.accNr": "Account Number:",
   "screen.economy.label.validity": "Validity:",
   "screen.economy.label.pin": "PIN:",
+  "screen.economy.label.server_ip": "Server IP:",
+  "screen.economy.label.password": "Password:",
+  "screen.economy.label.db_name": "Database:",
+  "screen.economy.label.amount_tables": "Amount Tables:",
+  "screen.economy.label.amount_entries": "Amount Entries:",
+  "screen.economy.label.total_accesses": "Amount Accesses:",
 
   "screen.economy.button.save": "Save",
-  "screen.economy.button.close_popup": "Close",
+  "screen.economy.button.close": "Close",
+  "screen.economy.button.on": "On",
+  "screen.economy.button.off": "Off",
 
   "screen.economy.heading.credit_cart_printer": "Card Printer",
   "screen.economy.heading.server": "Server Control Terminal v1.0",
   "screen.economy.heading.server_setup": "Server Setup",
+  "screen.economy.heading.server_overview": "Server Overview",
+  "screen.economy.heading.server_overview.general": "General",
+  "screen.economy.heading.server_overview.stats": "Database Stats",
 
   "screen.economy.tooltip.create_table": "Create Table",
   "screen.economy.tooltip.drop_table": "Drop Table",
   "screen.economy.tooltip.create_entry": "Create Entry",
   "screen.economy.tooltip.delete_entry": "Delete Entry",
   "screen.economy.tooltip.update_entry": "Update Entry",
+  "screen.economy.tooltip.clear_db_button": "Clear Database",
+  "screen.economy.tooltip.reset_server": "Reset Server",
 
   "itemGroup.economy": "Edom Economy"
 

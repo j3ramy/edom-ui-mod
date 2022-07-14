@@ -10,7 +10,7 @@ import net.minecraft.client.gui.AbstractGui;
 public class Tooltip {
 
     private String content;
-    public boolean isVisible = true;
+    public boolean isVisible = false;
 
     public Tooltip(String content){
         this.content = content;
@@ -26,7 +26,7 @@ public class Tooltip {
             AbstractGui.fill(matrixStack,
                     mouseX - 3,
                     mouseY - 3 - 7,
-                    mouseX + (this.content.length() * GuiUtils.LETTER_SIZE / 2) + 6,
+                    mouseX + (this.content.length() * GuiUtils.LETTER_SIZE / 2) + 10,
                     mouseY + GuiUtils.LETTER_SIZE + 4 - 8,
                     Color.BLACK_HEX);
 
@@ -34,7 +34,7 @@ public class Tooltip {
             AbstractGui.fill(matrixStack,
                     mouseX - 2,
                     mouseY - 2 - 7,
-                    mouseX + (this.content.length() * GuiUtils.LETTER_SIZE / 2) + 5,
+                    mouseX + (this.content.length() * GuiUtils.LETTER_SIZE / 2) + 9,
                     mouseY + GuiUtils.LETTER_SIZE + 3 - 8,
                     Color.LIGHT_GRAY_HEX);
 

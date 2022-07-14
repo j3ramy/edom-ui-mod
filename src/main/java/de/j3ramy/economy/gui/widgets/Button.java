@@ -25,9 +25,8 @@ public class Button extends net.minecraft.client.gui.widget.button.Button {
     private final Point mousePosition;
     private boolean isDisabled = false;
 
-    public boolean isDisabled(boolean isDisabled) {
+    public void isDisabled(boolean isDisabled) {
         this.isDisabled = isDisabled;
-        return this.isDisabled;
     }
 
     public Button(int x, int y, int width, int height, ITextComponent title, Button.IPressable onPress){

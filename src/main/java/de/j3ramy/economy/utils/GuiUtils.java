@@ -51,4 +51,12 @@ public class GuiUtils {
 
         return s;
     }
+
+    public static String formatTime(Long time) {
+        int hours24 = (int)(time / 1000L + 6L) % 24;
+        int hours = hours24 % 24;
+        int minutes = (int)((float) time / 16.666666F % 60.0F);
+
+        return String.format("%02d:%02d", hours < 1 ? 12 : hours, minutes);
+    }
 }

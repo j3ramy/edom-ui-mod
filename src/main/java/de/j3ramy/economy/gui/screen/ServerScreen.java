@@ -4,18 +4,18 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.ServerContainer;
-import de.j3ramy.economy.gui.widgets.Button;
-import de.j3ramy.economy.gui.widgets.CenteredHorizontalLine;
-import de.j3ramy.economy.gui.widgets.DropDown;
-import de.j3ramy.economy.gui.widgets.Tooltip;
+import de.j3ramy.economy.gui.widgets.*;
 import de.j3ramy.economy.network.CSPacketSendServerData;
 import de.j3ramy.economy.network.Network;
-import de.j3ramy.economy.utils.ingame.server.Server;
 import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.GuiUtils;
+import de.j3ramy.economy.utils.Texture;
+import de.j3ramy.economy.utils.ingame.server.Server;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -77,8 +77,9 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         GlStateManager.pushMatrix();
         GlStateManager.scalef(.5f, .5f, .5f);
         String titleText = new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.server").getString();
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, titleText + ((this.screenState != ServerScreenState.SET_UP) ? " | " + this.server.getIp() : ""),
-                (this.xPos + 4) * 2, (this.yPos + 4) * 2, Color.WHITE);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, titleText + " | " + ((this.screenState != ServerScreenState.SET_UP) ? this.server.getIp() : "")
+                + " | " + GuiUtils.formatTime(this.container.getTileEntity().getWorld().getDayTime()),
+                        (this.xPos + 4) * 2, (this.yPos + 4) * 2, Color.WHITE);
         GlStateManager.popMatrix();
 
         //draw screen
@@ -90,7 +91,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                 break;
             case OVERVIEW:
                 this.renderOverviewScreen(matrixStack, mouseX, mouseY, partialTicks);
-                this.updateOverviewScreen();
+                this.updateOverviewScreen(mouseX, mouseY);
                 break;
 
         }
@@ -105,18 +106,163 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     }
 
     //region OVERVIEW SCREEN
-    public void initOverviewScreen(){
+    private Button onButton;
+    private Button offButton;
+    private ImageButton clearDatabaseButton;
+    private Tooltip clearDatabaseButtonTooltip;
+    private ImageButton resetServerButton;
+    private Tooltip resetServerButtonTooltip;
 
+    public void initOverviewScreen(){
+        this.overviewScreen.addButton(this.onButton = new Button(this.xPos + TEXTURE_WIDTH - 50 - 10, this.yPos + TEXTURE_HEIGHT - 18 - 15 - 18, 50, 18,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.on"), (click)->{
+            this.server.setOn(true);
+            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server));
+        }));
+
+        this.overviewScreen.addButton(this.offButton = new Button(this.xPos + TEXTURE_WIDTH - 50 - 10, this.yPos + TEXTURE_HEIGHT - 18 - 10, 50, 18,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.off"), (click)->{
+            this.server.setOn(false);
+            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server));
+        }));
+
+        this.overviewScreen.addTooltip(this.clearDatabaseButtonTooltip = new Tooltip(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip.clear_db_button").getString()));
+        this.overviewScreen.addTooltip(this.resetServerButtonTooltip = new Tooltip(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip.reset_server").getString()));
     }
+
 
     private void renderOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
-        this.overviewScreen.render(matrixStack, mouseX, mouseY, partialTicks);
+        drawCenteredString(matrixStack, this.font, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.server_overview").getString(),
+                (this.width / 2),
+                (this.yPos + 20),
+                Color.WHITE);
 
-        this.overviewScreen.addTooltip(new Tooltip("Test"));
+        this.drawGeneralInfo(matrixStack);
+        this.drawStats(matrixStack);
+
+        this.addButton(this.clearDatabaseButton = new ImageButton(this.xPos + 15, this.yPos + TEXTURE_HEIGHT - 18 - 10, 20, 18, 0, 0, 19, Texture.CLEAR_DB_BUTTON_TEX, (click)->{
+            System.out.println("CLICK");
+        }));
+
+        this.addButton(this.resetServerButton = new ImageButton(this.xPos + 40, this.yPos + TEXTURE_HEIGHT - 18 - 10, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON_TEX, (click)->{
+            System.out.println("CLICK");
+        }));
+
+
+        this.overviewScreen.addVerticalLine(new VerticalLine(this.xPos + 175, this.yPos + 35, 100, Color.WHITE_HEX));
+        //on off indicator
+        AbstractGui.fill(matrixStack, this.xPos + TEXTURE_WIDTH - 50 - 20, this.yPos + TEXTURE_HEIGHT - 18 - 15 - 18,
+                this.xPos + TEXTURE_WIDTH - 50 - 15, this.yPos + TEXTURE_HEIGHT - 10, this.server.isOn() ? Color.GREEN_HEX : Color.RED_HEX);
+
+        this.overviewScreen.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
-    private void updateOverviewScreen(){
+    private void drawGeneralInfo(MatrixStack matrixStack){
+        GlStateManager.pushMatrix();
+        GlStateManager.scalef(.75f, .75f, .75f);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.server_overview.general").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.75f)),
+                (int) ((this.yPos + 35) * GuiUtils.getScalingPositionMultiplier(.75f)),
+                Color.WHITE);
+        GlStateManager.popMatrix();
 
+        GlStateManager.pushMatrix();
+        GlStateManager.scalef(.5f, .5f, .5f);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.server_ip").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 48) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                this.server.getIp(),
+                (int) ((this.xPos + 70) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 48) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.password").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 55) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                "PW",
+                (int) ((this.xPos + 70) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 55) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.db_name").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 62) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                this.server.getDatabase().getName(),
+                (int) ((this.xPos + 70) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 62) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+        GlStateManager.popMatrix();
+    }
+
+    private void drawStats(MatrixStack matrixStack){
+        GlStateManager.pushMatrix();
+        GlStateManager.scalef(.75f, .75f, .75f);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.server_overview.stats").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.75f)),
+                (int) ((this.yPos + 80) * GuiUtils.getScalingPositionMultiplier(.75f)),
+                Color.WHITE);
+        GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scalef(.5f, .5f, .5f);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.amount_tables").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 93) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                Integer.toString(this.server.getDatabase().getTableCount()),
+                (int) ((this.xPos + 70) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 93) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.amount_entries").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 101) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                Integer.toString(this.server.getDatabase().getTotalEntryCount()),
+                (int) ((this.xPos + 70) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 101) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.total_accesses").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 109) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                Integer.toString(this.server.getAccesses()),
+                (int) ((this.xPos + 70) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 109) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+
+        GlStateManager.popMatrix();
+    }
+
+    private void updateOverviewScreen(int mouseX, int mouseY){
+        if(this.server.isOn()){
+            this.onButton.isDisabled(true);
+            this.offButton.isDisabled(false);
+        }
+        else{
+            this.onButton.isDisabled(false);
+            this.offButton.isDisabled(true);
+        }
+
+
+        this.clearDatabaseButtonTooltip.isVisible = this.clearDatabaseButton.isMouseOver(mouseX, mouseY);
+        this.resetServerButtonTooltip.isVisible = this.resetServerButton.isMouseOver(mouseX, mouseY);
     }
     //endregion
 
@@ -126,7 +272,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     private Button saveButton = new Button(0, 0, 0, 0, new StringTextComponent(""), (click)->{});
 
     public void initSetUpScreen(){
-        this.setUpScreen.addCenteredHorizontalLines(new CenteredHorizontalLine(this.width, this.yPos + 32, 150, Color.WHITE_HEX));
+        this.setUpScreen.addCenteredHorizontalLine(new CenteredHorizontalLine(this.width, this.yPos + 32, 150, Color.WHITE_HEX));
 
         //add ip text field
         this.ipField = new TextFieldWidget(this.font, this.width / 2 - 45, this.yPos + 43, 90, 18, new StringTextComponent(""));

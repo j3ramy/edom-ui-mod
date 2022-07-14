@@ -7,32 +7,6 @@ import net.minecraft.tileentity.TileEntity;
 
 public class ServerTile extends TileEntity {
 
-    /*
-    private final IIntArray data = new IIntArray() {
-        public int get(int index) {
-            switch(index){
-
-            }
-
-            return -1;
-        }
-
-        public void set(int index, int value) {
-            switch(index){
-
-            }
-        }
-        public int size() {
-            return 1;
-        }
-    };
-
-    public IIntArray getData() {
-        return this.data;
-    }
-
-     */
-
     private Server server;
 
     public Server getServer() {
@@ -41,6 +15,11 @@ public class ServerTile extends TileEntity {
 
     public void setServer(Server server) {
         this.server = server;
+    }
+
+    public void setOn(boolean isOn){
+        if(this.server != null)
+            this.server.setOn(isOn);
     }
 
 

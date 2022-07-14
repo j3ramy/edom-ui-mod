@@ -8,8 +8,6 @@ public class Server {
 
     public enum DBType{
         BANK,
-        EMAIL,
-        KEKW,
         CUSTOM
     }
 
@@ -17,16 +15,19 @@ public class Server {
     private final String ip;
     private final BlockPos pos;
     private Database db;
+    private String password;
     private boolean isOn;
-    private boolean isSet;
+    private int accesses;
+
+    public void setOn(boolean on) {
+        this.isOn = on;
+    }
 
     public Server(DBType serverType, String ip, BlockPos pos){
         this.serverType = serverType;
         this.ip = ip;
         this.pos = pos;
-
         this.isOn = false;
-        this.isSet = true;
     }
 
     public Server(CompoundNBT nbt){
@@ -34,18 +35,21 @@ public class Server {
         this.ip = nbt.getString("ip");
         this.pos = NBTUtil.readBlockPos(nbt.getCompound("pos"));
         this.db = new Database(nbt.getCompound("db"));
-        this.isOn = false;
+        this.password = nbt.getString("password");
+        this.isOn = nbt.getBoolean("isOn");
+        this.accesses = nbt.getInt("accesses");
     }
 
     public CompoundNBT getData(){
         CompoundNBT nbt = new CompoundNBT();
 
         nbt.putBoolean("isOn", this.isOn);
-        nbt.putBoolean("isSet", this.isSet);
         nbt.putInt("serverType", this.serverType.ordinal());
         nbt.putString("ip", this.ip);
         nbt.put("pos", NBTUtil.writeBlockPos(this.pos));
         nbt.put("db", this.db.getData());
+        nbt.putString("password", this.password);
+        nbt.putInt("accesses", this.accesses);
 
         return nbt;
     }
@@ -60,6 +64,10 @@ public class Server {
 
     public Database getDatabase() {
         return this.db;
+    }
+
+    public int getAccesses() {
+        return this.accesses;
     }
 
     public void turnOn(){
@@ -84,5 +92,9 @@ public class Server {
 
     public BlockPos getPos() {
         return this.pos;
+    }
+
+    public String getPassword() {
+        return this.password;
     }
 }

@@ -18,6 +18,7 @@ public class ModScreen extends Screen {
     private final List<ScrollableList> scrollableList = new ArrayList<>();
     private final List<HorizontalLine> horizontalLines = new ArrayList<>();
     private final List<CenteredHorizontalLine> centeredHorizontalLines = new ArrayList<>();
+    private final List<VerticalLine> verticalLines = new ArrayList<>();
 
     public void addPopUpWindow(PopUpWindow popUpWindow){
         this.popUpWindows.add(popUpWindow);
@@ -47,8 +48,12 @@ public class ModScreen extends Screen {
         this.horizontalLines.add(horizontalLine);
     }
 
-    public void addCenteredHorizontalLines(CenteredHorizontalLine centeredHorizontalLine){
+    public void addCenteredHorizontalLine(CenteredHorizontalLine centeredHorizontalLine){
         this.centeredHorizontalLines.add(centeredHorizontalLine);
+    }
+
+    public void addVerticalLine(VerticalLine verticalLine){
+        this.verticalLines.add(verticalLine);
     }
 
     public ModScreen() {
@@ -94,6 +99,10 @@ public class ModScreen extends Screen {
 
         for(CenteredHorizontalLine centeredHorizontalLine : this.centeredHorizontalLines){
             centeredHorizontalLine.render(matrixStack, mouseX, mouseY, partialTicks);
+        }
+
+        for(VerticalLine verticalLine : this.verticalLines){
+            verticalLine.render(matrixStack, mouseX, mouseY, partialTicks);
         }
 
         for(PopUpWindow popUpWindow : this.popUpWindows){

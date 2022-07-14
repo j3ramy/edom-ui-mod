@@ -41,6 +41,15 @@ public class Database {
         return this.name;
     }
 
+    public int getTotalEntryCount(){
+        int i = 0;
+
+        for(Table table : this.tableList)
+            i += table.getAllEntries().size();
+
+        return i;
+    }
+
     @Nullable
     public Table getTable(String name){
         for(Table table : this.tableList){

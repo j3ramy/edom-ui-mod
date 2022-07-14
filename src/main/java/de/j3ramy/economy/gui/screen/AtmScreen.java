@@ -6,6 +6,7 @@ import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.AtmContainer;
 import de.j3ramy.economy.item.*;
 import de.j3ramy.economy.tileentity.AtmTile;
+import de.j3ramy.economy.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -87,7 +88,7 @@ public class AtmScreen extends ContainerScreen<AtmContainer> {
         if(player == null)
             return;
 
-        String time = formatTime(player.world.getDayTime());
+        String time = GuiUtils.formatTime(player.world.getDayTime());
         drawString(matrixStack, Minecraft.getInstance().fontRenderer, time, 293, 18, infoColorDefault);
     }
 
@@ -357,13 +358,5 @@ public class AtmScreen extends ContainerScreen<AtmContainer> {
                 depositValue += 500 * stack.getCount();
             }
         }
-    }
-
-    public static String formatTime(Long time) {
-        int hours24 = (int)(time / 1000L + 6L) % 24;
-        int hours = hours24 % 24;
-        int minutes = (int)((float) time / 16.666666F % 60.0F);
-
-        return String.format("%02d:%02d", hours < 1 ? 12 : hours, minutes);
     }
 }
