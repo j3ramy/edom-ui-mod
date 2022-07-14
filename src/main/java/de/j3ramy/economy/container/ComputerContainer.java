@@ -3,6 +3,7 @@ package de.j3ramy.economy.container;
 import de.j3ramy.economy.block.ModBlocks;
 import de.j3ramy.economy.tileentity.AtmTile;
 import de.j3ramy.economy.tileentity.ComputerTile;
+import de.j3ramy.economy.tileentity.ServerTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -20,6 +21,10 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 public class ComputerContainer extends Container {
 
     public TileEntity tileEntity;
+
+    public TileEntity getTileEntity() {
+        return this.tileEntity;
+    }
 
     public ComputerContainer(int windowId, ComputerTile tile){
         super(ModContainers.COMPUTER_CONTAINER.get(), windowId);
