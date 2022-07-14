@@ -46,7 +46,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     private Tooltip viewNameTooltip;
     private final ResourceLocation PLUS_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/elements/plus_button_gui.png");
     private final ResourceLocation TRASHCAN_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/elements/trashcan_button_gui.png");
-    private final ResourceLocation _ = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/elements/plus_button_gui.png");
+    private final ResourceLocation PEN_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/elements/pen_button_gui.png");
 
     private Server server = new Server(new CompoundNBT());
     public void setServer(Server server) {
@@ -108,7 +108,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
             this.deleteEntry();
         }));
 
-        this.addButton(this.updateEntryButton = new ImageButton(this.xPos + 193, this.yPos + 13, 20, 18, 0, 0, 19, _, (button) ->{
+        this.addButton(this.updateEntryButton = new ImageButton(this.xPos + 193, this.yPos + 13, 20, 18, 0, 0, 19, PEN_BUTTON, (button) ->{
             this.updateEntry();
         }));
     }
