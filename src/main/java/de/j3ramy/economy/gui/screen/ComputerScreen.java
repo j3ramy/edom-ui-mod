@@ -105,7 +105,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
             this.createTable();
         }));
 
-        this.addButton(this.dropTableButton = new ImageButton(this.xPos + 30, this.yPos + 13, 20, 18, 0, 0, 19, Texture.TRASHCAN_BUTTON, (button) -> {
+        this.addButton(this.dropTableButton = new ImageButton(this.xPos + 30, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) -> {
             this.dropTable();
         }));
 
@@ -113,7 +113,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
             this.createEntry();
         }));
 
-        this.addButton(this.deleteEntryButton = new ImageButton(this.xPos + 205, this.yPos + 13, 20, 18, 0, 0, 19, Texture.TRASHCAN_BUTTON, (button) ->{
+        this.addButton(this.deleteEntryButton = new ImageButton(this.xPos + 205, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) ->{
             this.deleteEntry();
         }));
 
@@ -210,5 +210,17 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     }
 
     private void updateEntry() {
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == 256) {
+            assert this.minecraft != null;
+            assert this.minecraft.player != null;
+            this.minecraft.player.closeScreen();
+        }
+
+        return (this.searchField.keyPressed(keyCode, scanCode, modifiers) || this.searchField.canWrite()) ||
+                super.keyPressed(keyCode, scanCode, modifiers);
     }
 }

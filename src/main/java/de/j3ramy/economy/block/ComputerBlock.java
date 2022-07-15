@@ -58,12 +58,10 @@ public class ComputerBlock extends HorizontalBlock {
         if(!world.isRemote){
             Direction blockDirection = getBlockFacing(state.getBlockState());
 
-            /*
             //Check if clicked side is always front
             if(blockDirection != result.getFace())
                 return ActionResultType.SUCCESS;
 
-             */
 
             ComputerTile tileEntity = (ComputerTile) world.getTileEntity(pos);
             if(tileEntity == null)

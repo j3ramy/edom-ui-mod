@@ -8,6 +8,7 @@ import de.j3ramy.economy.container.CreditCardPrinterContainer;
 import de.j3ramy.economy.network.CSPacketSendCreditCardData;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.Color;
+import de.j3ramy.economy.utils.Texture;
 import de.j3ramy.economy.utils.ingame.CreditCardData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -28,7 +29,6 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
     public static final int MIN_OWNER_LENGTH = 6;
 
     private final ResourceLocation GUI = new ResourceLocation(de.j3ramy.economy.EconomyMod.MOD_ID, "textures/gui/credit_cart_printer_gui.png");
-    private final ResourceLocation PRINT_BUTTON = new ResourceLocation(de.j3ramy.economy.EconomyMod.MOD_ID, "textures/gui/elements/print_button_gui.png");
 
     private final int TEXTURE_WIDTH = 176;
     private final int TEXTURE_HEIGHT = 168;
@@ -69,7 +69,7 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
         this.ownerField.setMaxStringLength(35);
         this.children.add(this.ownerField);
 
-        this.addButton(this.printButton = new ImageButton(this.guiLeft + 145, this.yOffset + 56, 20, 18, 0, 0, 19, PRINT_BUTTON, (button) -> {
+        this.addButton(this.printButton = new ImageButton(this.guiLeft + 145, this.yOffset + 56, 20, 18, 0, 0, 19, Texture.PRINT_BUTTON, (button) -> {
             this.printCard();
         }));
     }
