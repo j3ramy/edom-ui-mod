@@ -211,4 +211,16 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
 
     private void updateEntry() {
     }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == 256) {
+            assert this.minecraft != null;
+            assert this.minecraft.player != null;
+            this.minecraft.player.closeScreen();
+        }
+
+        return (this.searchField.keyPressed(keyCode, scanCode, modifiers) || this.searchField.canWrite()) ||
+                super.keyPressed(keyCode, scanCode, modifiers);
+    }
 }
