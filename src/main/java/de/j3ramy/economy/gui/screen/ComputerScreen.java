@@ -46,7 +46,6 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     private Tooltip createEntryButtonTooltip;
     private Tooltip deleteEntryButtonTooltip;
     private Tooltip updateEntryButtonTooltip;
-    private Tooltip viewNameTooltip;
 
     private Server server = new Server(new CompoundNBT());
     public void setServer(Server server) {
@@ -66,14 +65,17 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.tableOverviewScreen = new ModScreen();
         this.screen2 = new ModScreen();
     }
-
-
-    @Override
+@Override
     public void init(Minecraft minecraft, int width, int height) {
         super.init(minecraft, width, height);
-
         this.xPos = (this.width / 2) - (TEXTURE_WIDTH / 2);
         this.yPos = this.height / 2 - 75;
+
+        initTableOverviewScreen();
+        initScreen2();
+    }
+
+    public void initTableOverviewScreen() {
 
 /*        this.screen.buttons.add(this.button = new Button(this.xPos + 10, this.yPos, 100, 20, new TranslationTextComponent("screen.economy.button.save"), (onclick)->{
             System.out.println("Selected Option: " + this.dropDown.getSelectedText());
@@ -82,8 +84,35 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         String[] options = new String[]{"Option A", "Option B", "Option C"};
         this.screen.dropDowns.add(this.dropDown = new DropDown(options, this.xPos, this.yPos + 50, 100, 20, "Choose Option"));*/
 
-        initButtons();
-        initTooltips();
+        //<Buttons>
+        this.addButton(this.createTableButton = new ImageButton(this.xPos + 5, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) -> {
+        this.screenState = ComputerScreenState.SCREEN2;
+        }));
+
+        this.addButton(this.dropTableButton = new ImageButton(this.xPos + 30, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) -> {
+
+        }));
+
+        this.addButton(this.createEntryButton = new ImageButton(this.xPos + 180, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) ->{
+
+        }));
+
+        this.addButton(this.deleteEntryButton = new ImageButton(this.xPos + 205, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) ->{
+
+        }));
+
+        this.addButton(this.updateEntryButton = new ImageButton(this.xPos + 230, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PEN_BUTTON, (button) ->{
+
+        }));
+        //</Buttons>
+
+        //<Tooltips>
+        this.tableOverviewScreen.addTooltip(createTableButtonTooltip = new Tooltip(this.getTranslationText("create_table")));
+        this.tableOverviewScreen.addTooltip(dropTableButtonTooltip = new Tooltip(this.getTranslationText("drop_table")));
+        this.tableOverviewScreen.addTooltip(createEntryButtonTooltip = new Tooltip(this.getTranslationText("create_entry")));
+        this.tableOverviewScreen.addTooltip(deleteEntryButtonTooltip = new Tooltip(this.getTranslationText("delete_entry")));
+        this.tableOverviewScreen.addTooltip(updateEntryButtonTooltip = new Tooltip(this.getTranslationText("update_entry")));
+        //</Tooltips>
 
         //Search field
         this.searchField = new TextFieldWidget(this.font, (this.xPos + 85), (this.yPos + 16), 80, 12, new StringTextComponent(""));
@@ -100,34 +129,8 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.tableOverviewScreen.addTable(table = new ScrollableTable(this.xPos + 85, this.yPos + 36, 165, 105, 20, columnNames, true));
     }
 
-    private void initButtons(){
-        this.addButton(this.createTableButton = new ImageButton(this.xPos + 5, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) -> {
-            this.createTable();
-        }));
+    private void initScreen2() {
 
-        this.addButton(this.dropTableButton = new ImageButton(this.xPos + 30, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) -> {
-            this.dropTable();
-        }));
-
-        this.addButton(this.createEntryButton = new ImageButton(this.xPos + 180, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) ->{
-            this.createEntry();
-        }));
-
-        this.addButton(this.deleteEntryButton = new ImageButton(this.xPos + 205, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) ->{
-            this.deleteEntry();
-        }));
-
-        this.addButton(this.updateEntryButton = new ImageButton(this.xPos + 230, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PEN_BUTTON, (button) ->{
-            this.updateEntry();
-        }));
-    }
-
-    private void initTooltips(){
-        this.tableOverviewScreen.addTooltip(createTableButtonTooltip = new Tooltip(this.getTranslationText("create_table")));
-        this.tableOverviewScreen.addTooltip(dropTableButtonTooltip = new Tooltip(this.getTranslationText("drop_table")));
-        this.tableOverviewScreen.addTooltip(createEntryButtonTooltip = new Tooltip(this.getTranslationText("create_entry")));
-        this.tableOverviewScreen.addTooltip(deleteEntryButtonTooltip = new Tooltip(this.getTranslationText("delete_entry")));
-        this.tableOverviewScreen.addTooltip(updateEntryButtonTooltip = new Tooltip(this.getTranslationText("update_entry")));
     }
 
     private String getTranslationText(String translationKey){
@@ -155,12 +158,26 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
 //        this.update();
 
         //draw title heading
+
+        //All screens
         GlStateManager.pushMatrix();
         GlStateManager.scalef(.5f, .5f, .5f);
         String titleText = new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.computer").getString();
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, titleText + " | " + "IPAdress" + "/" + "DBName" + " | " + GuiUtils.formatTime(this.container.getTileEntity().getWorld().getDayTime()), (this.xPos + 4) * 2, (this.yPos + 4) * 2, Color.WHITE);
         GlStateManager.popMatrix();
 
+        //draw screens
+        switch(this.screenState){
+            case TABLE_OVERVIEW_SCREEN:
+                this.renderTableOverviewScreen(matrixStack, mouseX, mouseY, partialTicks);
+                break;
+            case SCREEN2:
+                this.renderScreen2(matrixStack, mouseX, mouseY, partialTicks);
+                break;
+        }
+    }
+
+    private void renderTableOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
         createTableButtonTooltip.isVisible = createTableButton.isHovered();
         dropTableButtonTooltip.isVisible = dropTableButton.isHovered();
@@ -168,6 +185,15 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         deleteEntryButtonTooltip.isVisible = deleteEntryButton.isHovered();
         updateEntryButtonTooltip.isVisible = updateEntryButton.isHovered();
         this.tableOverviewScreen.render(matrixStack, mouseX, mouseY, partialTicks);
+    }
+
+    private void renderScreen2(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        this.createTableButton.visible = false;
+        this.dropTableButton.visible = false;
+        this.createEntryButton.visible = false;
+        this.deleteEntryButton.visible = false;
+        this.updateEntryButton.visible = false;
+        this.screen2.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
 /*    private void update(){
@@ -195,21 +221,6 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.minecraft.getTextureManager().bindTexture(GUI);
 
         this.blit(matrixStack, this.xPos, this.yPos, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
-    }
-
-    private void createTable() {
-    }
-
-    private void dropTable() {
-    }
-
-    private void createEntry() {
-    }
-
-    private void deleteEntry() {
-    }
-
-    private void updateEntry() {
     }
 
     @Override
