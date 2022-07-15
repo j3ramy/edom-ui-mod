@@ -11,6 +11,7 @@
   "item.economy.onehundred_euro": "Onehundred Euro",
   "item.economy.twohundred_euro": "Twohundred Euro",
   "item.economy.fivehundred_euro": "Fivehundred Euro",
+  "item.economy.usb_flash_drive": "USB Flash Drive",
 
   "block.economy.atm": "ATM",
   "block.economy.money_changer": "Money Changer",
@@ -36,6 +37,8 @@
   "screen.economy.button.close": "Close",
   "screen.economy.button.on": "On",
   "screen.economy.button.off": "Off",
+  "screen.economy.button.yes": "Yes",
+  "screen.economy.button.no": "No",
 
   "screen.economy.heading.credit_cart_printer": "Card Printer",
   "screen.economy.heading.server": "Server Control Terminal v1.0",
@@ -51,6 +54,8 @@
   "screen.economy.tooltip.update_entry": "Update Entry",
   "screen.economy.tooltip.clear_db_button": "Clear Database",
   "screen.economy.tooltip.reset_server": "Reset Server",
+  "screen.economy.tooltip.load_from_drive": "Load From Flash Drive",
+  "screen.economy.tooltip.save_to_drive": "Save To Flash Drive",
 
   "itemGroup.economy": "Edom Economy"
 

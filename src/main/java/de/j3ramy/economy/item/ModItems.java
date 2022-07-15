@@ -20,6 +20,7 @@ public class ModItems {
     public static final RegistryObject<Item> ONEHUNDRED_EURO = ITEMS.register("onehundred_euro", () -> new OnehundredEuro(new Item.Properties().group(ModItemGroup.ECONOMY_GROUP)));
     public static final RegistryObject<Item> TWOHUNDRED_EURO = ITEMS.register("twohundred_euro", () -> new TwohundredEuro(new Item.Properties().group(ModItemGroup.ECONOMY_GROUP)));
     public static final RegistryObject<Item> FIVEHUNDRED_EURO = ITEMS.register("fivehundred_euro", () -> new FivehundredEuro(new Item.Properties().group(ModItemGroup.ECONOMY_GROUP)));
+    public static final RegistryObject<Item> USB_FLASH_DRIVE = ITEMS.register("usb_flash_drive", () -> new USBFlashDrive(new Item.Properties().group(ModItemGroup.ECONOMY_GROUP).maxStackSize(1)));
 
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);

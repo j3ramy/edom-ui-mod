@@ -5,6 +5,7 @@
 package de.j3ramy.economy.block;
 
 import de.j3ramy.economy.container.ServerContainer;
+import de.j3ramy.economy.item.ModItems;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.network.SCPacketSendServerData;
 import de.j3ramy.economy.tileentity.ModTileEntities;
@@ -79,7 +80,7 @@ public class ServerBlock extends HorizontalBlock {
 
             @Override
             public Container createMenu(int i, PlayerInventory playerInv, PlayerEntity playerEntity) {
-                return new ServerContainer(i, (ServerTile) world.getTileEntity(pos));
+                return new ServerContainer(i, playerInv, (ServerTile) world.getTileEntity(pos));
             }
 
             @Override

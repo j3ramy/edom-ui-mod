@@ -38,7 +38,7 @@ public class ModContainers {
             () -> IForgeContainerType.create(((windowId, inv, data) -> new CreditCardPrinterContainer(windowId, inv, (CreditCardPrinterTile) inv.player.getEntityWorld().getTileEntity(data.readBlockPos())))));
 
     public static final RegistryObject<ContainerType<ServerContainer>> SERVER_CONTAINER = CONTAINERS.register("server_container",
-            () -> IForgeContainerType.create(((windowId, inv, data) -> new ServerContainer(windowId, (ServerTile) inv.player.getEntityWorld().getTileEntity(data.readBlockPos())))));
+            () -> IForgeContainerType.create(((windowId, inv, data) -> new ServerContainer(windowId,  inv, (ServerTile) inv.player.getEntityWorld().getTileEntity(data.readBlockPos())))));
 
 
     public static final RegistryObject<ContainerType<ComputerContainer>> COMPUTER_CONTAINER = CONTAINERS.register("computer_container",

@@ -19,17 +19,22 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import java.awt.*;
 
-public class PopUpWindow extends Screen {
+public class AlertPopUp extends Screen {
 
     public final int WIDTH = 150;
     public final int HEIGHT = 90;
     public final int BUTTON_WIDTH = 60;
     public final int BUTTON_HEIGHT = 14;
 
-    public enum PopUpType{
+    public enum ColorType{
         DEFAULT,
         NOTICE,
         ERROR
+    }
+
+    public enum PopUpType{
+        CONFIRM,
+        ALERT
     }
 
     private final Point mousePosition;
@@ -38,12 +43,13 @@ public class PopUpWindow extends Screen {
     private final ContainerScreen<?> screen;
     private final Button closeButton;
 
-    private PopUpType type = PopUpType.DEFAULT;
+    private PopUpType type = PopUpType.ALERT;
+    private ColorType colorType = ColorType.DEFAULT;
     private String title;
     private String content;
     private boolean isClosed;
 
-    public PopUpWindow(ContainerScreen<?> screen){
+    public AlertPopUp(ContainerScreen<?> screen){
         super(new StringTextComponent(""));
 
         this.screen = screen;
@@ -57,6 +63,10 @@ public class PopUpWindow extends Screen {
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.close"), (click) -> {
             this.hide();
         });
+    }
+
+    public void setColorType(ColorType color) {
+        this.colorType = color;
     }
 
     public void setType(PopUpType type) {
@@ -94,7 +104,7 @@ public class PopUpWindow extends Screen {
         int DEFAULT_COLOR = Color.DARK_GRAY_HEX;
         int NOTICE_COLOR = Color.YELLOW_HEX;
         int ERROR_COLOR = Color.RED_HEX;
-        switch (this.type){
+        switch (this.colorType){
             case DEFAULT: AbstractGui.fill(matrixStack, leftPos, topPos, leftPos + WIDTH, topPos + HEIGHT, DEFAULT_COLOR); break;
             case NOTICE: AbstractGui.fill(matrixStack, leftPos, topPos, leftPos + WIDTH, topPos + HEIGHT, NOTICE_COLOR); break;
             case ERROR: AbstractGui.fill(matrixStack, leftPos, topPos, leftPos + WIDTH, topPos + HEIGHT, ERROR_COLOR);
@@ -102,7 +112,7 @@ public class PopUpWindow extends Screen {
 
         //background
         int CONTENT_MARGIN = 5;
-        int BACKGROUND_COLOR = Color.WHITE_HEX;
+        int BACKGROUND_COLOR = Color.DARK_GRAY_HEX;
         AbstractGui.fill(matrixStack, leftPos + CONTENT_MARGIN, topPos + CONTENT_MARGIN + 10,
                 leftPos + WIDTH - CONTENT_MARGIN, topPos + CONTENT_MARGIN + HEIGHT - 10,
                 BACKGROUND_COLOR);
@@ -116,8 +126,9 @@ public class PopUpWindow extends Screen {
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.content,
                 (screen.width / 2f) * 2 - GuiUtils.getCenteredTextOffset(this.content.length()),
                 (topPos + 37) * 2,
-                Color.BLACK);
+                Color.WHITE);
         GlStateManager.popMatrix();
+
 
         //button
         closeButton.render(matrixStack, mouseX, mouseY, partialTicks);
