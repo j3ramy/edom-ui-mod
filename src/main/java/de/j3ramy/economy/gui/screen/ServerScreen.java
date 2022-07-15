@@ -23,13 +23,14 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class ServerScreen extends ContainerScreen<ServerContainer> {
+import java.util.Objects;
 
-    private final ResourceLocation GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/screen_gui.png");
+public class ServerScreen extends ContainerScreen<ServerContainer> {
+    private final ResourceLocation GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/screen_inv_gui.png");
     private final ModScreen setUpScreen;
     private final ModScreen overviewScreen;
     private final int TEXTURE_WIDTH = 256;
-    private final int TEXTURE_HEIGHT = 148;
+    private final int TEXTURE_HEIGHT = 170;
 
     public int xPos;
     public int yPos;
@@ -100,8 +101,8 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
         assert this.minecraft != null;
-        this.minecraft.getTextureManager().bindTexture(GUI);
 
+        this.minecraft.getTextureManager().bindTexture(GUI);
         this.blit(matrixStack, this.xPos, this.yPos, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
@@ -112,47 +113,79 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     private Tooltip clearDatabaseButtonTooltip;
     private ImageButton resetServerButton;
     private Tooltip resetServerButtonTooltip;
+    private ImageButton saveServerButton;
+    private Tooltip saveServerButtonTooltip;
+    private ImageButton loadServerButton;
+    private Tooltip loadServerTooltip;
+    private ConfirmPopUp confirmPopUp;
 
     public void initOverviewScreen(){
-        this.overviewScreen.addButton(this.onButton = new Button(this.xPos + TEXTURE_WIDTH - 50 - 10, this.yPos + TEXTURE_HEIGHT - 18 - 15 - 18, 50, 18,
+        this.overviewScreen.addButton(this.onButton = new Button(this.xPos + TEXTURE_WIDTH - 50 - 10, this.yPos + TEXTURE_HEIGHT - 18 - 15 - 22 - 18, 50, 18,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.on"), (click)->{
             this.server.setOn(true);
             Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server));
         }));
 
-        this.overviewScreen.addButton(this.offButton = new Button(this.xPos + TEXTURE_WIDTH - 50 - 10, this.yPos + TEXTURE_HEIGHT - 18 - 10, 50, 18,
+        this.overviewScreen.addButton(this.offButton = new Button(this.xPos + TEXTURE_WIDTH - 50 - 10, this.yPos + TEXTURE_HEIGHT - 18 - 10 - 22, 50, 18,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.off"), (click)->{
             this.server.setOn(false);
             Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server));
         }));
 
+        //right area
+        this.overviewScreen.addVerticalLine(new VerticalLine(this.xPos + 175, this.yPos + 35, 100, Color.WHITE_HEX));
+
+        //tooltips
         this.overviewScreen.addTooltip(this.clearDatabaseButtonTooltip = new Tooltip(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip.clear_db_button").getString()));
         this.overviewScreen.addTooltip(this.resetServerButtonTooltip = new Tooltip(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip.reset_server").getString()));
+        this.overviewScreen.addTooltip(this.loadServerTooltip = new Tooltip(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip.load_from_drive").getString()));
+        this.overviewScreen.addTooltip(this.saveServerButtonTooltip = new Tooltip(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip.save_to_drive").getString()));
+
+
+        this.overviewScreen.addConfirmPopUp(confirmPopUp = new ConfirmPopUp(this, (click) ->{
+            confirmPopUp.hide();
+            System.out.println("YES");
+        }));
+
+        confirmPopUp.setTitle("Do you want to...?");
+        confirmPopUp.setContent("It really is dangeorus!!!!");
+        confirmPopUp.setColorType(ConfirmPopUp.ColorType.NOTICE);
+        confirmPopUp.show();
     }
 
 
     private void renderOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
+        this.buttons.clear();
+
         drawCenteredString(matrixStack, this.font, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.server_overview").getString(),
                 (this.width / 2),
                 (this.yPos + 20),
                 Color.WHITE);
 
+        //stats
         this.drawGeneralInfo(matrixStack);
         this.drawStats(matrixStack);
 
-        this.addButton(this.clearDatabaseButton = new ImageButton(this.xPos + 15, this.yPos + TEXTURE_HEIGHT - 18 - 10, 20, 18, 0, 0, 19, Texture.CLEAR_DB_BUTTON_TEX, (click)->{
+        //danger area bottom
+        this.addButton(this.clearDatabaseButton = new ImageButton(this.xPos + 15, this.yPos + TEXTURE_HEIGHT - 18 - 10 - 22, 20, 18, 0, 0, 19, Texture.CLEAR_DB_BUTTON, (click)->{
             System.out.println("CLICK");
         }));
 
-        this.addButton(this.resetServerButton = new ImageButton(this.xPos + 40, this.yPos + TEXTURE_HEIGHT - 18 - 10, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON_TEX, (click)->{
+        this.addButton(this.resetServerButton = new ImageButton(this.xPos + 40, this.yPos + TEXTURE_HEIGHT - 18 - 10 - 22, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (click)->{
             System.out.println("CLICK");
         }));
 
-
-        this.overviewScreen.addVerticalLine(new VerticalLine(this.xPos + 175, this.yPos + 35, 100, Color.WHITE_HEX));
         //on off indicator
-        AbstractGui.fill(matrixStack, this.xPos + TEXTURE_WIDTH - 50 - 20, this.yPos + TEXTURE_HEIGHT - 18 - 15 - 18,
-                this.xPos + TEXTURE_WIDTH - 50 - 15, this.yPos + TEXTURE_HEIGHT - 10, this.server.isOn() ? Color.GREEN_HEX : Color.RED_HEX);
+        AbstractGui.fill(matrixStack, this.xPos + TEXTURE_WIDTH - 50 - 20, this.yPos + TEXTURE_HEIGHT - 18 - 15 - 18 - 22,
+                this.xPos + TEXTURE_WIDTH - 50 - 15, this.yPos + TEXTURE_HEIGHT - 10 - 22, this.server.isOn() ? Color.GREEN_HEX : Color.RED_HEX);
+
+        this.addButton(this.saveServerButton = new ImageButton(this.xPos + 191, this.yPos + 57, 20, 18, 0, 0, 19, Texture.SAVE_BUTTON, (click)->{
+            System.out.println("CLICK");
+        }));
+
+        this.addButton(this.loadServerButton = new ImageButton(this.xPos + 218, this.yPos + 57, 20, 18, 0, 0, 19, Texture.LOAD_BUTTON, (click)->{
+            System.out.println("CLICK");
+        }));
 
         this.overviewScreen.render(matrixStack, mouseX, mouseY, partialTicks);
     }
@@ -260,9 +293,10 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             this.offButton.isDisabled(true);
         }
 
-
         this.clearDatabaseButtonTooltip.isVisible = this.clearDatabaseButton.isMouseOver(mouseX, mouseY);
         this.resetServerButtonTooltip.isVisible = this.resetServerButton.isMouseOver(mouseX, mouseY);
+        this.saveServerButtonTooltip.isVisible = this.saveServerButton.isMouseOver(mouseX, mouseY);
+        this.loadServerTooltip.isVisible = this.loadServerButton.isMouseOver(mouseX, mouseY);
     }
     //endregion
 
@@ -294,7 +328,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             Server server = new Server(
                     Server.DBType.valueOf(this.typeDropDown.getSelectedText()),
                     this.ipField.getText().replace(' ', '_').toLowerCase(),
-                    this.container.tileEntity.getPos());
+                    this.container.getTileEntity().getPos());
 
             server.initDatabase("db_" + this.typeDropDown.getSelectedText().toLowerCase());
 

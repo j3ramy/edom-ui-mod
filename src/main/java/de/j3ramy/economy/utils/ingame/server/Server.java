@@ -15,7 +15,7 @@ public class Server {
     private final String ip;
     private final BlockPos pos;
     private Database db;
-    private String password;
+    private String password = "";
     private boolean isOn;
     private int accesses;
 

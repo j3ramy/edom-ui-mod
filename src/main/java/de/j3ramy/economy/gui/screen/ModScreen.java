@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModScreen extends Screen {
-    private final List<PopUpWindow> popUpWindows = new ArrayList<>();
+    private final List<AlertPopUp> alertPopUps = new ArrayList<>();
+    private final List<ConfirmPopUp> confirmPopUps = new ArrayList<>();
     private final List<Button> buttons = new ArrayList<>();
     private final List<DropDown> dropDowns = new ArrayList<>();
     private final List<Tooltip> tooltips = new ArrayList<>();
@@ -20,8 +21,11 @@ public class ModScreen extends Screen {
     private final List<CenteredHorizontalLine> centeredHorizontalLines = new ArrayList<>();
     private final List<VerticalLine> verticalLines = new ArrayList<>();
 
-    public void addPopUpWindow(PopUpWindow popUpWindow){
-        this.popUpWindows.add(popUpWindow);
+    public void addAlertPopUpWindow(AlertPopUp alertPopUp){
+        this.alertPopUps.add(alertPopUp);
+    }
+    public void addConfirmPopUp(ConfirmPopUp confirmPopUp){
+        this.confirmPopUps.add(confirmPopUp);
     }
 
     public void addButton(Button button){
@@ -105,9 +109,14 @@ public class ModScreen extends Screen {
             verticalLine.render(matrixStack, mouseX, mouseY, partialTicks);
         }
 
-        for(PopUpWindow popUpWindow : this.popUpWindows){
-            popUpWindow.updateMousePosition(mouseX, mouseY);
-            popUpWindow.render(matrixStack, mouseX, mouseY, partialTicks);
+        for(AlertPopUp alertPopUp : this.alertPopUps){
+            alertPopUp.updateMousePosition(mouseX, mouseY);
+            alertPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
+        }
+
+        for(ConfirmPopUp confirmPopUp : this.confirmPopUps){
+            confirmPopUp.updateMousePosition(mouseX, mouseY);
+            confirmPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
         }
     }
 
@@ -129,8 +138,12 @@ public class ModScreen extends Screen {
             button.onClick();
         }
 
-        for(PopUpWindow popUpWindow : this.popUpWindows){
-            popUpWindow.onClick();
+        for(AlertPopUp alertPopUp : this.alertPopUps){
+            alertPopUp.onClick();
+        }
+
+        for(ConfirmPopUp confirmPopUp : this.confirmPopUps){
+            confirmPopUp.onClick();
         }
     }
 
