@@ -167,11 +167,11 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.drawStats(matrixStack);
 
         //danger area bottom
-        this.addButton(this.clearDatabaseButton = new ImageButton(this.xPos + 15, this.yPos + TEXTURE_HEIGHT - 18 - 10 - 22, 20, 18, 0, 0, 19, Texture.CLEAR_DB_BUTTON_TEX, (click)->{
+        this.addButton(this.clearDatabaseButton = new ImageButton(this.xPos + 15, this.yPos + TEXTURE_HEIGHT - 18 - 10 - 22, 20, 18, 0, 0, 19, Texture.CLEAR_DB_BUTTON, (click)->{
             System.out.println("CLICK");
         }));
 
-        this.addButton(this.resetServerButton = new ImageButton(this.xPos + 40, this.yPos + TEXTURE_HEIGHT - 18 - 10 - 22, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON_TEX, (click)->{
+        this.addButton(this.resetServerButton = new ImageButton(this.xPos + 40, this.yPos + TEXTURE_HEIGHT - 18 - 10 - 22, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (click)->{
             System.out.println("CLICK");
         }));
 
@@ -179,11 +179,11 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         AbstractGui.fill(matrixStack, this.xPos + TEXTURE_WIDTH - 50 - 20, this.yPos + TEXTURE_HEIGHT - 18 - 15 - 18 - 22,
                 this.xPos + TEXTURE_WIDTH - 50 - 15, this.yPos + TEXTURE_HEIGHT - 10 - 22, this.server.isOn() ? Color.GREEN_HEX : Color.RED_HEX);
 
-        this.addButton(this.saveServerButton = new ImageButton(this.xPos + 191, this.yPos + 57, 20, 18, 0, 0, 19, Texture.SAVE_BUTTON_TEX, (click)->{
+        this.addButton(this.saveServerButton = new ImageButton(this.xPos + 191, this.yPos + 57, 20, 18, 0, 0, 19, Texture.SAVE_BUTTON, (click)->{
             System.out.println("CLICK");
         }));
 
-        this.addButton(this.loadServerButton = new ImageButton(this.xPos + 218, this.yPos + 57, 20, 18, 0, 0, 19, Texture.LOAD_BUTTON_TEX, (click)->{
+        this.addButton(this.loadServerButton = new ImageButton(this.xPos + 218, this.yPos + 57, 20, 18, 0, 0, 19, Texture.LOAD_BUTTON, (click)->{
             System.out.println("CLICK");
         }));
 
