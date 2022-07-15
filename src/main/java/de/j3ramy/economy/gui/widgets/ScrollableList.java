@@ -29,6 +29,7 @@ public class ScrollableList extends Button {
     private final int maxVisibleListElements;
     private final int maxWordLength;
     private final int elementHeight;
+    private int selectedIndex = -1;
 
 
     public ScrollableList(int x, int y, int width, int height, int elementHeight){
@@ -38,10 +39,11 @@ public class ScrollableList extends Button {
         this.maxVisibleListElements = this.height / elementHeight;
         this.maxWordLength = (width - 20) / 6; //6 = width of letter;
         this.elementHeight = elementHeight;
-
-
     }
 
+    public int getSelectedIndex() {
+        return this.selectedIndex;
+    }
 
     public ListOption getEntry(int index){
         return this.contents.get(index);
@@ -74,6 +76,11 @@ public class ScrollableList extends Button {
         }
     }
 
+    public void clear(){
+        this.contents.clear();
+        this.contentFields.clear();
+    }
+
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if(this.mousePosition == null)
@@ -103,9 +110,10 @@ public class ScrollableList extends Button {
     }
 
     public void onClick(){
-        for(ListOption contentField : this.contentFields){
-            if(contentField != null && contentField.isMouseOver(this.mousePosition.x, this.mousePosition.y)){
-                contentField.onClick();
+        for(int i = 0; i < this.contentFields.size(); i++){
+            if(this.contentFields.get(i) != null && this.contentFields.get(i).isMouseOver(this.mousePosition.x, this.mousePosition.y)){
+                this.selectedIndex = i;
+                this.contentFields.get(i).onClick();
             }
         }
     }

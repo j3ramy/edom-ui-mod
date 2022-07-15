@@ -143,6 +143,7 @@ public class ScrollableTable extends Button {
     }
 
     public void clear(){
+        this.contents.clear();
         this.contentFields.clear();
     }
 
