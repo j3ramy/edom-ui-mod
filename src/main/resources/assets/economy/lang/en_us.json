@@ -46,6 +46,7 @@
   "screen.economy.heading.server_overview": "Server Overview",
   "screen.economy.heading.server_overview.general": "General",
   "screen.economy.heading.server_overview.stats": "Database Stats",
+  "screen.economy.heading.computer": "Computer",
 
   "screen.economy.tooltip.create_table": "Create Table",
   "screen.economy.tooltip.drop_table": "Drop Table",

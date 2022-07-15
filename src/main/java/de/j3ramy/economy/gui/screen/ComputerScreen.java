@@ -5,6 +5,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.ComputerContainer;
 import de.j3ramy.economy.gui.widgets.*;
+import de.j3ramy.economy.utils.GuiUtils;
+import de.j3ramy.economy.utils.Texture;
 import de.j3ramy.economy.utils.ingame.server.Server;
 import de.j3ramy.economy.utils.Color;
 import net.minecraft.client.Minecraft;
@@ -25,7 +27,8 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     private final ResourceLocation GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/screen_gui.png");
     private final int TEXTURE_WIDTH = 256;
     private final int TEXTURE_HEIGHT = 148;
-    private final ModScreen screen;
+    private final ModScreen tableOverviewScreen;
+    private final ModScreen screen2;
 
     private int xPos;
     private int yPos;
@@ -44,20 +47,24 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     private Tooltip deleteEntryButtonTooltip;
     private Tooltip updateEntryButtonTooltip;
     private Tooltip viewNameTooltip;
-    private final ResourceLocation PLUS_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/elements/plus_button_gui.png");
-    private final ResourceLocation TRASHCAN_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/elements/trashcan_button_gui.png");
-    private final ResourceLocation PEN_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/elements/pen_button_gui.png");
 
     private Server server = new Server(new CompoundNBT());
     public void setServer(Server server) {
         this.server = server;
     }
 
+    private enum ComputerScreenState{
+        TABLE_OVERVIEW_SCREEN,
+        SCREEN2
+    }
+
+    private ComputerScreenState screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
 
     public ComputerScreen(ComputerContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
 
-        this.screen = new ModScreen();
+        this.tableOverviewScreen = new ModScreen();
+        this.screen2 = new ModScreen();
     }
 
 
@@ -78,52 +85,54 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         initButtons();
         initTooltips();
 
-        this.searchField = new TextFieldWidget(this.font, (this.guiLeft + 38) * 4/3, (this.yPos + 13) * 4/3, 80, 12, new StringTextComponent(""));
+        //Search field
+        this.searchField = new TextFieldWidget(this.font, (this.xPos + 85), (this.yPos + 16), 80, 12, new StringTextComponent(""));
         this.searchField.setText(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".placeholder.search").getString());
         this.searchField.setCanLoseFocus(true);
         this.searchField.setTextColor(Color.WHITE);
         this.children.add(this.searchField);
 
-        this.screen.addList(this.tableList = new ScrollableList(this.xPos + 5, this.yPos + 46, 75, 95, 20));
+        //List of tables
+        this.tableOverviewScreen.addList(this.tableList = new ScrollableList(this.xPos + 5, this.yPos + 36, 75, 105, 20));
 
+        //List of Entries in Table
         String[] columnNames = new String[1];
-        this.screen.addTable(table = new ScrollableTable(this.xPos + 85, this.yPos + 46, 165, 95, 20, columnNames, true));
+        this.tableOverviewScreen.addTable(table = new ScrollableTable(this.xPos + 85, this.yPos + 36, 165, 105, 20, columnNames, true));
     }
 
     private void initButtons(){
-        this.addButton(this.createTableButton = new ImageButton(this.xPos + 5, this.yPos + 23, 20, 18, 0, 0, 19, PLUS_BUTTON, (button) -> {
+        this.addButton(this.createTableButton = new ImageButton(this.xPos + 5, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) -> {
             this.createTable();
         }));
 
-        this.addButton(this.dropTableButton = new ImageButton(this.xPos + 30, this.yPos + 23, 20, 18, 0, 0, 19, TRASHCAN_BUTTON, (button) -> {
+        this.addButton(this.dropTableButton = new ImageButton(this.xPos + 30, this.yPos + 13, 20, 18, 0, 0, 19, Texture.TRASHCAN_BUTTON, (button) -> {
             this.dropTable();
         }));
 
-        this.addButton(this.createEntryButton = new ImageButton(this.xPos + 143, this.yPos + 13, 20, 18, 0, 0, 19, PLUS_BUTTON, (button) ->{
+        this.addButton(this.createEntryButton = new ImageButton(this.xPos + 180, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) ->{
             this.createEntry();
         }));
 
-        this.addButton(this.deleteEntryButton = new ImageButton(this.xPos + 168, this.yPos + 13, 20, 18, 0, 0, 19, TRASHCAN_BUTTON, (button) ->{
+        this.addButton(this.deleteEntryButton = new ImageButton(this.xPos + 205, this.yPos + 13, 20, 18, 0, 0, 19, Texture.TRASHCAN_BUTTON, (button) ->{
             this.deleteEntry();
         }));
 
-        this.addButton(this.updateEntryButton = new ImageButton(this.xPos + 193, this.yPos + 13, 20, 18, 0, 0, 19, PEN_BUTTON, (button) ->{
+        this.addButton(this.updateEntryButton = new ImageButton(this.xPos + 230, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PEN_BUTTON, (button) ->{
             this.updateEntry();
         }));
     }
 
     private void initTooltips(){
-        this.screen.addTooltip(createTableButtonTooltip = new Tooltip(this.getTranslationText("create_table")));
-        this.screen.addTooltip(dropTableButtonTooltip = new Tooltip(this.getTranslationText("drop_table")));
-        this.screen.addTooltip(createEntryButtonTooltip = new Tooltip(this.getTranslationText("create_entry")));
-        this.screen.addTooltip(deleteEntryButtonTooltip = new Tooltip(this.getTranslationText("delete_entry")));
-        this.screen.addTooltip(updateEntryButtonTooltip = new Tooltip(this.getTranslationText("update_entry")));
+        this.tableOverviewScreen.addTooltip(createTableButtonTooltip = new Tooltip(this.getTranslationText("create_table")));
+        this.tableOverviewScreen.addTooltip(dropTableButtonTooltip = new Tooltip(this.getTranslationText("drop_table")));
+        this.tableOverviewScreen.addTooltip(createEntryButtonTooltip = new Tooltip(this.getTranslationText("create_entry")));
+        this.tableOverviewScreen.addTooltip(deleteEntryButtonTooltip = new Tooltip(this.getTranslationText("delete_entry")));
+        this.tableOverviewScreen.addTooltip(updateEntryButtonTooltip = new Tooltip(this.getTranslationText("update_entry")));
     }
 
     private String getTranslationText(String translationKey){
         return new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip." + translationKey).getString();
     }
-
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -145,17 +154,20 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
 //
 //        this.update();
 
+        //draw title heading
         GlStateManager.pushMatrix();
-        GlStateManager.scalef(.75f, .75f, .75f);
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, "IPAddress" + "/" + "DBName", (this.xPos + 5) * 4/3, (this.yPos + 13) * 4/3, Color.WHITE);
-        this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
+        GlStateManager.scalef(.5f, .5f, .5f);
+        String titleText = new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.computer").getString();
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, titleText + " | " + "IPAdress" + "/" + "DBName" + " | " + GuiUtils.formatTime(this.container.getTileEntity().getWorld().getDayTime()), (this.xPos + 4) * 2, (this.yPos + 4) * 2, Color.WHITE);
         GlStateManager.popMatrix();
+
+        this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
         createTableButtonTooltip.isVisible = createTableButton.isHovered();
         dropTableButtonTooltip.isVisible = dropTableButton.isHovered();
         createEntryButtonTooltip.isVisible = createEntryButton.isHovered();
         deleteEntryButtonTooltip.isVisible = deleteEntryButton.isHovered();
         updateEntryButtonTooltip.isVisible = updateEntryButton.isHovered();
-        this.screen.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.tableOverviewScreen.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
 /*    private void update(){
