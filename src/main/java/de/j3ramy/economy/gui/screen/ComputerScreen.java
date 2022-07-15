@@ -101,23 +101,23 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     }
 
     private void initButtons(){
-        this.addButton(this.createTableButton = new ImageButton(this.xPos + 5, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) -> {
+        this.addButton(this.createTableButton = new ImageButton(this.xPos + 5, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON_TEX, (button) -> {
             this.createTable();
         }));
 
-        this.addButton(this.dropTableButton = new ImageButton(this.xPos + 30, this.yPos + 13, 20, 18, 0, 0, 19, Texture.TRASHCAN_BUTTON, (button) -> {
+        this.addButton(this.dropTableButton = new ImageButton(this.xPos + 30, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON_TEX, (button) -> {
             this.dropTable();
         }));
 
-        this.addButton(this.createEntryButton = new ImageButton(this.xPos + 180, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) ->{
+        this.addButton(this.createEntryButton = new ImageButton(this.xPos + 180, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON_TEX, (button) ->{
             this.createEntry();
         }));
 
-        this.addButton(this.deleteEntryButton = new ImageButton(this.xPos + 205, this.yPos + 13, 20, 18, 0, 0, 19, Texture.TRASHCAN_BUTTON, (button) ->{
+        this.addButton(this.deleteEntryButton = new ImageButton(this.xPos + 205, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON_TEX, (button) ->{
             this.deleteEntry();
         }));
 
-        this.addButton(this.updateEntryButton = new ImageButton(this.xPos + 230, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PEN_BUTTON, (button) ->{
+        this.addButton(this.updateEntryButton = new ImageButton(this.xPos + 230, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PEN_BUTTON_TEXT, (button) ->{
             this.updateEntry();
         }));
     }
