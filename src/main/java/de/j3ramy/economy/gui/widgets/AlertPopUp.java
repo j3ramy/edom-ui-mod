@@ -32,18 +32,12 @@ public class AlertPopUp extends Screen {
         ERROR
     }
 
-    public enum PopUpType{
-        CONFIRM,
-        ALERT
-    }
-
     private final Point mousePosition;
     private final int leftPos;
     private final int topPos;
     private final ContainerScreen<?> screen;
     private final Button closeButton;
 
-    private PopUpType type = PopUpType.ALERT;
     private ColorType colorType = ColorType.DEFAULT;
     private String title;
     private String content;
@@ -67,10 +61,6 @@ public class AlertPopUp extends Screen {
 
     public void setColorType(ColorType color) {
         this.colorType = color;
-    }
-
-    public void setType(PopUpType type) {
-        this.type = type;
     }
 
     public void setTitle(String title) {

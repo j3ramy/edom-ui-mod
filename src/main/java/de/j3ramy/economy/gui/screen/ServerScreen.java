@@ -149,7 +149,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
         confirmPopUp.setTitle("Do you want to...?");
         confirmPopUp.setContent("It really is dangeorus!!!!");
-        confirmPopUp.setColorType(ConfirmPopUp.ColorType.NOTICE);
+        confirmPopUp.setColorType(ConfirmPopUp.ColorType.DEFAULT);
         confirmPopUp.show();
     }
 
@@ -293,10 +293,27 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             this.offButton.isDisabled(true);
         }
 
-        this.clearDatabaseButtonTooltip.isVisible = this.clearDatabaseButton.isMouseOver(mouseX, mouseY);
-        this.resetServerButtonTooltip.isVisible = this.resetServerButton.isMouseOver(mouseX, mouseY);
-        this.saveServerButtonTooltip.isVisible = this.saveServerButton.isMouseOver(mouseX, mouseY);
-        this.loadServerTooltip.isVisible = this.loadServerButton.isMouseOver(mouseX, mouseY);
+        if(!this.confirmPopUp.isHidden()){
+            this.onButton.visible = false;
+            this.offButton.visible = false;
+            this.clearDatabaseButton.visible = false;
+            this.resetServerButton.visible = false;
+            this.saveServerButton.visible = false;
+            this.loadServerButton.visible = false;
+        }
+        else{
+            this.onButton.visible = true;
+            this.offButton.visible = true;
+            this.clearDatabaseButton.visible = true;
+            this.resetServerButton.visible = true;
+            this.saveServerButton.visible = true;
+            this.loadServerButton.visible = true;
+
+            this.clearDatabaseButtonTooltip.isVisible = this.clearDatabaseButton.isMouseOver(mouseX, mouseY);
+            this.resetServerButtonTooltip.isVisible = this.resetServerButton.isMouseOver(mouseX, mouseY);
+            this.saveServerButtonTooltip.isVisible = this.saveServerButton.isMouseOver(mouseX, mouseY);
+            this.loadServerTooltip.isVisible = this.loadServerButton.isMouseOver(mouseX, mouseY);
+        }
     }
     //endregion
 

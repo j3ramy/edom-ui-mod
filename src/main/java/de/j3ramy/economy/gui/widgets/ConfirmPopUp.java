@@ -32,11 +32,6 @@ public class ConfirmPopUp extends Screen {
         ERROR
     }
 
-    public enum PopUpType{
-        CONFIRM,
-        ALERT
-    }
-
     private final Point mousePosition;
     private final int leftPos;
     private final int topPos;
@@ -44,7 +39,6 @@ public class ConfirmPopUp extends Screen {
     private final Button noButton;
     private final Button yesButton;
 
-    private PopUpType type = PopUpType.ALERT;
     private ColorType colorType = ColorType.DEFAULT;
     private String title;
     private String content;
@@ -72,10 +66,6 @@ public class ConfirmPopUp extends Screen {
 
     public void setColorType(ColorType color) {
         this.colorType = color;
-    }
-
-    public void setType(PopUpType type) {
-        this.type = type;
     }
 
     public void setTitle(String title) {
