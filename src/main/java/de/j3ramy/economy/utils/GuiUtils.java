@@ -1,6 +1,8 @@
 package de.j3ramy.economy.utils;
 
+import de.j3ramy.economy.EconomyMod;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class GuiUtils {
     public static final int LETTER_SIZE = 5;
@@ -58,5 +60,9 @@ public class GuiUtils {
         int minutes = (int)((float) time / 16.666666F % 60.0F);
 
         return String.format("%02d:%02d", hours < 1 ? 12 : hours, minutes);
+    }
+
+    public static String getTranslationText(String translationKey){
+        return new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip." + translationKey).getString();
     }
 }

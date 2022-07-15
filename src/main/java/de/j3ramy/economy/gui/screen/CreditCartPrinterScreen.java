@@ -27,9 +27,6 @@ import java.util.List;
 public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterContainer> {
 
     public static final int MIN_OWNER_LENGTH = 6;
-
-    private final ResourceLocation GUI = new ResourceLocation(de.j3ramy.economy.EconomyMod.MOD_ID, "textures/gui/credit_cart_printer_gui.png");
-
     private final int TEXTURE_WIDTH = 176;
     private final int TEXTURE_HEIGHT = 168;
     private int xOffset;
@@ -146,7 +143,7 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
         RenderSystem.color4f(1f, 1f, 1f, 1f);
 
         assert this.minecraft != null;
-        this.minecraft.getTextureManager().bindTexture(GUI);
+        this.minecraft.getTextureManager().bindTexture(Texture.CC_PRINTER_GUI);
 
         this.blit(matrixStack, this.xOffset - (TEXTURE_WIDTH / 2), this.yOffset, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }

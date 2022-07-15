@@ -50,6 +50,10 @@ public class Database {
         return i;
     }
 
+    public List<Table> getTables(){
+        return this.tableList;
+    }
+
     @Nullable
     public Table getTable(String name){
         for(Table table : this.tableList){
@@ -63,9 +67,18 @@ public class Database {
     public void dropTable(int index){
         this.tableList.remove(index);
     }
+    public void dropTable(String name){
+        this.tableList.remove(name);
+    }
 
-    public void createTable(String name, List<String> attributes){
+    public boolean createTable(String name, List<String> attributes){
+        for(Table table : this.tableList){
+            if(table.getName().equals(name))
+                return false;
+        }
+
         this.tableList.add(new Table(name, attributes));
+        return true;
     }
 
     public int getTableCount(){

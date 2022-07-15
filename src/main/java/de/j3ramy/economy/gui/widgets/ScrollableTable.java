@@ -32,15 +32,20 @@ public class ScrollableTable extends Button {
     private final boolean isFixedAttributeRow;
     private int selectedIndex = -1;
 
-    public ScrollableTable(int x, int y, int width, int height, int elementHeight, String[] columnNames, boolean fixedAttributeRow){
+    public ScrollableTable(int x, int y, int width, int height, int elementHeight, boolean fixedAttributeRow){
         super(x, y, width, height, new StringTextComponent(""), (onPress) ->{});
 
         this.mousePosition = new Point();
         this.maxVisibleListElements = this.height / elementHeight;
         this.elementHeight = elementHeight;
         this.isFixedAttributeRow = fixedAttributeRow;
+    }
 
-        this.addRow(columnNames, false, Color.GREEN_HEX, (click)->{});
+    public void setAttributeColumns(ArrayList<String> columnNames){
+        if(!this.contents.isEmpty())
+            this.contents.set(0, new TableRow(this.x, this.y, this.width, this.elementHeight, columnNames, false, Color.GREEN_HEX, (click)->{}));
+        else
+            this.addRow(columnNames, false, Color.GREEN_HEX, (click)->{});
     }
 
     @Nullable
@@ -61,7 +66,7 @@ public class ScrollableTable extends Button {
         return null;
     }
 
-    public void addRow(String[] rowContent, boolean isClickable, int backgroundColor, IPressable onClick){
+    public void addRow(ArrayList<String> rowContent, boolean isClickable, int backgroundColor, IPressable onClick){
         this.contents.add(new TableRow(this.x, this.y, this.width, this.elementHeight, rowContent, isClickable, backgroundColor, onClick));
 
         this.initList(0);
@@ -178,7 +183,7 @@ public class ScrollableTable extends Button {
         private final Point mousePosition;
         private final boolean isClickable;
         private final int initialYPos;
-        private final String[] content;
+        private final ArrayList<String> content;
         private final int columnWidth;
         private final int maxWordLength;
 
@@ -187,21 +192,21 @@ public class ScrollableTable extends Button {
             this.y = this.initialYPos + this.height * index;
         }
 
-        public String[] getContent() {
+        public ArrayList<String> getContent() {
             return this.content;
         }
 
         public String getHoveredColumnText(){
-            return this.content[this.getHoveredColumn()];
+            return this.content.get(this.getHoveredColumn());
         }
 
-        public TableRow(int x, int y, int width, int height, String[] content, boolean isClickable, int backgroundColor, IPressable onclick){
+        public TableRow(int x, int y, int width, int height, ArrayList<String> content, boolean isClickable, int backgroundColor, IPressable onclick){
             super(x, y, width, height, new StringTextComponent("") , onclick);
 
             this.initialYPos = y;
             this.mousePosition = new Point();
             this.isClickable = isClickable;
-            this.columnWidth = this.width / content.length;
+            this.columnWidth = this.width / content.size();
             this.content = content;
             this.maxWordLength = (this.columnWidth * 2 - 12) / GuiUtils.LETTER_SIZE; //GuiUtils.LETTER_SIZE = width of letter;
             this.backgroundColor = backgroundColor;
@@ -218,7 +223,7 @@ public class ScrollableTable extends Button {
 
 
         private int getHoveredColumn(){
-            for(int i = this.content.length - 1; i >= 0; i--){
+            for(int i = this.content.size() - 1; i >= 0; i--){
                 Rectangle column = new Rectangle(this.x + i * this.columnWidth, this.y, this.x + i * this.columnWidth + this.columnWidth, this.y + this.height);
                 if(column.contains(this.mousePosition))
                     return i;
@@ -228,11 +233,11 @@ public class ScrollableTable extends Button {
         }
 
         private void drawRow(MatrixStack matrixStack){
-            for(int i = 0; i < this.content.length; i++){
+            for(int i = 0; i < this.content.size(); i++){
                 //content
                 GlStateManager.pushMatrix();
                 GlStateManager.scalef(.5f, .5f, .5f);
-                Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.getFormattedLabel(this.maxWordLength, this.content[i]).getText(), (this.x + 3 + this.columnWidth * i) * 2,
+                Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.getFormattedLabel(this.maxWordLength, this.content.get(i)).getText(), (this.x + 3 + this.columnWidth * i) * 2,
                         (this.y + this.height / 2f - TEXT_Y_OFFSET) * 2,  this.isHovered() && this.isClickable ? Color.DARK_GRAY_HEX : TEXT_COLOR);
                 GlStateManager.popMatrix();
 

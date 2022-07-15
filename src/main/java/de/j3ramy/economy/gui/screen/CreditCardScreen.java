@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.CreditCardContainer;
 import de.j3ramy.economy.utils.Color;
+import de.j3ramy.economy.utils.Texture;
 import de.j3ramy.economy.utils.ingame.CreditCardData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -13,7 +14,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 public class CreditCardScreen extends ContainerScreen<CreditCardContainer> {
-    private final ResourceLocation GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/credit_card_gui.png");
     private final int TEXTURE_WIDTH = 160;
     private final int TEXTURE_HEIGHT = 100;
     //private TextFieldWidget ownerField;
@@ -79,7 +79,7 @@ public class CreditCardScreen extends ContainerScreen<CreditCardContainer> {
         if(this.creditCardData.isSet()){
             Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.creditCardData.getOwner(), this.guiLeft + 20, this.yOffset + 66, Color.WHITE);
             Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.creditCardData.getAccountNumber(), this.guiLeft + 20, this.yOffset + 80, Color.WHITE);
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.creditCardData.getValidity(), this.guiLeft + 127, this.yOffset + 80, Color.WHITE);
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.creditCardData.getValidity(), this.guiLeft + 124, this.yOffset + 80, Color.WHITE);
 
             //this.saveButton.visible = false;
         }
@@ -97,7 +97,7 @@ public class CreditCardScreen extends ContainerScreen<CreditCardContainer> {
         RenderSystem.color4f(1f, 1f, 1f, 1f);
 
         assert this.minecraft != null;
-        this.minecraft.getTextureManager().bindTexture(GUI);
+        this.minecraft.getTextureManager().bindTexture(Texture.CC_GUI);
 
         this.blit(matrixStack, this.xOffset - (TEXTURE_WIDTH / 2), this.yOffset, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }

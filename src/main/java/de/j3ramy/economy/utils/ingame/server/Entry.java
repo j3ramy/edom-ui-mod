@@ -41,8 +41,4 @@ public class Entry {
     public void setColumnsContent(List<String> columnsContent) {
         this.columnsContent = columnsContent;
     }
-
-    public int getEntrySize(){
-        return this.columnsContent.size();
-    }
 }

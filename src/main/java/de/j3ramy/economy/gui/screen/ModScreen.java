@@ -160,4 +160,17 @@ public class ModScreen extends Screen {
             scrollableTable.onScroll(scrollDelta);
         }
     }
+
+    public void clearScreen(){
+        alertPopUps.clear();
+        confirmPopUps.clear();
+        buttons.clear();
+        dropDowns.clear();
+        tooltips.clear();
+        tables.clear();
+        scrollableList.clear();
+        horizontalLines.clear();
+        centeredHorizontalLines.clear();
+        verticalLines.clear();
+    }
 }

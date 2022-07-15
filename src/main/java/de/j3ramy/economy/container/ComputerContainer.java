@@ -20,7 +20,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class ComputerContainer extends Container {
 
-    public TileEntity tileEntity;
+    private final TileEntity tileEntity;
 
     public TileEntity getTileEntity() {
         return this.tileEntity;

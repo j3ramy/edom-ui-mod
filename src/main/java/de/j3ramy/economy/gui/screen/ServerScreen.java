@@ -55,6 +55,9 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     public void init(Minecraft minecraft, int width, int height) {
         super.init(minecraft, width, height);
 
+        this.setUpScreen.clearScreen();
+        this.overviewScreen.clearScreen();
+
         this.xPos = (this.width / 2) - (TEXTURE_WIDTH / 2);
         this.yPos = this.height / 2 - 75;
 
@@ -360,7 +363,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     }
 
     private void updateSetUpScreen(){
-        this.saveButton.active = this.ipField.getText().isEmpty() || this.typeDropDown.getSelectedText().equals(this.typeDropDown.getPlaceholder());
+        this.saveButton.active = !this.ipField.getText().isEmpty() && !this.typeDropDown.getSelectedText().equals(this.typeDropDown.getPlaceholder());
     }
     //endregion
 
