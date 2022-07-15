@@ -18,15 +18,11 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-import java.util.Objects;
-
 public class ServerScreen extends ContainerScreen<ServerContainer> {
-    private final ResourceLocation GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/screen_inv_gui.png");
     private final ModScreen setUpScreen;
     private final ModScreen overviewScreen;
     private final int TEXTURE_WIDTH = 256;
@@ -102,7 +98,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
         assert this.minecraft != null;
 
-        this.minecraft.getTextureManager().bindTexture(GUI);
+        this.minecraft.getTextureManager().bindTexture(Texture.SCREEN_GUI_INV);
         this.blit(matrixStack, this.xPos, this.yPos, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
@@ -152,7 +148,6 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         confirmPopUp.setColorType(ConfirmPopUp.ColorType.DEFAULT);
         confirmPopUp.show();
     }
-
 
     private void renderOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
         this.buttons.clear();
@@ -279,7 +274,6 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                 (int) ((this.xPos + 70) * GuiUtils.getScalingPositionMultiplier(.5f)),
                 (int) ((this.yPos + 109) * GuiUtils.getScalingPositionMultiplier(.5f)),
                 Color.WHITE);
-
         GlStateManager.popMatrix();
     }
 
@@ -316,6 +310,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         }
     }
     //endregion
+
 
     //region SET UP SCREEN
     private TextFieldWidget ipField = new TextFieldWidget(this.font, 0 ,0 ,0 ,0 , new StringTextComponent(""));
