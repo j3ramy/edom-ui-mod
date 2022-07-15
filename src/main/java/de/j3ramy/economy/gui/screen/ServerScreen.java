@@ -175,7 +175,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             System.out.println("CLICK");
         }));
 
-        //on off indicator
+        //right area
         AbstractGui.fill(matrixStack, this.xPos + TEXTURE_WIDTH - 50 - 20, this.yPos + TEXTURE_HEIGHT - 18 - 15 - 18 - 22,
                 this.xPos + TEXTURE_WIDTH - 50 - 15, this.yPos + TEXTURE_HEIGHT - 10 - 22, this.server.isOn() ? Color.GREEN_HEX : Color.RED_HEX);
 
@@ -285,29 +285,29 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
     private void updateOverviewScreen(int mouseX, int mouseY){
         if(this.server.isOn()){
-            this.onButton.isDisabled(true);
-            this.offButton.isDisabled(false);
+            this.onButton.active = true;
+            this.offButton.active = false;
         }
         else{
-            this.onButton.isDisabled(false);
-            this.offButton.isDisabled(true);
+            this.onButton.active = false;
+            this.offButton.active = true;
         }
 
         if(!this.confirmPopUp.isHidden()){
-            this.onButton.visible = false;
-            this.offButton.visible = false;
-            this.clearDatabaseButton.visible = false;
-            this.resetServerButton.visible = false;
-            this.saveServerButton.visible = false;
-            this.loadServerButton.visible = false;
+            this.onButton.active = false;
+            this.offButton.active = false;
+            this.clearDatabaseButton.active = false;
+            this.resetServerButton.active = false;
+            this.saveServerButton.active = false;
+            this.loadServerButton.active = false;
         }
         else{
-            this.onButton.visible = true;
-            this.offButton.visible = true;
-            this.clearDatabaseButton.visible = true;
-            this.resetServerButton.visible = true;
-            this.saveServerButton.visible = true;
-            this.loadServerButton.visible = true;
+            this.onButton.active = true;
+            this.offButton.active = true;
+            this.clearDatabaseButton.active = true;
+            this.resetServerButton.active = true;
+            this.saveServerButton.active = true;
+            this.loadServerButton.active = true;
 
             this.clearDatabaseButtonTooltip.isVisible = this.clearDatabaseButton.isMouseOver(mouseX, mouseY);
             this.resetServerButtonTooltip.isVisible = this.resetServerButton.isMouseOver(mouseX, mouseY);
@@ -365,7 +365,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     }
 
     private void updateSetUpScreen(){
-        this.saveButton.isDisabled(this.ipField.getText().isEmpty() || this.typeDropDown.getSelectedText().equals(this.typeDropDown.getPlaceholder()));
+        this.saveButton.active = this.ipField.getText().isEmpty() || this.typeDropDown.getSelectedText().equals(this.typeDropDown.getPlaceholder());
     }
     //endregion
 

@@ -23,11 +23,6 @@ public class Button extends net.minecraft.client.gui.widget.button.Button {
     public static final int BORDER_THICKNESS = 1;
     public static final int TEXT_Y_OFFSET = 4;
     private final Point mousePosition;
-    private boolean isDisabled = false;
-
-    public void isDisabled(boolean isDisabled) {
-        this.isDisabled = isDisabled;
-    }
 
     public Button(int x, int y, int width, int height, ITextComponent title, Button.IPressable onPress){
         super(x, y, width, height, title, onPress);
@@ -50,7 +45,7 @@ public class Button extends net.minecraft.client.gui.widget.button.Button {
             return;
 
         //render background and border
-        if(isMouseOver(mousePosition.x, mousePosition.y) && !this.isDisabled)
+        if(isMouseOver(mousePosition.x, mousePosition.y) && this.active)
             this.onHover(matrixStack);
         else{
             AbstractGui.fill(matrixStack, this.x - BORDER_THICKNESS, this.y - BORDER_THICKNESS,
@@ -61,7 +56,7 @@ public class Button extends net.minecraft.client.gui.widget.button.Button {
         }
 
         //render text
-        if(!this.isDisabled){
+        if(this.active){
             Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.getMessage().getString(),
                     this.x + this.width / 2f - GuiUtils.getCenteredTextOffset(this.getMessage().getString().length()),
                     this.y + this.height / 2f - TEXT_Y_OFFSET,
@@ -76,7 +71,7 @@ public class Button extends net.minecraft.client.gui.widget.button.Button {
     }
 
     public void onClick(){
-        if(this.isMouseOver(this.mousePosition.x, this.mousePosition.y) && !this.isDisabled)
+        if(this.isMouseOver(this.mousePosition.x, this.mousePosition.y) && this.active)
             this.onPress();
     }
 
