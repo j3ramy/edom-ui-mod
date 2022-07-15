@@ -115,9 +115,13 @@ public class ScrollableTable extends Button {
     }
 
     private void drawContent(MatrixStack matrixStack){
-        for (TableRow contentField : this.contentFields) {
-            if (contentField != null)
-                contentField.draw(matrixStack);
+        for (int i = 0; i < this.contentFields.size(); i++) {
+            if (this.contentFields.get(i) != null){
+                this.contentFields.get(i) .draw(matrixStack);
+
+                if(i != 0)
+                    this.contentFields.get(i).setBackgroundColor(i == this.selectedIndex ? Color.LIGHT_GRAY_HEX : Color.DARK_GRAY_HEX);
+            }
         }
     }
 
@@ -180,7 +184,7 @@ public class ScrollableTable extends Button {
     public static class TableRow extends Button {
         private static final int DIVIDE_BORDER_THICKNESS = 1;
 
-        private final int backgroundColor;
+        private int backgroundColor;
         private final Point mousePosition;
         private final boolean isClickable;
         private final int initialYPos;
@@ -188,6 +192,9 @@ public class ScrollableTable extends Button {
         private final int columnWidth;
         private final int maxWordLength;
 
+        public void setBackgroundColor(int backgroundColor) {
+            this.backgroundColor = backgroundColor;
+        }
 
         public void setIndex(int index){
             this.y = this.initialYPos + this.height * index;

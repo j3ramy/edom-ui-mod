@@ -49,8 +49,8 @@ public class ScrollableList extends Button {
         return this.contents.get(index);
     }
 
-    public void addToList(String content, boolean isClickable, Button.IPressable onClick){
-        this.contents.add(new ListOption(this.x, this.y, this.width, this.elementHeight, GuiUtils.getFormattedLabel(this.maxWordLength, content), isClickable, onClick));
+    public void addToList(String content, boolean isClickable, int backgroundColor, Button.IPressable onClick){
+        this.contents.add(new ListOption(this.x, this.y, this.width, this.elementHeight, GuiUtils.getFormattedLabel(this.maxWordLength, content), isClickable, backgroundColor, onClick));
 
         this.initList(0);
     }
@@ -91,9 +91,11 @@ public class ScrollableList extends Button {
     }
 
     private void drawContent(MatrixStack matrixStack){
-        for (ListOption contentField : this.contentFields) {
-            if (contentField != null)
-                contentField.draw(matrixStack);
+        for (int i = 0; i < this.contentFields.size(); i++) {
+            if (this.contentFields.get(i) != null){
+                this.contentFields.get(i) .draw(matrixStack);
+                this.contentFields.get(i).setBackgroundColor(i == this.selectedIndex ? Color.LIGHT_GRAY_HEX : Color.DARK_GRAY_HEX);
+            }
         }
     }
 
@@ -152,6 +154,7 @@ public class ScrollableList extends Button {
         private static final int DIVIDE_BORDER_THICKNESS = 1;
         private static final int DIVIDE_BORDER_COLOR = Color.LIGHT_GRAY_HEX;
 
+        private int backgroundColor;
         private final Point mousePosition;
         private final boolean isClickable;
         private final int initialYPos;
@@ -161,13 +164,18 @@ public class ScrollableList extends Button {
             this.y = this.initialYPos + this.height * index;
         }
 
+        public void setBackgroundColor(int backgroundColor) {
+            this.backgroundColor = backgroundColor;
+        }
 
-        public ListOption(int x, int y, int width, int height, ITextComponent content, boolean isClickable, Button.IPressable onclick){
+
+        public ListOption(int x, int y, int width, int height, ITextComponent content, boolean isClickable, int backgroundColor,  Button.IPressable onclick){
             super(x, y, width, height, content , onclick);
 
             this.initialYPos = y;
             this.mousePosition = new Point();
             this.isClickable = isClickable;
+            this.backgroundColor = backgroundColor;
         }
 
         public void draw(MatrixStack matrixStack){
@@ -176,7 +184,7 @@ public class ScrollableList extends Button {
                     this.y,
                     this.x + this.width,
                     this.y + this.height,
-                    this.isClickable && this.isMouseOver(this.mousePosition.x, this.mousePosition.y) ? Color.LIGHT_GRAY_HEX : Color.DARK_GRAY_HEX);
+                    this.isClickable && this.isMouseOver(this.mousePosition.x, this.mousePosition.y) ? Color.LIGHT_GRAY_HEX : this.backgroundColor);
 
 
             Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.getMessage().getString(), this.x + 6,

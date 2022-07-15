@@ -22,6 +22,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import java.util.ArrayList;
+
 public class ServerScreen extends ContainerScreen<ServerContainer> {
     private final ModScreen setUpScreen;
     private final ModScreen overviewScreen;
@@ -150,6 +152,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         confirmPopUp.setContent("It really is dangeorus!!!!");
         confirmPopUp.setColorType(ConfirmPopUp.ColorType.DEFAULT);
         confirmPopUp.show();
+
     }
 
     private void renderOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
