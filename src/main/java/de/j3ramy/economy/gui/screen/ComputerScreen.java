@@ -81,6 +81,8 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         super.init(minecraft, width, height);
 
         this.tableOverviewScreen.clearScreen();
+        this.createTableScreen.clearScreen();
+        this.createEntryScreen.clearScreen();
 
         this.xPos = (this.width / 2) - (TEXTURE_WIDTH / 2);
         this.yPos = this.height / 2 - 75;
@@ -149,6 +151,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         //draw screens
         switch(this.screenState){
             case TABLE_OVERVIEW_SCREEN:
+                this.showTableOverviewScreen();
                 this.renderTableOverviewScreen(matrixStack, mouseX, mouseY, partialTicks);
                 this.updateTableOverviewScreen();
                 break;
@@ -159,6 +162,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
             case CREATE_ENTRY_SCREEN:
                 this.renderCreateEntryScreen(matrixStack, mouseX, mouseY, partialTicks);
                 this.updateCreateEntryScreen();
+                break;
             case UPDATE_ENTRY_SCREEN:
                 this.renderUpdateEntryScreen(matrixStack, mouseX, mouseY, partialTicks);
                 this.updateUpdateEntryScreen();
@@ -275,7 +279,8 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     private void initCreateTableScreen() {
         this.createTableScreen.addButton(cancelButton = new Button(xPos + 200, yPos + 80, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.cancle"), (onClick)->{
             this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
-            showTableOverviewScreen();
+            this.cancelButton.active = false;
+            this.cancelButton.visible = false;
             System.out.println("Clicked");
         }));
     }

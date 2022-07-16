@@ -75,10 +75,6 @@ public class ModScreen extends Screen {
             button.render(matrixStack, mouseX, mouseY, partialTicks);
         }
 
-        for(Tooltip tooltip : this.tooltips){
-            tooltip.render(matrixStack, mouseX, mouseY);
-        }
-
         for(DropDown dropDown : this.dropDowns){
             dropDown.updateMousePosition(mouseX, mouseY);
             dropDown.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -117,6 +113,10 @@ public class ModScreen extends Screen {
         for(ConfirmPopUp confirmPopUp : this.confirmPopUps){
             confirmPopUp.updateMousePosition(mouseX, mouseY);
             confirmPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
+        }
+
+        for(Tooltip tooltip : this.tooltips){
+            tooltip.render(matrixStack, mouseX, mouseY);
         }
     }
 
