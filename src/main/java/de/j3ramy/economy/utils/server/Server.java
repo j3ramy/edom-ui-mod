@@ -1,4 +1,4 @@
-package de.j3ramy.economy.utils.ingame.server;
+package de.j3ramy.economy.utils.server;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -14,7 +14,7 @@ public class Server {
     private final DBType serverType;
     private final String ip;
     private final BlockPos pos;
-    private Database db;
+    private final Database db;
     private String password = "";
     private boolean isOn;
     private int accesses;
@@ -28,6 +28,8 @@ public class Server {
         this.ip = ip;
         this.pos = pos;
         this.isOn = false;
+
+        this.db = new Database("db_" + this.serverType.name().toLowerCase());
     }
 
     public Server(CompoundNBT nbt){
@@ -52,14 +54,6 @@ public class Server {
         nbt.putInt("accesses", this.accesses);
 
         return nbt;
-    }
-
-    public void initDatabase(String dbName){
-        this.db = new Database(dbName);
-    }
-
-    public void deleteDatabase(){
-        this.db = null;
     }
 
     public Database getDatabase() {
@@ -92,6 +86,10 @@ public class Server {
 
     public BlockPos getPos() {
         return this.pos;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPassword() {

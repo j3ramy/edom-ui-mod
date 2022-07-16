@@ -1,9 +1,4 @@
-/*
-* UPDATE LATER:
-* - Two Font Sizes (as in GuiUtils) for button text
-* - When unfolded then buttons underneath get ignored
-* - Scroll indicator
-* */
+
 package de.j3ramy.economy.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;

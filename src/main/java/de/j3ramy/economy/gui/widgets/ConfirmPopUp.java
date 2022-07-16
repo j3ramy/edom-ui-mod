@@ -1,7 +1,3 @@
-/*
-* UPDATE:
-* - Custom screen parent class
-* */
 
 package de.j3ramy.economy.gui.widgets;
 
@@ -39,45 +35,34 @@ public class ConfirmPopUp extends Screen {
     private final Button noButton;
     private final Button yesButton;
 
-    private ColorType colorType = ColorType.DEFAULT;
-    private String title;
-    private String content;
-    private boolean isClosed;
+    private final ColorType colorType;
+    private final String title;
+    private final String content;
+    private boolean isHidden;
 
-    public ConfirmPopUp(ContainerScreen<?> screen, net.minecraft.client.gui.widget.button.Button.IPressable confirmAction){
+    public ConfirmPopUp(ContainerScreen<?> screen, String title, String content, ConfirmPopUp.ColorType type, net.minecraft.client.gui.widget.button.Button.IPressable confirmAction){
         super(new StringTextComponent(""));
 
         this.screen = screen;
         this.mousePosition = new Point();
-        this.isClosed = true;
+
+        this.title = title;
+        this.content = content;
+        this.colorType = type;
 
         this.leftPos = screen.width / 2 - WIDTH / 2;
         this.topPos = screen.height / 2 - HEIGHT / 2;
 
 
-        this.yesButton = new Button(this.leftPos + 20, topPos + 65, BUTTON_WIDTH, BUTTON_HEIGHT,
+        this.yesButton = new Button(this.leftPos + 20, topPos + 55, BUTTON_WIDTH, BUTTON_HEIGHT,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.yes"), confirmAction);
 
-        this.noButton = new Button(this.leftPos + WIDTH - BUTTON_WIDTH - 20, topPos + 65, BUTTON_WIDTH, BUTTON_HEIGHT,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.no"), (click) -> {
-            this.hide();
-        });
-    }
-
-    public void setColorType(ColorType color) {
-        this.colorType = color;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+        this.noButton = new Button(this.leftPos + WIDTH - BUTTON_WIDTH - 20, topPos + 55, BUTTON_WIDTH, BUTTON_HEIGHT,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.no"), (click) -> this.hide());
     }
 
     public boolean isHidden() {
-        return this.isClosed;
+        return this.isHidden;
     }
 
     public void updateMousePosition(int x, int y){
@@ -91,7 +76,7 @@ public class ConfirmPopUp extends Screen {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
-        if(this.isClosed)
+        if(this.isHidden)
             return;
 
         screen.renderBackground(matrixStack);
@@ -121,7 +106,7 @@ public class ConfirmPopUp extends Screen {
         GlStateManager.scalef(.5f, .5f, .5f);
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.content,
                 (screen.width / 2f) * 2 - GuiUtils.getCenteredTextOffset(this.content.length()),
-                (topPos + 37) * 2,
+                (topPos + 30) * 2,
                 Color.WHITE);
         GlStateManager.popMatrix();
 
@@ -138,11 +123,7 @@ public class ConfirmPopUp extends Screen {
     }
 
     public void hide(){
-        this.isClosed = true;
-    }
-
-    public void show(){
-        this.isClosed = false;
+        this.isHidden = true;
     }
 
 

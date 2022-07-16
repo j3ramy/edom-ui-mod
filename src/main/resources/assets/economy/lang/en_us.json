@@ -54,15 +54,20 @@
   "screen.economy.tooltip.create_entry": "Create Entry",
   "screen.economy.tooltip.delete_entry": "Delete Entry",
   "screen.economy.tooltip.update_entry": "Update Entry",
-  "screen.economy.tooltip.clear_db_button": "Clear Database",
   "screen.economy.tooltip.reset_server": "Reset Server",
   "screen.economy.tooltip.load_from_drive": "Load From Flash Drive",
   "screen.economy.tooltip.save_to_drive": "Save To Flash Drive",
+  "screen.economy.tooltip.save_password": "Save Password",
 
   "screen.economy.popup.title.drop_table": "Drop Table",
-  "screen.economy.popup.content.drop_table": "Do you really want to drop this table?",
   "screen.economy.popup.title.delete_entry": "Delete Entry",
+  "screen.economy.popup.title.save_password": "Change Password",
+  "screen.economy.popup.title.server_reset": "Server Reset",
+
+  "screen.economy.popup.content.drop_table": "Do you really want to drop this table?",
   "screen.economy.popup.content.delete_entry": "Do you really want to delete this entry?",
+  "screen.economy.popup.content.save_password": "The password has been changed successfully",
+  "screen.economy.popup.content.server_reset": "Do you really want to reset the server?",
 
   "itemGroup.economy": "Edom Economy"
 

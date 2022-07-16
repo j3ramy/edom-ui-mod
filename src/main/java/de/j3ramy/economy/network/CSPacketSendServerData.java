@@ -1,9 +1,8 @@
 package de.j3ramy.economy.network;
 
 import de.j3ramy.economy.tileentity.ServerTile;
-import de.j3ramy.economy.utils.ingame.server.Server;
+import de.j3ramy.economy.utils.server.Server;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
 

@@ -8,8 +8,6 @@ public class Texture {
     public static final ResourceLocation SCREEN_GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/screen_gui.png");
     public static final ResourceLocation CC_PRINTER_GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/credit_cart_printer_gui.png");
     public static final ResourceLocation CC_GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/credit_card_gui.png");
-
-    public static final ResourceLocation CLEAR_DB_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/clear_db_gui.png");
     public static final ResourceLocation DELETE_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/trashcan_button_gui.png");
     public static final ResourceLocation PLUS_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/plus_button_gui.png");
     public static final ResourceLocation PEN_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/pen_button_gui.png");

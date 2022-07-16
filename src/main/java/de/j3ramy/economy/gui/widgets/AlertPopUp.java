@@ -1,8 +1,3 @@
-/*
-* UPDATE:
-* - Custom screen parent class
-* */
-
 package de.j3ramy.economy.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -38,41 +33,30 @@ public class AlertPopUp extends Screen {
     private final ContainerScreen<?> screen;
     private final Button closeButton;
 
-    private ColorType colorType = ColorType.DEFAULT;
-    private String title;
-    private String content;
-    private boolean isClosed;
+    private final ColorType colorType;
+    private final String title;
+    private final String content;
+    private boolean isHidden;
 
-    public AlertPopUp(ContainerScreen<?> screen){
+    public AlertPopUp(ContainerScreen<?> screen, String title, String content, AlertPopUp.ColorType type){
         super(new StringTextComponent(""));
 
         this.screen = screen;
         this.mousePosition = new Point();
-        this.isClosed = true;
+
+        this.title = title;
+        this.content = content;
+        this.colorType = type;
 
         this.leftPos = screen.width / 2 - WIDTH / 2;
         this.topPos = screen.height / 2 - HEIGHT / 2;
 
-        this.closeButton = new Button(screen.width / 2 - BUTTON_WIDTH / 2, topPos + 65, BUTTON_WIDTH, BUTTON_HEIGHT,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.close"), (click) -> {
-            this.hide();
-        });
-    }
-
-    public void setColorType(ColorType color) {
-        this.colorType = color;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+        this.closeButton = new Button(screen.width / 2 - BUTTON_WIDTH / 2, topPos + 55, BUTTON_WIDTH, BUTTON_HEIGHT,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.close"), (click) -> this.hide());
     }
 
     public boolean isHidden() {
-        return this.isClosed;
+        return this.isHidden;
     }
 
     public void updateMousePosition(int x, int y){
@@ -85,7 +69,7 @@ public class AlertPopUp extends Screen {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
-        if(this.isClosed)
+        if(this.isHidden)
             return;
 
         screen.renderBackground(matrixStack);
@@ -102,7 +86,7 @@ public class AlertPopUp extends Screen {
 
         //background
         int CONTENT_MARGIN = 5;
-        int BACKGROUND_COLOR = Color.DARK_GRAY_HEX;
+        int BACKGROUND_COLOR = Color.LIGHT_GRAY_HEX;
         AbstractGui.fill(matrixStack, leftPos + CONTENT_MARGIN, topPos + CONTENT_MARGIN + 10,
                 leftPos + WIDTH - CONTENT_MARGIN, topPos + CONTENT_MARGIN + HEIGHT - 10,
                 BACKGROUND_COLOR);
@@ -115,7 +99,7 @@ public class AlertPopUp extends Screen {
         GlStateManager.scalef(.5f, .5f, .5f);
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.content,
                 (screen.width / 2f) * 2 - GuiUtils.getCenteredTextOffset(this.content.length()),
-                (topPos + 37) * 2,
+                (topPos + 30) * 2,
                 Color.WHITE);
         GlStateManager.popMatrix();
 
@@ -129,13 +113,8 @@ public class AlertPopUp extends Screen {
     }
 
     public void hide(){
-        this.isClosed = true;
+        this.isHidden = true;
     }
-
-    public void show(){
-        this.isClosed = false;
-    }
-
 
 }
 

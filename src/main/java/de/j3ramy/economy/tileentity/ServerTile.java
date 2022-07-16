@@ -1,9 +1,7 @@
 package de.j3ramy.economy.tileentity;
 
-import de.j3ramy.economy.item.FiveEuro;
 import de.j3ramy.economy.item.ModItems;
-import de.j3ramy.economy.item.TenEuro;
-import de.j3ramy.economy.utils.ingame.server.Server;
+import de.j3ramy.economy.utils.server.Server;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -29,11 +27,6 @@ public class ServerTile extends TileEntity {
     }
     public void setServer(Server server) {
         this.server = server;
-    }
-
-    public void setOn(boolean isOn){
-        if(this.server != null)
-            this.server.setOn(isOn);
     }
 
 

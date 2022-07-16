@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModScreen extends Screen {
-    private final List<AlertPopUp> alertPopUps = new ArrayList<>();
-    private final List<ConfirmPopUp> confirmPopUps = new ArrayList<>();
+    private AlertPopUp alertPopUp;
+    private ConfirmPopUp confirmPopUp;
     private final List<Button> buttons = new ArrayList<>();
     private final List<DropDown> dropDowns = new ArrayList<>();
     private final List<Tooltip> tooltips = new ArrayList<>();
@@ -21,11 +21,11 @@ public class ModScreen extends Screen {
     private final List<CenteredHorizontalLine> centeredHorizontalLines = new ArrayList<>();
     private final List<VerticalLine> verticalLines = new ArrayList<>();
 
-    public void addAlertPopUpWindow(AlertPopUp alertPopUp){
-        this.alertPopUps.add(alertPopUp);
+    public void setAlertPopUp(AlertPopUp alertPopUp){
+        this.alertPopUp = alertPopUp;
     }
-    public void addConfirmPopUp(ConfirmPopUp confirmPopUp){
-        this.confirmPopUps.add(confirmPopUp);
+    public void setConfirmPopUp(ConfirmPopUp confirmPopUp){
+        this.confirmPopUp = confirmPopUp;
     }
 
     public void addButton(Button button){
@@ -71,106 +71,132 @@ public class ModScreen extends Screen {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         for(Button button : this.buttons){
-            button.updateMousePosition(mouseX, mouseY);
-            button.render(matrixStack, mouseX, mouseY, partialTicks);
+            if(button != null){
+                button.updateMousePosition(mouseX, mouseY);
+                button.render(matrixStack, mouseX, mouseY, partialTicks);
+            }
         }
 
         for(DropDown dropDown : this.dropDowns){
-            dropDown.updateMousePosition(mouseX, mouseY);
-            dropDown.render(matrixStack, mouseX, mouseY, partialTicks);
-            dropDown.update();
+            if(dropDown != null){
+                dropDown.updateMousePosition(mouseX, mouseY);
+                dropDown.render(matrixStack, mouseX, mouseY, partialTicks);
+                dropDown.update();
+            }
+
         }
 
         for(ScrollableTable table : this.tables){
-            table.updateMousePosition(mouseX, mouseY);
-            table.render(matrixStack, mouseX, mouseY, partialTicks);
-            table.update();
+            if(table != null){
+                table.updateMousePosition(mouseX, mouseY);
+                table.render(matrixStack, mouseX, mouseY, partialTicks);
+                table.update();
+            }
+
         }
 
         for(ScrollableList scrollableList : this.scrollableList){
-            scrollableList.updateMousePosition(mouseX, mouseY);
-            scrollableList.render(matrixStack, mouseX, mouseY, partialTicks);
-            scrollableList.update();
+            if(scrollableList != null){
+                scrollableList.updateMousePosition(mouseX, mouseY);
+                scrollableList.render(matrixStack, mouseX, mouseY, partialTicks);
+                scrollableList.update();
+            }
+
         }
 
         for(HorizontalLine horizontalLine : this.horizontalLines){
-            horizontalLine.render(matrixStack, mouseX, mouseY, partialTicks);
+            if(horizontalLine != null){
+                horizontalLine.render(matrixStack, mouseX, mouseY, partialTicks);
+            }
+
         }
 
         for(CenteredHorizontalLine centeredHorizontalLine : this.centeredHorizontalLines){
-            centeredHorizontalLine.render(matrixStack, mouseX, mouseY, partialTicks);
+            if(centeredHorizontalLine != null){
+                centeredHorizontalLine.render(matrixStack, mouseX, mouseY, partialTicks);
+            }
+
         }
 
         for(VerticalLine verticalLine : this.verticalLines){
-            verticalLine.render(matrixStack, mouseX, mouseY, partialTicks);
+            if(verticalLine != null){
+                verticalLine.render(matrixStack, mouseX, mouseY, partialTicks);
+            }
+
         }
 
-        for(AlertPopUp alertPopUp : this.alertPopUps){
-            alertPopUp.updateMousePosition(mouseX, mouseY);
-            alertPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
+        if(this.alertPopUp != null){
+            this.alertPopUp.updateMousePosition(mouseX, mouseY);
+            this.alertPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
         }
 
-        for(ConfirmPopUp confirmPopUp : this.confirmPopUps){
-            confirmPopUp.updateMousePosition(mouseX, mouseY);
-            confirmPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
+        if(this.confirmPopUp != null){
+            this.confirmPopUp.updateMousePosition(mouseX, mouseY);
+            this.confirmPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
         }
 
         for(Tooltip tooltip : this.tooltips){
-            tooltip.render(matrixStack, mouseX, mouseY);
+            if(tooltip != null)
+                tooltip.render(matrixStack, mouseX, mouseY);
         }
     }
 
     public void onClick(){
 
         for(DropDown dropDown : this.dropDowns){
-            dropDown.onClick();
+            if(dropDown != null)
+                dropDown.onClick();
         }
 
         for(ScrollableList scrollableList : this.scrollableList){
-            scrollableList.onClick();
+            if(scrollableList != null)
+                scrollableList.onClick();
         }
 
         for(ScrollableTable scrollableTable : this.tables){
-            scrollableTable.onClick();
+            if(scrollableTable != null)
+                scrollableTable.onClick();
         }
 
         for(Button button : this.buttons){
-            button.onClick();
+            if(button != null)
+                button.onClick();
         }
 
-        for(AlertPopUp alertPopUp : this.alertPopUps){
-            alertPopUp.onClick();
-        }
+        if(this.alertPopUp != null)
+            this.alertPopUp.onClick();
 
-        for(ConfirmPopUp confirmPopUp : this.confirmPopUps){
-            confirmPopUp.onClick();
-        }
+        if(this.confirmPopUp != null)
+            this.confirmPopUp.onClick();
     }
 
     public void onScroll(int scrollDelta){
         for(DropDown dropDown : this.dropDowns){
-            dropDown.onScroll(scrollDelta);
+            if(dropDown != null)
+                dropDown.onScroll(scrollDelta);
         }
 
         for(ScrollableList scrollableList : this.scrollableList){
-            scrollableList.onScroll(scrollDelta);
+            if(scrollableList != null)
+                scrollableList.onScroll(scrollDelta);
         }
 
         for(ScrollableTable scrollableTable : this.tables){
-            scrollableTable.onScroll(scrollDelta);
+            if(scrollableTable != null)
+                scrollableTable.onScroll(scrollDelta);
         }
     }
 
     public void clearScreen(){
-        alertPopUps.clear();
-        confirmPopUps.clear();
-        buttons.clear();
-        dropDowns.clear();
-        tooltips.clear();
-        tables.clear();
-        scrollableList.clear();
-        horizontalLines.clear();
-        centeredHorizontalLines.clear();
-        verticalLines.clear();
+        this.confirmPopUp = null;
+        this.alertPopUp = null;
+        this.buttons.clear();
+        this.dropDowns.clear();
+        this.tooltips.clear();
+        this.tables.clear();
+        this.scrollableList.clear();
+        this.horizontalLines.clear();
+        this.centeredHorizontalLines.clear();
+        this.verticalLines.clear();
     }
 }

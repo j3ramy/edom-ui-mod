@@ -8,11 +8,10 @@ import de.j3ramy.economy.gui.widgets.*;
 import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.GuiUtils;
 import de.j3ramy.economy.utils.Texture;
-import de.j3ramy.economy.utils.ingame.server.Entry;
-import de.j3ramy.economy.utils.ingame.server.Server;
-import de.j3ramy.economy.utils.ingame.server.Table;
+import de.j3ramy.economy.utils.server.Entry;
+import de.j3ramy.economy.utils.server.Server;
+import de.j3ramy.economy.utils.server.Table;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.LoadingGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -22,7 +21,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-import javax.swing.plaf.ProgressBarUI;
 import java.util.ArrayList;
 
 public class ComputerScreen extends ContainerScreen<ComputerContainer> {
@@ -94,7 +92,6 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.yPos = this.height / 2 - 75;
 
         this.server = new Server(Server.DBType.CUSTOM, "Berdi's Leben ist eine Freude IP", this.container.getTileEntity().getPos());
-        this.server.initDatabase("db_berdiisthuebsch.de");
 
         ArrayList<String> columns1 = new ArrayList<>();
         columns1.add("Name");
@@ -191,13 +188,13 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         }));
 
         this.addButton(this.dropTableButton = new ImageButton(this.xPos + 30, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) -> {
-            this.tableOverviewScreen.addConfirmPopUp(confirmDropTable = new ConfirmPopUp(this, (onYesClick)->{
-                confirmDropTable.hide();
-            }));
-            this.confirmDropTable.setTitle(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drop_table").getString());
-            this.confirmDropTable.setContent(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drop_table").getString());
-            this.confirmDropTable.setColorType(ConfirmPopUp.ColorType.DEFAULT);
-            this.confirmDropTable.show();
+            this.tableOverviewScreen.setConfirmPopUp(confirmDropTable = new ConfirmPopUp(this,
+                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drop_table").getString(),
+                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drop_table").getString(),
+                    ConfirmPopUp.ColorType.DEFAULT,
+                    (onYesClick)-> {
+                        confirmDropTable.hide();
+                    }));
         }));
         dropTableButton.active = false;
 
@@ -207,13 +204,14 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         }));
 
         this.addButton(this.deleteEntryButton = new ImageButton(this.xPos + 205, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) ->{
-            this.tableOverviewScreen.addConfirmPopUp(confirmDeleteEntry = new ConfirmPopUp(this, (onYesClick)->{
-                confirmDeleteEntry.hide();
-            }));
-            this.confirmDeleteEntry.setTitle(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.delete_entry").getString());
-            this.confirmDeleteEntry.setContent(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.delete_entry").getString());
-            this.confirmDeleteEntry.setColorType(ConfirmPopUp.ColorType.DEFAULT);
-            this.confirmDeleteEntry.show();
+            this.tableOverviewScreen.setConfirmPopUp(confirmDeleteEntry = new ConfirmPopUp(
+                    this,
+                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.delete_entry").getString(),
+                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.delete_entry").getString(),
+                    ConfirmPopUp.ColorType.DEFAULT,
+                    (onYesClick)->{
+                        confirmDeleteEntry.hide();
+                    }));
         }));
         this.deleteEntryButton.active = false;
 

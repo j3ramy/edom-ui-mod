@@ -1,4 +1,4 @@
-package de.j3ramy.economy.utils.ingame.server;
+package de.j3ramy.economy.utils.server;
 
 import net.minecraft.nbt.CompoundNBT;
 

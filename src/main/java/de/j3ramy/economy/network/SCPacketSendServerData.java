@@ -1,7 +1,7 @@
 package de.j3ramy.economy.network;
 
 import de.j3ramy.economy.gui.screen.ServerScreen;
-import de.j3ramy.economy.utils.ingame.server.Server;
+import de.j3ramy.economy.utils.server.Server;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.network.PacketBuffer;

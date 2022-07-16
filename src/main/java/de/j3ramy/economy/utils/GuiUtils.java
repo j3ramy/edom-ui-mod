@@ -5,14 +5,14 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class GuiUtils {
-    public static final int LETTER_SIZE = 5;
+    public static final int LETTER_SIZE = 6;
     public enum FontSize{
         DEFAULT,
         SMALL
     }
 
     public static int getCenteredTextOffset(int length){
-        return (length / 2 * LETTER_SIZE) + 2;
+        return (length / 2 * LETTER_SIZE);
     }
 
     public static StringTextComponent getFormattedLabel(int maxWordLength, String s){
@@ -65,4 +65,5 @@ public class GuiUtils {
     public static String getTranslationText(String translationKey){
         return new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip." + translationKey).getString();
     }
+
 }
