@@ -1,9 +1,4 @@
-/*
-* UPDATE LATER:
-* - Two Font Sizes (as in GuiUtils) for button text
-* - When unfolded then buttons underneath get ignored
-* - Scroll indicator
-* */
+
 package de.j3ramy.economy.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -79,6 +74,11 @@ public class ScrollableList extends Button {
     public void clear(){
         this.contents.clear();
         this.contentFields.clear();
+        this.clearSelectedIndex();
+    }
+
+    public void clearSelectedIndex(){
+        this.selectedIndex = -1;
     }
 
     @Override
@@ -120,14 +120,14 @@ public class ScrollableList extends Button {
         }
     }
 
-    private boolean isMouseOverList(int x, int y){
+    private boolean isMouseOverList(){
         Rectangle list = new Rectangle(this.x, this.y, this.x + this.width, this.y + this.height);
-        return list.contains(new Point(x, y));
+        return list.contains(new Point(this.mousePosition.x, this.mousePosition.y));
     }
 
     private float currentScrollIndex = 0;
     public void onScroll(int scrollDelta){
-        if(!this.isMouseOverList(this.mousePosition.x, this.mousePosition.y))
+        if(!this.isMouseOverList())
             return;
 
         if(!this.needsScrolling())
