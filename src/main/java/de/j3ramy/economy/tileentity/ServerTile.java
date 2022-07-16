@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IIntArray;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -17,6 +18,28 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ServerTile extends TileEntity {
+
+    private final IIntArray data = new IIntArray() {
+        public int get(int index) {
+            switch(index){
+                case 0: return ServerTile.this.itemHandler.getStackInSlot(0).getItem() == ModItems.USB_FLASH_DRIVE.get() ? 1 : 0;
+                case 1: return ServerTile.this.itemHandler.getStackInSlot(0).hasTag() ? 1 : 0;
+            }
+
+            return -1;
+        }
+
+        public void set(int index, int value) {
+
+        }
+        public int size() {
+            return 2;
+        }
+    };
+
+    public IIntArray getData() {
+        return this.data;
+    }
 
     public final ItemStackHandler itemHandler = createHandler();
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.ServerContainer;
 import de.j3ramy.economy.gui.widgets.*;
+import de.j3ramy.economy.network.CSPacketLoadBackup;
 import de.j3ramy.economy.network.CSPacketSendServerData;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.Color;
@@ -87,8 +88,14 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         //draw screen
         switch(this.screenState){
             case SET_UP:
+                this.overviewScreen.disable();
+                this.setUpScreen.enable();
+
                 this.renderSetUpScreen(matrixStack, mouseX, mouseY, partialTicks);
                 this.updateSetUpScreen();
+
+                this.ipField.active = true;
+                this.passwordField.active = false;
 
                 this.resetServerButton.visible = false;
                 this.resetServerButton.active = false;
@@ -100,10 +107,14 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                 this.savePasswordButton.active = false;
                 break;
             case OVERVIEW:
+                this.overviewScreen.enable();
+                this.setUpScreen.disable();
+
                 this.renderOverviewScreen(matrixStack, mouseX, mouseY, partialTicks);
                 this.updateOverviewScreen(mouseX, mouseY);
 
                 this.ipField.active = false;
+                this.passwordField.active = true;
 
                 this.resetServerButton.visible = true;
                 this.resetServerButton.active = true;
@@ -145,7 +156,8 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
         this.addButton(this.savePasswordButton = new ImageButton(this.xPos + 70 + 61 + 2, this.yPos + 59, 20, 19, 0, 0, 19, Texture.SAVE_BUTTON, (click)-> {
             this.server.setPassword(this.passwordField.getText());
-            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server));
+
+            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
 
             this.overviewScreen.setAlertPopUp(this.alertPopUp = new AlertPopUp(
                     this,
@@ -164,7 +176,16 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.server_reset").getString(),
                     ConfirmPopUp.ColorType.ERROR,
                     (yesAction)->{
-                        this.confirmPopUp.hide();
+                        /*
+                        this.server = new Server(new CompoundNBT());
+                        Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server));
+
+                        this.setUpScreen.clearScreen();
+                        this.overviewScreen.clearScreen();
+                        this.initSetUpScreen();
+                        this.initOverviewScreen();
+
+                         */
                     }));
         }));
 
@@ -174,23 +195,102 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.overviewScreen.addVerticalLine(new VerticalLine(this.xPos + 175, this.yPos + 35, 100, Color.WHITE_HEX));
 
         this.addButton(this.saveServerButton = new ImageButton(this.xPos + 191, this.yPos + 41, 20, 18, 0, 0, 19, Texture.SAVE_BUTTON, (click)->{
-            System.out.println("CLICK");
+
+            //check if drive is plugged in
+            if(this.container.getTileEntity().getData().get(0) == 0){
+                this.overviewScreen.setAlertPopUp(this.alertPopUp = new AlertPopUp(
+                        this,
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.no_drive_found").getString(),
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.no_drive_found").getString(),
+                        AlertPopUp.ColorType.NOTICE));
+                return;
+            }
+
+            //check if drive has tag
+            if(this.container.getTileEntity().getData().get(1) == 1){
+                this.overviewScreen.setConfirmPopUp(this.confirmPopUp = new ConfirmPopUp(
+                        this,
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drive_has_data").getString(),
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drive_has_data").getString(),
+                        ConfirmPopUp.ColorType.NOTICE,
+                        (yesAction)->{
+                            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, true));
+
+                            this.confirmPopUp.hide();
+                            this.overviewScreen.setAlertPopUp(this.alertPopUp = new AlertPopUp(
+                                    this,
+                                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_created").getString(),
+                                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_created").getString(),
+                                    AlertPopUp.ColorType.DEFAULT));
+                        }));
+            }
+            else{
+                Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, true));
+
+                this.overviewScreen.setAlertPopUp(this.alertPopUp = new AlertPopUp(
+                        this,
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_created").getString(),
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_created").getString(),
+                        AlertPopUp.ColorType.DEFAULT));
+            }
+
+
         }));
 
         this.addButton(this.loadServerButton = new ImageButton(this.xPos + 218, this.yPos + 41, 20, 18, 0, 0, 19, Texture.LOAD_BUTTON, (click)->{
-            System.out.println("CLICK");
+
+            //check if drive is plugged in
+            if(this.container.getTileEntity().getData().get(0) == 0){
+                this.overviewScreen.setAlertPopUp(this.alertPopUp = new AlertPopUp(
+                        this,
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.no_drive_found").getString(),
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.no_drive_found").getString(),
+                        AlertPopUp.ColorType.NOTICE));
+                return;
+            }
+
+            //check if drive has backup
+            if(this.container.getTileEntity().getData().get(1) == 0){
+                this.overviewScreen.setAlertPopUp(this.alertPopUp = new AlertPopUp(
+                        this,
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drive_no_data").getString(),
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drive_no_data").getString(),
+                        AlertPopUp.ColorType.ERROR));
+                return;
+            }
+
+            this.overviewScreen.setConfirmPopUp(this.confirmPopUp = new ConfirmPopUp(
+                    this,
+                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_overwrite").getString(),
+                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_overwrite").getString(),
+                    ConfirmPopUp.ColorType.NOTICE,
+                    (yesAction)->{
+                        Network.INSTANCE.sendToServer(new CSPacketLoadBackup(this.server.getPos()));
+
+                        this.confirmPopUp.hide();
+                        this.overviewScreen.setAlertPopUp(this.alertPopUp = new AlertPopUp(
+                                this,
+                                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_loaded").getString(),
+                                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_loaded").getString(),
+                                AlertPopUp.ColorType.DEFAULT));
+
+                    }));
+
+
         }));
 
         this.overviewScreen.addButton(this.onButton = new Button(this.xPos + TEXTURE_WIDTH - 50 - 10, this.yPos + TEXTURE_HEIGHT - 18 - 15 - 22 - 18, 50, 18,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.on"), (click)->{
             this.server.setOn(true);
-            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server));
+
+            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
         }));
 
         this.overviewScreen.addButton(this.offButton = new Button(this.xPos + TEXTURE_WIDTH - 50 - 10, this.yPos + TEXTURE_HEIGHT - 18 - 10 - 22, 50, 18,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.off"), (click)->{
             this.server.setOn(false);
-            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server));
+
+            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
         }));
 
 
@@ -383,7 +483,6 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
     //endregion
 
-
     //region SET UP SCREEN
     private TextFieldWidget ipField = new TextFieldWidget(this.font, 0 ,0 ,0 ,0 , new StringTextComponent(""));
     private DropDown typeDropDown = new DropDown(new String[0], 0, 0, 0, 0, "");
@@ -413,10 +512,10 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                     Server.DBType.valueOf(this.typeDropDown.getSelectedText()),
                     this.ipField.getText().replace(' ', '_').toLowerCase(),
                     this.container.getTileEntity().getPos());
-            this.setServer(server);
-            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server));
 
-            this.screenState = ServerScreenState.OVERVIEW;
+            this.setServer(server);
+
+            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
         }));
     }
 

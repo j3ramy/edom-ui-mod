@@ -37,6 +37,8 @@ public class ServerContainer extends Container {
             });
 
             layoutPlayerInventorySlots(8, 100); //Position of player inventory
+
+            this.trackIntArray(tile.getData());
         }
     }
 

@@ -20,5 +20,6 @@ public class Network {
         INSTANCE.registerMessage(getNextId(), SCPacketSendCreditCardData.class, SCPacketSendCreditCardData::toBytes, SCPacketSendCreditCardData::new, SCPacketSendCreditCardData::handle);
         INSTANCE.registerMessage(getNextId(), SCPacketSendServerData.class, SCPacketSendServerData::toBytes, SCPacketSendServerData::new, SCPacketSendServerData::handle);
         INSTANCE.registerMessage(getNextId(), CSPacketSendServerData.class, CSPacketSendServerData::toBytes, CSPacketSendServerData::new, CSPacketSendServerData::handle);
+        INSTANCE.registerMessage(getNextId(), CSPacketLoadBackup.class, CSPacketLoadBackup::toBytes, CSPacketLoadBackup::new, CSPacketLoadBackup::handle);
     }
 }

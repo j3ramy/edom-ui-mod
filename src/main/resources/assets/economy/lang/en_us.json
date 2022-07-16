@@ -63,11 +63,23 @@
   "screen.economy.popup.title.delete_entry": "Delete Entry",
   "screen.economy.popup.title.save_password": "Change Password",
   "screen.economy.popup.title.server_reset": "Server Reset",
+  "screen.economy.popup.title.no_drive_found": "No Drive Found",
+  "screen.economy.popup.title.drive_has_data": "Drive Contains Data",
+  "screen.economy.popup.title.backup_created": "Backup Created",
+  "screen.economy.popup.title.drive_no_data": "No Backup Available",
+  "screen.economy.popup.title.backup_overwrite": "Backup Overwrite",
+  "screen.economy.popup.title.backup_loaded": "Backup Loaded",
 
   "screen.economy.popup.content.drop_table": "Do you really want to drop this table?",
   "screen.economy.popup.content.delete_entry": "Do you really want to delete this entry?",
-  "screen.economy.popup.content.save_password": "The password has been changed successfully",
+  "screen.economy.popup.content.save_password": "The password has been changed successfully.",
   "screen.economy.popup.content.server_reset": "Do you really want to reset the server?",
+  "screen.economy.popup.content.no_drive_found": "Please insert an USB Flash Drive and try again.",
+  "screen.economy.popup.content.drive_has_data": "Do you want to override the saved data?",
+  "screen.economy.popup.content.backup_created": "Server backup was created successfully",
+  "screen.economy.popup.content.drive_no_data": "The current does not contain any backup.",
+  "screen.economy.popup.content.backup_overwrite": "Do you really want to load the backup?",
+  "screen.economy.popup.content.backup_loaded": "Backup successfully loaded. Please close the screen.",
 
   "itemGroup.economy": "Edom Economy"
 

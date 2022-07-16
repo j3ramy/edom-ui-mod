@@ -76,7 +76,7 @@ public class AlertPopUp extends Screen {
 
         //border
         int DEFAULT_COLOR = Color.DARK_GRAY_HEX;
-        int NOTICE_COLOR = Color.YELLOW_HEX;
+        int NOTICE_COLOR = Color.ORANGE_HEX;
         int ERROR_COLOR = Color.RED_HEX;
         switch (this.colorType){
             case DEFAULT: AbstractGui.fill(matrixStack, leftPos, topPos, leftPos + WIDTH, topPos + HEIGHT, DEFAULT_COLOR); break;

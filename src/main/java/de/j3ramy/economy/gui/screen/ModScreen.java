@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModScreen extends Screen {
+    private boolean disableScreen;
     private AlertPopUp alertPopUp;
     private ConfirmPopUp confirmPopUp;
     private final List<Button> buttons = new ArrayList<>();
@@ -68,6 +69,9 @@ public class ModScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        if(this.disableScreen)
+            return;
+
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         for(Button button : this.buttons){
@@ -142,6 +146,8 @@ public class ModScreen extends Screen {
     }
 
     public void onClick(){
+        if(this.disableScreen)
+            return;
 
         for(DropDown dropDown : this.dropDowns){
             if(dropDown != null)
@@ -171,6 +177,9 @@ public class ModScreen extends Screen {
     }
 
     public void onScroll(int scrollDelta){
+        if(this.disableScreen)
+            return;
+
         for(DropDown dropDown : this.dropDowns){
             if(dropDown != null)
                 dropDown.onScroll(scrollDelta);
@@ -198,5 +207,13 @@ public class ModScreen extends Screen {
         this.horizontalLines.clear();
         this.centeredHorizontalLines.clear();
         this.verticalLines.clear();
+    }
+
+    public void enable(){
+        this.disableScreen = false;
+    }
+
+    public void disable(){
+        this.disableScreen = true;
     }
 }
