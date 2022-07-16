@@ -39,6 +39,7 @@
   "screen.economy.button.off": "Off",
   "screen.economy.button.yes": "Yes",
   "screen.economy.button.no": "No",
+  "screen.economy.button.cancle": "Cancle",
 
   "screen.economy.heading.credit_cart_printer": "Card Printer",
   "screen.economy.heading.server": "Server Control Terminal v1.0",
@@ -57,6 +58,11 @@
   "screen.economy.tooltip.reset_server": "Reset Server",
   "screen.economy.tooltip.load_from_drive": "Load From Flash Drive",
   "screen.economy.tooltip.save_to_drive": "Save To Flash Drive",
+
+  "screen.economy.popup.title.drop_table": "Drop Table",
+  "screen.economy.popup.content.drop_table": "Do you really want to drop this table?",
+  "screen.economy.popup.title.delete_entry": "Delete Entry",
+  "screen.economy.popup.content.delete_entry": "Do you really want to delete this entry?",
 
   "itemGroup.economy": "Edom Economy"
 

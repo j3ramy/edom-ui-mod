@@ -4,9 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.ComputerContainer;
-import de.j3ramy.economy.gui.widgets.ScrollableList;
-import de.j3ramy.economy.gui.widgets.ScrollableTable;
-import de.j3ramy.economy.gui.widgets.Tooltip;
+import de.j3ramy.economy.gui.widgets.*;
 import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.GuiUtils;
 import de.j3ramy.economy.utils.Texture;
@@ -31,7 +29,9 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     private final int TEXTURE_WIDTH = 256;
     private final int TEXTURE_HEIGHT = 148;
     private final ModScreen tableOverviewScreen;
-    private final ModScreen screen2;
+    private final ModScreen createTableScreen;
+    private final ModScreen createEntryScreen;
+    private final ModScreen updateEntryScreen;
 
     private int xPos;
     private int yPos;
@@ -41,6 +41,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     private ImageButton createEntryButton;
     private ImageButton deleteEntryButton;
     private ImageButton updateEntryButton;
+    private Button cancelButton;
     private TextFieldWidget searchField;
     private ScrollableList tableList;
     private ScrollableTable table;
@@ -49,6 +50,8 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     private Tooltip createEntryButtonTooltip;
     private Tooltip deleteEntryButtonTooltip;
     private Tooltip updateEntryButtonTooltip;
+    private ConfirmPopUp confirmDropTable;
+    private ConfirmPopUp confirmDeleteEntry;
 
     private Server server = new Server(new CompoundNBT());
     public void setServer(Server server) {
@@ -57,7 +60,9 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
 
     private enum ComputerScreenState{
         TABLE_OVERVIEW_SCREEN,
-        SCREEN2
+        CREATE_TABLE_SCREEN,
+        CREATE_ENTRY_SCREEN,
+        UPDATE_ENTRY_SCREEN
     }
 
     private ComputerScreenState screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
@@ -66,7 +71,9 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         super(screenContainer, inv, titleIn);
 
         this.tableOverviewScreen = new ModScreen();
-        this.screen2 = new ModScreen();
+        this.createTableScreen = new ModScreen();
+        this.createEntryScreen = new ModScreen();
+        this.updateEntryScreen = new ModScreen();
     }
 
     @Override
@@ -103,14 +110,27 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.server.getDatabase().getTable("Table1").insert(new Entry(content1));
 
         ArrayList<String> content2 = new ArrayList<>();
-        content2.add("Berdi2");
+        content2.add("Berdä2");
         content2.add("123456");
         content2.add("Nein");
         content2.add("Viel Geld");
         this.server.getDatabase().getTable("Table2").insert(new Entry(content2));
 
         initTableOverviewScreen();
-        initScreen2();
+        initCreateTableScreen();
+        initCreateEntryScreen();
+        initUpdateEntryScreen();
+
+        for (Table table : this.server.getDatabase().getTables()){
+            this.tableList.addToList(table.getName(), true, this.tableList.getFGColor(), (onClick)->{
+                this.table.clear();
+                this.table.setAttributeColumns((ArrayList<String>) table.getColumnNames());
+                this.dropTableButton.active = true;
+                for (Entry entry : table.getAllEntries()){
+                    this.table.addRow((ArrayList<String>) entry.getColumnsContent(), true, this.table.getFGColor(), (onClick2)->{this.deleteEntryButton.active = true;});
+                }
+            });
+        }
     }
 
     @Override
@@ -132,10 +152,16 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
                 this.renderTableOverviewScreen(matrixStack, mouseX, mouseY, partialTicks);
                 this.updateTableOverviewScreen();
                 break;
-            case SCREEN2:
-                this.renderScreen2(matrixStack, mouseX, mouseY, partialTicks);
-                this.updateScreen2();
+            case CREATE_TABLE_SCREEN:
+                this.renderCreateTableScreen(matrixStack, mouseX, mouseY, partialTicks);
+                this.updateCreateTableScreen();
                 break;
+            case CREATE_ENTRY_SCREEN:
+                this.renderCreateEntryScreen(matrixStack, mouseX, mouseY, partialTicks);
+                this.updateCreateEntryScreen();
+            case UPDATE_ENTRY_SCREEN:
+                this.renderUpdateEntryScreen(matrixStack, mouseX, mouseY, partialTicks);
+                this.updateUpdateEntryScreen();
         }
     }
 
@@ -143,23 +169,40 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     public void initTableOverviewScreen() {
         //<Buttons>
         this.addButton(this.createTableButton = new ImageButton(this.xPos + 5, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) -> {
-            this.screenState = ComputerScreenState.SCREEN2;
+            this.screenState = ComputerScreenState.CREATE_TABLE_SCREEN;
+            this.hideTableOverviewScreen();
         }));
 
         this.addButton(this.dropTableButton = new ImageButton(this.xPos + 30, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) -> {
-
+            this.tableOverviewScreen.addConfirmPopUp(confirmDropTable = new ConfirmPopUp(this, (onYesClick)->{
+                confirmDropTable.hide();
+            }));
+            this.confirmDropTable.setTitle(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drop_table").getString());
+            this.confirmDropTable.setContent(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drop_table").getString());
+            this.confirmDropTable.setColorType(ConfirmPopUp.ColorType.DEFAULT);
+            this.confirmDropTable.show();
         }));
+        dropTableButton.active = false;
 
         this.addButton(this.createEntryButton = new ImageButton(this.xPos + 180, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) ->{
-
+            this.screenState = ComputerScreenState.CREATE_ENTRY_SCREEN;
+            this.hideTableOverviewScreen();
         }));
 
         this.addButton(this.deleteEntryButton = new ImageButton(this.xPos + 205, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) ->{
-
+            this.tableOverviewScreen.addConfirmPopUp(confirmDeleteEntry = new ConfirmPopUp(this, (onYesClick)->{
+                confirmDeleteEntry.hide();
+            }));
+            this.confirmDeleteEntry.setTitle(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.delete_entry").getString());
+            this.confirmDeleteEntry.setContent(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.delete_entry").getString());
+            this.confirmDeleteEntry.setColorType(ConfirmPopUp.ColorType.DEFAULT);
+            this.confirmDeleteEntry.show();
         }));
+        this.deleteEntryButton.active = false;
 
         this.addButton(this.updateEntryButton = new ImageButton(this.xPos + 230, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PEN_BUTTON, (button) ->{
-
+            this.screenState = ComputerScreenState.UPDATE_ENTRY_SCREEN;
+            hideTableOverviewScreen();
         }));
         //</Buttons>
 
@@ -179,10 +222,10 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.children.add(this.searchField);
 
         //List of tables
-        this.tableOverviewScreen.addList(this.tableList = new ScrollableList(this.xPos + 5, this.yPos + 36, 75, 105, 20));
+        this.tableOverviewScreen.addList(this.tableList = new ScrollableList(this.xPos + 5, this.yPos + 36, 75, 105, 13));
 
         //List of Entries in Table
-        this.tableOverviewScreen.addTable(table = new ScrollableTable(this.xPos + 85, this.yPos + 36, 165, 105, 20, true));
+        this.tableOverviewScreen.addTable(table = new ScrollableTable(this.xPos + 85, this.yPos + 36, 165, 105, 10, true));
     }
 
     private void renderTableOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -198,23 +241,101 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.updateEntryButtonTooltip.isVisible = updateEntryButton.isHovered();
     }
 
-    //endregion
+    private void showTableOverviewScreen(){
+        this.createTableButton.visible = true;
+        this.dropTableButton.visible = true;
+        this.createEntryButton.visible = true;
+        this.deleteEntryButton.visible = true;
+        this.updateEntryButton.visible = true;
 
-    //region SCREEN2
-    private void initScreen2() {
-
+        this.createTableButton.active = true;
+        this.dropTableButton.active = true;
+        this.createEntryButton.active = true;
+        this.deleteEntryButton.active = true;
+        this.updateEntryButton.active = true;
     }
 
-    private void renderScreen2(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.screen2.render(matrixStack, mouseX, mouseY, partialTicks);
-    }
-
-    private void updateScreen2(){
+    private void hideTableOverviewScreen(){
         this.createTableButton.visible = false;
         this.dropTableButton.visible = false;
         this.createEntryButton.visible = false;
         this.deleteEntryButton.visible = false;
         this.updateEntryButton.visible = false;
+
+        this.createTableButton.active = false;
+        this.dropTableButton.active = false;
+        this.createEntryButton.active = false;
+        this.deleteEntryButton.active = false;
+        this.updateEntryButton.active = false;
+    }
+
+    //endregion
+
+    //region CREATE_TABLE_SCREEN
+    private void initCreateTableScreen() {
+        this.createTableScreen.addButton(cancelButton = new Button(xPos + 200, yPos + 80, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.cancle"), (onClick)->{
+            this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
+            showTableOverviewScreen();
+            System.out.println("Clicked");
+        }));
+    }
+
+    private void renderCreateTableScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        this.createTableScreen.render(matrixStack, mouseX, mouseY, partialTicks);
+    }
+
+    private void updateCreateTableScreen(){
+
+    }
+
+    private void showCreateTableScreen(){
+        this.createTableButton.visible = true;
+
+        this.createTableButton.active = true;
+        this.dropTableButton.active = true;
+        this.createEntryButton.active = true;
+        this.deleteEntryButton.active = true;
+        this.updateEntryButton.active = true;
+    }
+
+    private void hideCreateTableScreen(){
+        this.createTableButton.visible = false;
+        this.dropTableButton.visible = false;
+        this.createEntryButton.visible = false;
+        this.deleteEntryButton.visible = false;
+        this.updateEntryButton.visible = false;
+
+        this.createTableButton.active = false;
+        this.dropTableButton.active = false;
+        this.createEntryButton.active = false;
+        this.deleteEntryButton.active = false;
+        this.updateEntryButton.active = false;
+    }
+
+    //endregion
+
+    //region CREATE_ENTRY_SCREEN
+    private void initCreateEntryScreen() {
+    }
+    private void renderCreateEntryScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        this.createEntryScreen.render(matrixStack, mouseX, mouseY, partialTicks);
+    }
+
+    private void updateCreateEntryScreen() {
+    }
+
+    //endregion
+
+    //region UPDATE_ENTRY_SCREEN
+
+    private void initUpdateEntryScreen() {
+    }
+
+    private void renderUpdateEntryScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        this.updateEntryScreen.render(matrixStack, mouseX, mouseY, partialTicks);
+    }
+
+    private void updateUpdateEntryScreen() {
     }
 
     //endregion
