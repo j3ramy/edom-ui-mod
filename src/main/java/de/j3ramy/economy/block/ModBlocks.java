@@ -33,6 +33,12 @@ public class ModBlocks {
     public static final RegistryObject<Block> COMPUTER = registerBlock("computer", () ->
             new ComputerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f)));
 
+    public static final RegistryObject<Block> ROUTER = registerBlock("router", () ->
+            new RouterBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid()));
+
+    public static final RegistryObject<Block> SWITCH = registerBlock("switch", () ->
+            new SwitchBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid()));
+
 
     public static void register(IEventBus eventBus){
         BLOCKS.register(eventBus);

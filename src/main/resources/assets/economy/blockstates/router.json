@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "economy:block/router",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "economy:block/router",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "economy:block/router",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "economy:block/router",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "economy:block/router"
+    },
+    "facing=west": {
+      "model": "economy:block/router",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

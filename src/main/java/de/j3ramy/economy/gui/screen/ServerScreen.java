@@ -176,16 +176,11 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.server_reset").getString(),
                     ConfirmPopUp.ColorType.ERROR,
                     (yesAction)->{
-                        /*
                         this.server = new Server(new CompoundNBT());
-                        Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server));
+                        Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
 
-                        this.setUpScreen.clearScreen();
-                        this.overviewScreen.clearScreen();
-                        this.initSetUpScreen();
-                        this.initOverviewScreen();
-
-                         */
+                        this.confirmPopUp.hide();
+                        this.passwordField.setText("");
                     }));
         }));
 

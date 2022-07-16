@@ -10,15 +10,18 @@ import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.network.SCPacketSendServerData;
 import de.j3ramy.economy.tileentity.ModTileEntities;
 import de.j3ramy.economy.tileentity.ServerTile;
+import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -29,6 +32,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -88,6 +92,25 @@ public class ServerBlock extends HorizontalBlock {
                 return new TranslationTextComponent("");
             }
         };
+    }
+
+    //When added
+    @Override
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
+
+        if(worldIn.isRemote)
+            return;
+
+        if(!(worldIn.getBlockState(fromPos).getBlock() instanceof SwitchBlock))
+            return;
+
+        ServerTile tile = (ServerTile) worldIn.getTileEntity(pos);
+        System.out.println("Switch added");
+
+        if(tile != null){
+
+        }
     }
 
     @Override

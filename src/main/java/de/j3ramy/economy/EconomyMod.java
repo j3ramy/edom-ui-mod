@@ -81,6 +81,8 @@ public class EconomyMod
             ScreenManager.registerFactory(ModContainers.COMPUTER_CONTAINER.get(), ComputerScreen::new);
 
             RenderTypeLookup.setRenderLayer(ModBlocks.CREDIT_CART_PRINTER.get(), RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(ModBlocks.ROUTER.get(), RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(ModBlocks.SWITCH.get(), RenderType.getCutout());
         });
 
     }
