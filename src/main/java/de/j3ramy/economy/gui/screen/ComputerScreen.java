@@ -43,7 +43,20 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
     });
     private Button saveButton = new Button(xPos + TEXTURE_WIDTH - 50 - 8, yPos + TEXTURE_HEIGHT - 18 - 8, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onClick)->{
-
+        switch(this.screenState){
+            case CREATE_TABLE_SCREEN:
+                System.out.println("CREATE_TABLE_SCREEN");
+                this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
+                break;
+            case CREATE_ENTRY_SCREEN:
+                System.out.println("CREATE_ENTRY_SCREEN");
+                this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
+                break;
+            case UPDATE_ENTRY_SCREEN:
+                System.out.println("UPDATE_ENTRY_SCREEN");
+                this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
+                break;
+        }
     });
     private TextFieldWidget searchField;
     private ScrollableList tableList;
@@ -137,10 +150,14 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
             this.tableList.addToList(table.getName(), true, this.tableList.getFGColor(), (onClick)->{
                 this.table.clear();
                 this.deleteEntryButton.active = false;
+                this.updateEntryButton.active = false;
                 this.table.setAttributeColumns((ArrayList<String>) table.getColumnNames());
                 this.dropTableButton.active = true;
                 for (Entry entry : table.getAllEntries()){
-                    this.table.addRow((ArrayList<String>) entry.getColumnsContent(), true, this.table.getFGColor(), (onClick2)->{this.deleteEntryButton.active = true;});
+                    this.table.addRow((ArrayList<String>) entry.getColumnsContent(), true, this.table.getFGColor(), (onClick2)->{
+                        this.deleteEntryButton.active = true;
+                        this.updateEntryButton.active = true;
+                    });
                 }
             });
         }
@@ -219,6 +236,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
             this.screenState = ComputerScreenState.UPDATE_ENTRY_SCREEN;
             hideTableOverviewScreen();
         }));
+        this.updateEntryButton.active = false;
         //</Buttons>
 
         //<Tooltips>
@@ -262,6 +280,8 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     }
 
     private void showTableOverviewScreen(){
+        this.tableOverviewScreen.enable();
+
         this.createTableButton.visible = true;
         this.dropTableButton.visible = true;
         this.createEntryButton.visible = true;
@@ -270,14 +290,13 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
 
         this.createTableButton.active = true;
         this.createEntryButton.active = true;
-        this.updateEntryButton.active = true;
 
-        this.cancelButton.visible = false;
-
-        this.cancelButton.active = false;
+        this.searchField.active = true;
     }
 
     private void hideTableOverviewScreen(){
+        this.tableOverviewScreen.disable();
+
         this.createTableButton.visible = false;
         this.dropTableButton.visible = false;
         this.createEntryButton.visible = false;
@@ -294,9 +313,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.table.clearSelectedIndex();
         this.table.clear();
 
-        this.cancelButton.visible = true;
-
-        this.cancelButton.active = true;
+        this.searchField.active = false;
     }
 
     //endregion
@@ -319,11 +336,11 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     }
 
     private void showCreateTableScreen(){
-
+        this.createTableScreen.enable();
     }
 
     private void hideCreateTableScreen(){
-
+        this.createTableScreen.disable();
     }
 
     //endregion
@@ -346,11 +363,11 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     }
 
     private void showCreateEntryScreen() {
-
+        this.createEntryScreen.enable();
     }
 
     private void hideCreateEntryScreen() {
-
+        this.createEntryScreen.disable();
     }
 
     //endregion
@@ -374,11 +391,11 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     }
 
     private void showUpdateEntryScreen() {
-
+        updateEntryScreen.enable();
     }
 
     private void hideUpdateEntryScreen() {
-
+        updateEntryScreen.disable();
     }
 
     //endregion
