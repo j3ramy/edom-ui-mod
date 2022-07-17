@@ -52,7 +52,6 @@ public class CSPacketSendServerData {
                 flashDrive.setTag(nbt);
             }
             else{
-                System.out.println(this.server.getPassword());
                 tile.setServer(this.server);
             }
 

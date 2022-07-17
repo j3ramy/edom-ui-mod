@@ -177,6 +177,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                     ConfirmPopUp.ColorType.ERROR,
                     (yesAction)->{
                         this.server = new Server(new CompoundNBT());
+                        this.server.setPos(this.container.getTileEntity().getPos());
                         Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
 
                         this.confirmPopUp.hide();

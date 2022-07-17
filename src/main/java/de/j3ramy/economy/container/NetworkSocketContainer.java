@@ -1,6 +1,7 @@
 package de.j3ramy.economy.container;
 
 import de.j3ramy.economy.block.ModBlocks;
+import de.j3ramy.economy.tileentity.NetworkSocketTile;
 import de.j3ramy.economy.tileentity.SwitchTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -13,18 +14,18 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-public class SwitchContainer extends Container {
+public class NetworkSocketContainer extends Container {
 
-    private final SwitchTile tileEntity;
+    private final NetworkSocketTile tileEntity;
     private final PlayerEntity playerEntity;
     private final IItemHandler playerInventory;
 
-    public SwitchTile getTileEntity() {
+    public NetworkSocketTile getTileEntity() {
         return this.tileEntity;
     }
 
-    public SwitchContainer(int windowId, PlayerInventory inv, SwitchTile tile){
-        super(ModContainers.SWITCH_CONTAINER.get(), windowId);
+    public NetworkSocketContainer(int windowId, PlayerInventory inv, NetworkSocketTile tile){
+        super(ModContainers.NETWORK_SOCKET_CONTAINER.get(), windowId);
 
         this.playerInventory = new InvWrapper(inv);
         this.playerEntity = inv.player;
@@ -32,14 +33,11 @@ public class SwitchContainer extends Container {
 
         if(this.tileEntity != null){
             this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->{
-                addSlot(new SlotItemHandler(h, 0, -20, 44));
-                addSlot(new SlotItemHandler(h, 1, 39, 44));
-                addSlot(new SlotItemHandler(h, 2, 78, 44));
-                addSlot(new SlotItemHandler(h, 3, 117, 44));
-                addSlot(new SlotItemHandler(h, 4, 156, 44));
+                addSlot(new SlotItemHandler(h, 0, 63, 56));
+                addSlot(new SlotItemHandler(h, 1, 97, 56));
             });
 
-            layoutPlayerInventorySlots(6, 48); //Position of player inventory
+            layoutPlayerInventorySlots(8, 53); //Position of player inventory
 
         }
     }
@@ -49,7 +47,7 @@ public class SwitchContainer extends Container {
         if(tileEntity.getWorld() == null)
             return false;
 
-        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerIn, ModBlocks.SWITCH.get());
+        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerIn, ModBlocks.NETWORK_SOCKET.get());
     }
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
@@ -77,7 +75,7 @@ public class SwitchContainer extends Container {
     private static final int VANILLA_FIRST_SLOT_INDEX = 0;
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
     // THIS YOU HAVE TO DEFINE!
-    private static final int TE_INVENTORY_SLOT_COUNT = 5;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
+    private static final int TE_INVENTORY_SLOT_COUNT = 2;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
 
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {

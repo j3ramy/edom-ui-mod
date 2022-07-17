@@ -28,6 +28,9 @@ public class ModTileEntities {
     public static RegistryObject<TileEntityType<SwitchTile>> SWITCH_TILE = TILE_ENTITIES.register("switch_tile", () -> TileEntityType.Builder.create(
             SwitchTile::new, ModBlocks.SWITCH.get()).build(null));
 
+    public static RegistryObject<TileEntityType<NetworkSocketTile>> NETWORK_SOCKET_TILE = TILE_ENTITIES.register("network_socket_tile", () -> TileEntityType.Builder.create(
+            NetworkSocketTile::new, ModBlocks.NETWORK_SOCKET.get()).build(null));
+
     public static void register(IEventBus eventBus){
         TILE_ENTITIES.register(eventBus);
     }

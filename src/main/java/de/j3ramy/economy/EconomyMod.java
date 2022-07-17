@@ -80,10 +80,13 @@ public class EconomyMod
             ScreenManager.registerFactory(ModContainers.SERVER_CONTAINER.get(), ServerScreen::new);
             ScreenManager.registerFactory(ModContainers.COMPUTER_CONTAINER.get(), ComputerScreen::new);
             ScreenManager.registerFactory(ModContainers.SWITCH_CONTAINER.get(), SwitchScreen::new);
+            ScreenManager.registerFactory(ModContainers.NETWORK_SOCKET_CONTAINER.get(), NetworkSocketScreen::new);
 
             RenderTypeLookup.setRenderLayer(ModBlocks.CREDIT_CART_PRINTER.get(), RenderType.getCutout());
             RenderTypeLookup.setRenderLayer(ModBlocks.ROUTER.get(), RenderType.getCutout());
             RenderTypeLookup.setRenderLayer(ModBlocks.SWITCH.get(), RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(ModBlocks.NETWORK_SOCKET.get(), RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(ModBlocks.SERVER.get(), RenderType.getCutout());
         });
 
     }

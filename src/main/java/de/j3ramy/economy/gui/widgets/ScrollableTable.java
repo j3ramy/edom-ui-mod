@@ -7,6 +7,7 @@ import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -15,7 +16,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScrollableTable extends Button {
+public class ScrollableTable extends Widget {
     public static final int TEXT_COLOR = Color.WHITE;
     public static final int TEXT_Y_OFFSET = 2;
 
@@ -28,7 +29,7 @@ public class ScrollableTable extends Button {
     private int selectedIndex = -1;
 
     public ScrollableTable(int x, int y, int width, int height, int elementHeight, boolean fixedAttributeRow){
-        super(x, y, width, height, new StringTextComponent(""), (onPress) ->{});
+        super(x, y, width, height, new StringTextComponent(""));
 
         this.mousePosition = new Point();
         this.maxVisibleListElements = this.height / elementHeight;
@@ -61,7 +62,7 @@ public class ScrollableTable extends Button {
         return null;
     }
 
-    public void addRow(ArrayList<String> rowContent, boolean isClickable, int backgroundColor, IPressable onClick){
+    public void addRow(ArrayList<String> rowContent, boolean isClickable, int backgroundColor, Button.IPressable onClick){
         this.contents.add(new TableRow(this.x, this.y, this.width, this.elementHeight, rowContent, isClickable, backgroundColor, onClick));
 
         this.initList(0);

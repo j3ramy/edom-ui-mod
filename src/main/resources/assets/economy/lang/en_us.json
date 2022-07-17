@@ -21,6 +21,7 @@
   "block.economy.computer": "Computer",
   "block.economy.router": "Router",
   "block.economy.switch": "Switch",
+  "block.economy.network_socket": "Network Socket",
 
   "screen.economy.placeholder.owner": "Account Owner",
   "screen.economy.placeholder.ip": "IP Address",

@@ -1,0 +1,89 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "minecraft:block/white_concrete",
+		"1": "minecraft:block/light_gray_concrete",
+		"2": "minecraft:block/emerald_block",
+		"particle": "minecraft:block/white_concrete"
+	},
+	"elements": [
+		{
+			"name": "body",
+			"from": [7, 3, 0],
+			"to": [9, 5, 0.5],
+			"color": 2,
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#0"},
+				"east": {"uv": [0, 0, 0.75, 2], "texture": "#0"},
+				"south": {"uv": [0, 0, 2, 2], "texture": "#0"},
+				"west": {"uv": [0, 0, 0.75, 2], "texture": "#0"},
+				"up": {"uv": [0, 0, 2, 0.75], "texture": "#0"},
+				"down": {"uv": [0, 0, 2, 0.75], "texture": "#0"}
+			}
+		},
+		{
+			"name": "socket1",
+			"from": [8.2, 3.5, 0.5],
+			"to": [8.7, 4, 0.55],
+			"color": 2,
+			"faces": {
+				"north": {"uv": [0, 0, 0.5, 0.5], "texture": "#1"},
+				"east": {"uv": [0, 0, 0.05, 0.5], "texture": "#1"},
+				"south": {"uv": [0, 0, 0.5, 0.5], "texture": "#1"},
+				"west": {"uv": [0, 0, 0.05, 0.5], "texture": "#1"},
+				"up": {"uv": [0, 0, 0.5, 0.05], "texture": "#1"},
+				"down": {"uv": [0, 0, 0.5, 0.05], "texture": "#1"}
+			}
+		},
+		{
+			"name": "socket2",
+			"from": [7.3, 3.5, 0.5],
+			"to": [7.8, 4, 0.55],
+			"color": 2,
+			"faces": {
+				"north": {"uv": [0, 0, 0.5, 0.5], "texture": "#1"},
+				"east": {"uv": [0, 0, 0.05, 0.5], "texture": "#1"},
+				"south": {"uv": [0, 0, 0.5, 0.5], "texture": "#1"},
+				"west": {"uv": [0, 0, 0.05, 0.5], "texture": "#1"},
+				"up": {"uv": [0, 0, 0.5, 0.05], "texture": "#1"},
+				"down": {"uv": [0, 0, 0.5, 0.05], "texture": "#1"}
+			}
+		},
+		{
+			"name": "label1",
+			"from": [8.2, 4.25, 0.5],
+			"to": [8.7, 4.45, 0.55],
+			"color": 2,
+			"faces": {
+				"north": {"uv": [0, 0, 0.5, 0.2], "texture": "#2"},
+				"east": {"uv": [0, 0, 0.05, 0.2], "texture": "#2"},
+				"south": {"uv": [0, 0, 0.5, 0.2], "texture": "#2"},
+				"west": {"uv": [0, 0, 0.05, 0.2], "texture": "#2"},
+				"up": {"uv": [0, 0, 0.5, 0.05], "texture": "#2"},
+				"down": {"uv": [0, 0, 0.5, 0.05], "texture": "#2"}
+			}
+		},
+		{
+			"name": "label2",
+			"from": [7.3, 4.25, 0.5],
+			"to": [7.8, 4.45, 0.55],
+			"color": 2,
+			"faces": {
+				"north": {"uv": [0, 0, 0.5, 0.2], "texture": "#2"},
+				"east": {"uv": [0, 0, 0.05, 0.2], "texture": "#2"},
+				"south": {"uv": [0, 0, 0.5, 0.2], "texture": "#2"},
+				"west": {"uv": [0, 0, 0.05, 0.2], "texture": "#2"},
+				"up": {"uv": [0, 0, 0.5, 0.05], "texture": "#2"},
+				"down": {"uv": [0, 0, 0.5, 0.05], "texture": "#2"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "VoxelShapes",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0, 1, 2, 3, 4]
+		}
+	]
+}

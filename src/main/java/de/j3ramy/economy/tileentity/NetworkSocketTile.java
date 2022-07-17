@@ -16,26 +16,15 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class SwitchTile extends TileEntity {
+public class NetworkSocketTile extends TileEntity {
     private final ItemStackHandler itemHandler = this.createHandler();
     private final LazyOptional<IItemHandler> handler =  LazyOptional.of(() -> this.itemHandler);
 
-    //private SwitchData switchData = new SwitchData(new CompoundNBT());
 
-    public SwitchTile(){
-        super(ModTileEntities.SWITCH_TILE.get());
+    public NetworkSocketTile(){
+        super(ModTileEntities.NETWORK_SOCKET_TILE.get());
     }
 
-
-    /*public SwitchData getSwitchData() {
-        return this.switchData;
-    }
-
-    public void setSwitchData(SwitchData switchData) {
-        this.switchData = switchData;
-    }
-
-     */
 
     @Override
     public void read(BlockState state, CompoundNBT nbt) {

@@ -48,6 +48,10 @@ public class ModContainers {
     public static final RegistryObject<ContainerType<SwitchContainer>> SWITCH_CONTAINER = CONTAINERS.register("switch_container",
             () -> IForgeContainerType.create(((windowId, inv, data) -> new SwitchContainer(windowId, inv, (SwitchTile) inv.player.getEntityWorld().getTileEntity(data.readBlockPos())))));
 
+
+    public static final RegistryObject<ContainerType<NetworkSocketContainer>> NETWORK_SOCKET_CONTAINER = CONTAINERS.register("network_socket_container",
+            () -> IForgeContainerType.create(((windowId, inv, data) -> new NetworkSocketContainer(windowId, inv, (NetworkSocketTile) inv.player.getEntityWorld().getTileEntity(data.readBlockPos())))));
+
     public static void register(IEventBus eventBus){
         CONTAINERS.register(eventBus);
     }

@@ -13,7 +13,7 @@ public class Server {
 
     private final DBType serverType;
     private final String ip;
-    private final BlockPos pos;
+    private BlockPos pos;
     private final Database db;
     private String password = "";
     private boolean isOn;
@@ -54,6 +54,10 @@ public class Server {
         nbt.putInt("accesses", this.accesses);
 
         return nbt;
+    }
+
+    public void setPos(BlockPos pos) {
+        this.pos = pos;
     }
 
     public Database getDatabase() {

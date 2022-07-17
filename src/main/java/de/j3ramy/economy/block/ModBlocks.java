@@ -28,7 +28,7 @@ public class ModBlocks {
             new CreditCardPrinterBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid()));
 
     public static final RegistryObject<Block> SERVER = registerBlock("server", () ->
-            new ServerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f)));
+            new ServerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid()));
 
     public static final RegistryObject<Block> COMPUTER = registerBlock("computer", () ->
             new ComputerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f)));
@@ -38,6 +38,9 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> SWITCH = registerBlock("switch", () ->
             new SwitchBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f)));
+
+    public static final RegistryObject<Block> NETWORK_SOCKET = registerBlock("network_socket", () ->
+            new NetworkSocketBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid()));
 
 
     public static void register(IEventBus eventBus){

@@ -6,6 +6,7 @@ import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -14,7 +15,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScrollableList extends Button {
+public class ScrollableList extends Widget {
     public static final int TEXT_COLOR = Color.WHITE;
     public static final int TEXT_Y_OFFSET = 4;
 
@@ -28,7 +29,7 @@ public class ScrollableList extends Button {
 
 
     public ScrollableList(int x, int y, int width, int height, int elementHeight){
-        super(x, y, width, height, new StringTextComponent(""), (onPress) ->{});
+        super(x, y, width, height, new StringTextComponent(""));
 
         this.mousePosition = new Point();
         this.maxVisibleListElements = this.height / elementHeight;

@@ -6,6 +6,7 @@ import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -13,7 +14,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 import java.awt.*;
 
-public class DropDown extends net.minecraft.client.gui.widget.button.Button {
+public class DropDown extends Widget {
     public static final int DEFAULT_COLOR = Color.DARK_GRAY_HEX;
     public static final int HOVER_COLOR = Color.LIGHT_GRAY_HEX;
     public static final int TEXT_COLOR = Color.WHITE;
@@ -35,7 +36,7 @@ public class DropDown extends net.minecraft.client.gui.widget.button.Button {
 
 
     public DropDown(@NotNull String[] options, int x, int y, int width, int height, String placeholder){
-        super(x, y, width, height, new StringTextComponent(""), (onPress) ->{});
+        super(x, y, width, height, new StringTextComponent(""));
 
         this.mousePosition = new Point();
         this.options = options;

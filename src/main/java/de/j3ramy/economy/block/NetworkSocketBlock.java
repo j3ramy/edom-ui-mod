@@ -1,46 +1,41 @@
-/*
-* Per hard disk one table
-* */
-
 package de.j3ramy.economy.block;
 
-import de.j3ramy.economy.container.ServerContainer;
-import de.j3ramy.economy.item.ModItems;
-import de.j3ramy.economy.network.Network;
-import de.j3ramy.economy.network.SCPacketSendServerData;
+import de.j3ramy.economy.container.NetworkSocketContainer;
 import de.j3ramy.economy.tileentity.ModTileEntities;
-import de.j3ramy.economy.tileentity.ServerTile;
-import net.minecraft.block.AirBlock;
+import de.j3ramy.economy.tileentity.NetworkSocketTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
-public class ServerBlock extends HorizontalBlock {
-    public ServerBlock(Properties props) {
+public class NetworkSocketBlock extends HorizontalBlock {
+    protected static final VoxelShape NS_EAST = Block.makeCuboidShape(15.0D, 2.0D, 6.0D, 16.0D, 6.0D, 10.0D); //X
+    protected static final VoxelShape NS_WEST = Block.makeCuboidShape(0.0D, 2.0D, 6.0D, 1.0D, 6.0D, 10.0D);//X
+    protected static final VoxelShape NS_SOUTH = Block.makeCuboidShape(6.0D, 2.0D, 15.0D, 10.0D, 6.0D, 16.0D);//X
+    protected static final VoxelShape NS_NORTH = Block.makeCuboidShape(6.0D, 2.0D, 0.0D, 10.0D, 6.0D, 1.0D);//X
+
+    public NetworkSocketBlock(Properties props) {
         super(props);
     }
 
@@ -55,41 +50,34 @@ public class ServerBlock extends HorizontalBlock {
         return getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing());
     }
 
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        switch(state.get(HORIZONTAL_FACING)) {
+            case NORTH:
+                return NS_NORTH;
+            case SOUTH:
+                return NS_SOUTH;
+            case WEST:
+                return NS_WEST;
+            case EAST:
+            default:
+                return NS_EAST;
+        }
+    }
+
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
 
         if(!world.isRemote){
-            ServerTile tileEntity = (ServerTile) world.getTileEntity(pos);
+            NetworkSocketTile tileEntity = (NetworkSocketTile) world.getTileEntity(pos);
+
             if(tileEntity == null)
                 return ActionResultType.SUCCESS;
 
             INamedContainerProvider containerProvider = createContainerProvider(world, pos);
             NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
-
-            if(tileEntity.getServer() != null)
-                Network.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SCPacketSendServerData(tileEntity.getServer()));
         }
 
         return ActionResultType.SUCCESS;
-    }
-
-    //When added
-    @Override
-    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
-
-        if(worldIn.isRemote)
-            return;
-
-        if(!(worldIn.getBlockState(fromPos).getBlock() instanceof SwitchBlock))
-            return;
-
-        ServerTile tile = (ServerTile) worldIn.getTileEntity(pos);
-        System.out.println("Switch added");
-
-        if(tile != null){
-
-        }
     }
 
     private INamedContainerProvider createContainerProvider(World world, BlockPos pos) {
@@ -97,7 +85,7 @@ public class ServerBlock extends HorizontalBlock {
 
             @Override
             public Container createMenu(int i, PlayerInventory playerInv, PlayerEntity playerEntity) {
-                return new ServerContainer(i, playerInv, (ServerTile) world.getTileEntity(pos));
+                return new NetworkSocketContainer(i, playerInv, (NetworkSocketTile) world.getTileEntity(pos));
             }
 
             @Override
@@ -115,22 +103,11 @@ public class ServerBlock extends HorizontalBlock {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return ModTileEntities.SERVER_TILE.get().create();
+        return ModTileEntities.NETWORK_SOCKET_TILE.get().create();
     }
 
-    Direction getBlockFacing(BlockState state){
-        if(state.toString().contains("north"))
-            return Direction.NORTH;
-
-        if(state.toString().contains("south"))
-            return Direction.SOUTH;
-
-        if(state.toString().contains("east"))
-            return Direction.EAST;
-
-        if(state.toString().contains("west"))
-            return Direction.WEST;
-
-        return Direction.NORTH;
+    @Override
+    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        return worldIn.getBlockState(pos.offset(state.get(HORIZONTAL_FACING))).isSolid();
     }
 }
