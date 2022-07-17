@@ -1,41 +1,47 @@
 package de.j3ramy.economy.container;
 
 import de.j3ramy.economy.block.ModBlocks;
-import de.j3ramy.economy.tileentity.MoneyChangerTile;
+import de.j3ramy.economy.tileentity.SwitchTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-public class MoneyChangerContainer extends Container {
+public class SwitchContainer extends Container {
 
-    public MoneyChangerTile tileEntity;
+    private final SwitchTile tileEntity;
     private final PlayerEntity playerEntity;
     private final IItemHandler playerInventory;
 
-    public MoneyChangerContainer(int windowId, PlayerInventory playerInventory, PlayerEntity player, MoneyChangerTile tile){
-        super(ModContainers.MONEY_CHANGER_CONTAINER.get(), windowId);
+    public SwitchTile getTileEntity() {
+        return this.tileEntity;
+    }
 
+    public SwitchContainer(int windowId, PlayerInventory inv, SwitchTile tile){
+        super(ModContainers.SWITCH_CONTAINER.get(), windowId);
+
+        this.playerInventory = new InvWrapper(inv);
+        this.playerEntity = inv.player;
         this.tileEntity = tile;
-        this.playerEntity = player;
-        this.playerInventory = new InvWrapper(playerInventory);
 
-        if(tileEntity != null){
-            tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->{
-                addSlot(new SlotItemHandler(h, 0, 44, 31));
-                addSlot(new SlotItemHandler(h, 1, 44, 53));
-                addSlot(new SlotItemHandler(h, 2, 65, 53));
+        if(this.tileEntity != null){
+            this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->{
+                addSlot(new SlotItemHandler(h, 0, -20, 44));
+                addSlot(new SlotItemHandler(h, 1, 39, 44));
+                addSlot(new SlotItemHandler(h, 2, 78, 44));
+                addSlot(new SlotItemHandler(h, 3, 117, 44));
+                addSlot(new SlotItemHandler(h, 4, 156, 44));
             });
-        }
 
-        layoutPlayerInventorySlots(8, 86); //Position of player inventory
+            layoutPlayerInventorySlots(6, 29); //Position of player inventory
+
+        }
     }
 
     @Override
@@ -43,7 +49,7 @@ public class MoneyChangerContainer extends Container {
         if(tileEntity.getWorld() == null)
             return false;
 
-        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerIn, ModBlocks.MONEY_CHANGER.get());
+        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerIn, ModBlocks.SWITCH.get());
     }
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
@@ -56,15 +62,8 @@ public class MoneyChangerContainer extends Container {
         return index;
     }
 
-    private void addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
-        for (int j = 0; j < verAmount; j++) {
-            index = addSlotRange(handler, index, x, y, horAmount, dx);
-            y += dy;
-        }
-    }
-
     private void layoutPlayerInventorySlots(int leftCol, int topRow) {
-        addSlotBox(playerInventory, 9, leftCol, topRow, 9, 18, 3, 18);
+        //addSlotBox(playerInventory, 9, leftCol, topRow, 9, 18, 3, 18);
 
         topRow += 58;
         addSlotRange(playerInventory, 0, leftCol, topRow, 9, 18);
@@ -78,7 +77,7 @@ public class MoneyChangerContainer extends Container {
     private static final int VANILLA_FIRST_SLOT_INDEX = 0;
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
     // THIS YOU HAVE TO DEFINE!
-    private static final int TE_INVENTORY_SLOT_COUNT = 3;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
+    private static final int TE_INVENTORY_SLOT_COUNT = 5;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
 
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
@@ -111,6 +110,4 @@ public class MoneyChangerContainer extends Container {
         sourceSlot.onTake(playerEntity, sourceStack);
         return copyOfSourceStack;
     }
-
-
 }

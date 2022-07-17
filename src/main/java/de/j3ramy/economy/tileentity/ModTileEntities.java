@@ -23,7 +23,10 @@ public class ModTileEntities {
             ServerTile::new, ModBlocks.SERVER.get()).build(null));
 
     public static RegistryObject<TileEntityType<ComputerTile>> COMPUTER_TILE = TILE_ENTITIES.register("computer_tile", () -> TileEntityType.Builder.create(
-            ComputerTile::new, ModBlocks.SERVER.get()).build(null));
+            ComputerTile::new, ModBlocks.COMPUTER.get()).build(null));
+
+    public static RegistryObject<TileEntityType<SwitchTile>> SWITCH_TILE = TILE_ENTITIES.register("switch_tile", () -> TileEntityType.Builder.create(
+            SwitchTile::new, ModBlocks.SWITCH.get()).build(null));
 
     public static void register(IEventBus eventBus){
         TILE_ENTITIES.register(eventBus);

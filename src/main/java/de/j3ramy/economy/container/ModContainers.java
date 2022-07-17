@@ -44,6 +44,10 @@ public class ModContainers {
     public static final RegistryObject<ContainerType<ComputerContainer>> COMPUTER_CONTAINER = CONTAINERS.register("computer_container",
             () -> IForgeContainerType.create(((windowId, inv, data) -> new ComputerContainer(windowId, (ComputerTile) inv.player.getEntityWorld().getTileEntity(data.readBlockPos())))));
 
+
+    public static final RegistryObject<ContainerType<SwitchContainer>> SWITCH_CONTAINER = CONTAINERS.register("switch_container",
+            () -> IForgeContainerType.create(((windowId, inv, data) -> new SwitchContainer(windowId, inv, (SwitchTile) inv.player.getEntityWorld().getTileEntity(data.readBlockPos())))));
+
     public static void register(IEventBus eventBus){
         CONTAINERS.register(eventBus);
     }

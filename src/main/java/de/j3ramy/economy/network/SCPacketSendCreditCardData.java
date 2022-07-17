@@ -1,7 +1,7 @@
 package de.j3ramy.economy.network;
 
 import de.j3ramy.economy.gui.screen.CreditCardScreen;
-import de.j3ramy.economy.utils.CreditCardData;
+import de.j3ramy.economy.utils.data.CreditCardData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.network.PacketBuffer;

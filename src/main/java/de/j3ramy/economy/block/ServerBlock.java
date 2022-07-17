@@ -79,21 +79,6 @@ public class ServerBlock extends HorizontalBlock {
         return ActionResultType.SUCCESS;
     }
 
-    private INamedContainerProvider createContainerProvider(World world, BlockPos pos) {
-        return new INamedContainerProvider(){
-
-            @Override
-            public Container createMenu(int i, PlayerInventory playerInv, PlayerEntity playerEntity) {
-                return new ServerContainer(i, playerInv, (ServerTile) world.getTileEntity(pos));
-            }
-
-            @Override
-            public ITextComponent getDisplayName() {
-                return new TranslationTextComponent("");
-            }
-        };
-    }
-
     //When added
     @Override
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
@@ -111,6 +96,21 @@ public class ServerBlock extends HorizontalBlock {
         if(tile != null){
 
         }
+    }
+
+    private INamedContainerProvider createContainerProvider(World world, BlockPos pos) {
+        return new INamedContainerProvider(){
+
+            @Override
+            public Container createMenu(int i, PlayerInventory playerInv, PlayerEntity playerEntity) {
+                return new ServerContainer(i, playerInv, (ServerTile) world.getTileEntity(pos));
+            }
+
+            @Override
+            public ITextComponent getDisplayName() {
+                return new TranslationTextComponent("");
+            }
+        };
     }
 
     @Override

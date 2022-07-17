@@ -37,7 +37,7 @@ public class ModBlocks {
             new RouterBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid()));
 
     public static final RegistryObject<Block> SWITCH = registerBlock("switch", () ->
-            new SwitchBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid()));
+            new SwitchBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f)));
 
 
     public static void register(IEventBus eventBus){

@@ -79,7 +79,7 @@ public class MoneyChangerBlock extends HorizontalBlock {
 
             @Override
             public Container createMenu(int i, PlayerInventory playerInv, PlayerEntity playerEntity) {
-                return new MoneyChangerContainer(i, playerInv, playerEntity, tileEntity);
+                return new MoneyChangerContainer(i, playerInv, playerEntity, (MoneyChangerTile) world.getTileEntity(pos));
             }
 
             @Override

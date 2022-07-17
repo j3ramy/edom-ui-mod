@@ -3,7 +3,7 @@ package de.j3ramy.economy.item;
 import de.j3ramy.economy.container.CreditCardContainer;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.network.SCPacketSendCreditCardData;
-import de.j3ramy.economy.utils.CreditCardData;
+import de.j3ramy.economy.utils.data.CreditCardData;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

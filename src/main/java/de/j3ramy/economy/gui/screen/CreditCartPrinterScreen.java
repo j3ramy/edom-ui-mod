@@ -9,7 +9,7 @@ import de.j3ramy.economy.network.CSPacketSendCreditCardData;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.Texture;
-import de.j3ramy.economy.utils.CreditCardData;
+import de.j3ramy.economy.utils.data.CreditCardData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;

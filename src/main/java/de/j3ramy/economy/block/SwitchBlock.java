@@ -1,11 +1,16 @@
 package de.j3ramy.economy.block;
 
+import de.j3ramy.economy.container.SwitchContainer;
 import de.j3ramy.economy.tileentity.ModTileEntities;
-import de.j3ramy.economy.tileentity.ServerTile;
+import de.j3ramy.economy.tileentity.SwitchTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -17,71 +22,50 @@ import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public class SwitchBlock extends HorizontalBlock {
 
-    static final VoxelShape SHAPE_N = Stream.of(
-            Block.makeCuboidShape(0, 0, 0, 16, 3, 8)
-    ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
-
-    static final VoxelShape SHAPE_W = Stream.of(
-            Block.makeCuboidShape(0, 0, 0, 8, 3, 16)
-    ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
-
-    static final VoxelShape SHAPE_S = Stream.of(
-            Block.makeCuboidShape(0, 0, 8, 16, 3, 16)
-    ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
-
-    static final VoxelShape SHAPE_E = Stream.of(
-            Block.makeCuboidShape(8, 0, 0, 16, 3, 16)
-    ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
 
     public SwitchBlock(Properties props) {
         super(props);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(!world.isRemote){
+            SwitchTile tileEntity = (SwitchTile) world.getTileEntity(pos);
 
+            if(tileEntity == null)
+                return ActionResultType.SUCCESS;
+
+            INamedContainerProvider containerProvider = createContainerProvider(world, pos);
+            NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
+        }
         return ActionResultType.SUCCESS;
     }
 
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
-        switch (state.get(HORIZONTAL_FACING)){
-            case SOUTH: return SHAPE_S;
-            case EAST: return SHAPE_E;
-            case WEST: return SHAPE_W;
-            default: return SHAPE_N;
-        }
-    }
+    private INamedContainerProvider createContainerProvider(World world, BlockPos pos) {
+        return new INamedContainerProvider(){
 
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING);
-    }
+            @Override
+            public Container createMenu(int i, PlayerInventory playerInv, PlayerEntity playerEntity) {
+                return new SwitchContainer(i, playerInv, (SwitchTile) world.getTileEntity(pos));
+            }
 
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing());
-    }
-
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return ModTileEntities.CREDIT_CARD_PRINTER_TILE.get().create();
+            @Override
+            public ITextComponent getDisplayName() {
+                return new TranslationTextComponent("");
+            }
+        };
     }
 
     @Override
@@ -95,5 +79,27 @@ public class SwitchBlock extends HorizontalBlock {
 
         //Scan for server around block
         //...
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(HORIZONTAL_FACING);
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing());
+    }
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return ModTileEntities.SWITCH_TILE.get().create();
     }
 }
