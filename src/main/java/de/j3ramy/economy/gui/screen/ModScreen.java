@@ -28,38 +28,31 @@ public class ModScreen extends Screen {
     public void setConfirmPopUp(ConfirmPopUp confirmPopUp){
         this.confirmPopUp = confirmPopUp;
     }
-
     public void addButton(Button button){
         this.buttons.add(button);
     }
-
     public void addDropDown(DropDown dropDown){
         this.dropDowns.add(dropDown);
     }
-
     public void addTooltip(Tooltip tooltip){
         this.tooltips.add(tooltip);
     }
-
     public void addTable(ScrollableTable table){
         this.tables.add(table);
     }
-
     public void addList(ScrollableList scrollableList){
         this.scrollableList.add(scrollableList);
     }
-
     public void addHorizontalLine(HorizontalLine horizontalLine){
         this.horizontalLines.add(horizontalLine);
     }
-
     public void addCenteredHorizontalLine(CenteredHorizontalLine centeredHorizontalLine){
         this.centeredHorizontalLines.add(centeredHorizontalLine);
     }
-
     public void addVerticalLine(VerticalLine verticalLine){
         this.verticalLines.add(verticalLine);
     }
+
 
     public ModScreen() {
         super(new StringTextComponent(""));

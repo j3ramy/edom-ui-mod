@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "minecraft:block/white_concrete",
-		"1": "minecraft:block/light_gray_concrete",
+		"1": "minecraft:block/black_concrete",
 		"2": "minecraft:block/emerald_block",
 		"particle": "minecraft:block/white_concrete"
 	},

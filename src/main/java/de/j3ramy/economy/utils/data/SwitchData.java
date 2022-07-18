@@ -6,63 +6,75 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class SwitchData {
-    private static final int OUTPUT_PORT_COUNT = 4;
+    public static final int PORT_COUNT = 5;
 
+    public enum PortState{
+        CONNECTED,
+        CONNECTED_NO_INTERNET,
+        NOT_CONNECTED
+    }
 
-    private ItemStackHandler itemHandler = new ItemStackHandler();
     private boolean isOn;
-    private BlockPos inputServer;/*, dnsServer;*/
-    private final BlockPos[] outputServer = new BlockPos[OUTPUT_PORT_COUNT];
+    private final BlockPos[] ports = new BlockPos[PORT_COUNT];
+    private final PortState[] portStates = new PortState[PORT_COUNT];
 
 
     public SwitchData(CompoundNBT nbt){
-        this.itemHandler.deserializeNBT(nbt.getCompound("inv"));
+
         this.isOn = nbt.getBoolean("isOn");
-        this.inputServer = NBTUtil.readBlockPos(nbt.getCompound("input"));
         //this.dnsServer = NBTUtil.readBlockPos(nbt.getCompound("dns"));
 
-        int i = 0;
-        while(nbt.contains("output" + i)){
-            this.outputServer[i] = NBTUtil.readBlockPos(nbt.getCompound("output" + i));
+        for(int i = 0; i < this.ports.length; i++){
+            this.ports[i] = new BlockPos(BlockPos.ZERO);
+            this.portStates[i] = PortState.NOT_CONNECTED;
+
+            if(nbt.contains("port_" + i))
+                this.ports[i] = NBTUtil.readBlockPos(nbt.getCompound("port_" + i));
+
+            if(nbt.contains("portState_" + i))
+                this.portStates[i] = PortState.values()[nbt.getInt("portState_" + i)];
         }
     }
 
     public CompoundNBT getData(){
         CompoundNBT nbt = new CompoundNBT();
 
-        nbt.put("inv", this.itemHandler.serializeNBT());
         nbt.putBoolean("isOn", this.isOn);
-        nbt.put("input", NBTUtil.writeBlockPos(this.inputServer));
         //nbt.put("dns", NBTUtil.writeBlockPos(this.dnsServer));
 
-        for(int i = 0; i < this.outputServer.length; i++){
-            nbt.put("output" + i, NBTUtil.writeBlockPos(this.outputServer[i]));
+        for(int i = 0; i < this.ports.length; i++){
+            nbt.put("port_" + i, NBTUtil.writeBlockPos(this.ports[i]));
+            nbt.putInt("portState_" + i, this.portStates[i].ordinal());
         }
 
         return nbt;
     }
 
-    public ItemStackHandler getItemHandler() {
-        return this.itemHandler;
+    public void setPortState(int port, PortState portState) {
+        this.portStates[port] = portState;
     }
 
-    public void setItemHandler(ItemStackHandler itemHandler) {
-        this.itemHandler = itemHandler;
+    public PortState[] getPortStates() {
+        return this.portStates;
+    }
+    public PortState getPortState(int index){
+        return this.portStates[index];
     }
 
     public void setOn(boolean on) {
         this.isOn = on;
     }
 
-    public void setOutput(int slot, BlockPos pos){
-        if(slot == 0)
-            return;
-
-        this.outputServer[slot] = pos;
+    public void setPort(int port, BlockPos pos){
+        this.ports[port] = pos;
     }
 
-    public void setInput(BlockPos pos){
-        this.inputServer = pos;
+    public BlockPos getPort(int index) {
+        return this.ports[index];
+    }
+
+    public BlockPos[] getPorts() {
+        return this.ports;
     }
 
     /*

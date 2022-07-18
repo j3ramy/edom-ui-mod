@@ -57,7 +57,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     @Override
     public void init(Minecraft minecraft, int width, int height) {
         super.init(minecraft, width, height);
-
+        System.out.println(this.width + " | " + this.height);
         this.setUpScreen.clearScreen();
         this.overviewScreen.clearScreen();
 
@@ -70,9 +70,12 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.playerInventoryTitleX = 1000;
+        this.renderBackground(matrixStack);
+
+        new Desktop(300, 169, 3, Color.DARK_GRAY_HEX, Color.ORANGE_HEX).render(this, matrixStack);
+
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         this.screenState = this.server.isSet() ? ServerScreenState.OVERVIEW : ServerScreenState.SET_UP;
 
@@ -133,7 +136,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
         assert this.minecraft != null;
 
-        this.minecraft.getTextureManager().bindTexture(Texture.SCREEN_GUI_INV);
+        this.minecraft.getTextureManager().bindTexture(Texture.BLANK_GUI);
         this.blit(matrixStack, this.xPos, this.yPos, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 

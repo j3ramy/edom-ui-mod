@@ -1,14 +1,20 @@
 package de.j3ramy.economy.tileentity;
 
 import de.j3ramy.economy.item.ModItems;
+import de.j3ramy.economy.network.Network;
+import de.j3ramy.economy.network.SCPacketSendSwitchData;
 import de.j3ramy.economy.utils.data.SwitchData;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -20,32 +26,38 @@ public class SwitchTile extends TileEntity {
     private final ItemStackHandler itemHandler = this.createHandler();
     private final LazyOptional<IItemHandler> handler =  LazyOptional.of(() -> this.itemHandler);
 
-    //private SwitchData switchData = new SwitchData(new CompoundNBT());
+    private SwitchData data = new SwitchData(new CompoundNBT());
 
     public SwitchTile(){
         super(ModTileEntities.SWITCH_TILE.get());
     }
 
 
-    /*public SwitchData getSwitchData() {
-        return this.switchData;
+    public SwitchData getSwitchData() {
+        return this.data;
     }
 
     public void setSwitchData(SwitchData switchData) {
-        this.switchData = switchData;
+        this.data = switchData;
     }
 
-     */
+    public ItemStackHandler getItemHandler() {
+        return this.itemHandler;
+    }
 
     @Override
     public void read(BlockState state, CompoundNBT nbt) {
         itemHandler.deserializeNBT(nbt.getCompound("inv"));
+        this.data = new SwitchData(nbt.getCompound("data"));
+
         super.read(state, nbt);
     }
 
     @Override
     public CompoundNBT write(CompoundNBT nbt) {
         nbt.put("inv", itemHandler.serializeNBT());
+        nbt.put("data", this.data.getData());
+
         return super.write(nbt);
     }
 
@@ -58,11 +70,28 @@ public class SwitchTile extends TileEntity {
         return super.getCapability(cap, side);
     }
 
-    private ItemStackHandler createHandler(){
-        return new ItemStackHandler(5){
+    public ItemStackHandler createHandler(){
+        return new ItemStackHandler(SwitchData.PORT_COUNT){
             @Override
-            protected void onContentsChanged(int slot) {
+            public void onContentsChanged(int slot) {
+                assert world != null;
+                if(world.isRemote())
+                    return;
 
+                CompoundNBT nbt = itemHandler.getStackInSlot(slot).getTag();
+
+                if(itemHandler.getStackInSlot(slot).isEmpty()){
+                    data.setPort(slot, BlockPos.ZERO);
+                    data.setPortState(slot, SwitchData.PortState.NOT_CONNECTED);
+                }
+                else if(nbt == null || !nbt.contains("pos")){
+                    data.setPort(slot, BlockPos.ZERO);
+                    data.setPortState(slot, SwitchData.PortState.CONNECTED_NO_INTERNET);
+                }
+                else{
+                    data.setPort(slot, NBTUtil.readBlockPos(nbt.getCompound("pos")));
+                    data.setPortState(slot, SwitchData.PortState.CONNECTED);
+                }
             }
 
             @Override

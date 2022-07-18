@@ -1,6 +1,9 @@
 package de.j3ramy.economy.block;
 
 import de.j3ramy.economy.container.SwitchContainer;
+import de.j3ramy.economy.network.Network;
+import de.j3ramy.economy.network.SCPacketSendServerData;
+import de.j3ramy.economy.network.SCPacketSendSwitchData;
 import de.j3ramy.economy.tileentity.ModTileEntities;
 import de.j3ramy.economy.tileentity.SwitchTile;
 import net.minecraft.block.Block;
@@ -24,6 +27,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
@@ -44,6 +48,9 @@ public class SwitchBlock extends HorizontalBlock {
 
             INamedContainerProvider containerProvider = createContainerProvider(world, pos);
             NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
+
+            if(tileEntity.getSwitchData() != null)
+                Network.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SCPacketSendSwitchData(tileEntity.getSwitchData()));
         }
         return ActionResultType.SUCCESS;
     }

@@ -1,8 +1,12 @@
 package de.j3ramy.economy.block;
 
 import de.j3ramy.economy.container.CreditCardPrinterContainer;
+import de.j3ramy.economy.container.ServerContainer;
+import de.j3ramy.economy.network.Network;
+import de.j3ramy.economy.network.SCPacketSendServerData;
 import de.j3ramy.economy.tileentity.CreditCardPrinterTile;
 import de.j3ramy.economy.tileentity.ModTileEntities;
+import de.j3ramy.economy.tileentity.ServerTile;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -26,6 +30,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.security.cert.X509Certificate;
@@ -44,6 +49,40 @@ public class RouterBlock extends DirectionalBlock {
         super(props);
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.UP));
     }
+
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+
+        if(!world.isRemote){
+            ServerTile tileEntity = (ServerTile) world.getTileEntity(pos);
+            if(tileEntity == null)
+                return ActionResultType.SUCCESS;
+
+            INamedContainerProvider containerProvider = createContainerProvider(world, pos);
+            NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
+
+            if(tileEntity.getServer() != null)
+                Network.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SCPacketSendServerData(tileEntity.getServer()));
+        }
+
+        return super.onBlockActivated(state, world, pos, player, handIn, hit);
+    }
+
+    private INamedContainerProvider createContainerProvider(World world, BlockPos pos) {
+        return new INamedContainerProvider(){
+
+            @Override
+            public Container createMenu(int i, PlayerInventory playerInv, PlayerEntity playerEntity) {
+                return new ServerContainer(i, playerInv, (ServerTile) world.getTileEntity(pos));
+            }
+
+            @Override
+            public ITextComponent getDisplayName() {
+                return new TranslationTextComponent("");
+            }
+        };
+    }
+
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {

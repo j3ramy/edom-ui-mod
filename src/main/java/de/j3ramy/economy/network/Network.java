@@ -1,6 +1,7 @@
 package de.j3ramy.economy.network;
 
 import de.j3ramy.economy.EconomyMod;
+import de.j3ramy.economy.utils.data.SwitchData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -21,5 +22,7 @@ public class Network {
         INSTANCE.registerMessage(getNextId(), SCPacketSendServerData.class, SCPacketSendServerData::toBytes, SCPacketSendServerData::new, SCPacketSendServerData::handle);
         INSTANCE.registerMessage(getNextId(), CSPacketSendServerData.class, CSPacketSendServerData::toBytes, CSPacketSendServerData::new, CSPacketSendServerData::handle);
         INSTANCE.registerMessage(getNextId(), CSPacketLoadBackup.class, CSPacketLoadBackup::toBytes, CSPacketLoadBackup::new, CSPacketLoadBackup::handle);
+        INSTANCE.registerMessage(getNextId(), SCPacketSendSwitchData.class, SCPacketSendSwitchData::toBytes, SCPacketSendSwitchData::new, SCPacketSendSwitchData::handle);
+        INSTANCE.registerMessage(getNextId(), CSPacketSendSwitchData.class, CSPacketSendSwitchData::toBytes, CSPacketSendSwitchData::new, CSPacketSendSwitchData::handle);
     }
 }

@@ -4,6 +4,7 @@ import de.j3ramy.economy.EconomyMod;
 import net.minecraft.util.ResourceLocation;
 
 public class Texture {
+    public static final ResourceLocation BLANK_GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/blank_gui.png");
     public static final ResourceLocation SCREEN_GUI_INV = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/screen_inv_gui.png");
     public static final ResourceLocation SCREEN_GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/screen_gui.png");
     public static final ResourceLocation CC_PRINTER_GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/credit_cart_printer_gui.png");
