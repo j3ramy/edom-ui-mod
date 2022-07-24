@@ -5,7 +5,6 @@ import de.j3ramy.economy.utils.server.Server;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraftforge.common.capabilities.Capability;
@@ -17,7 +16,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ServerTile extends TileEntity {
+public class ServerTile extends NetworkComponentTile {
 
     private final IIntArray data = new IIntArray() {
         public int get(int index) {
@@ -37,7 +36,7 @@ public class ServerTile extends TileEntity {
         }
     };
 
-    public IIntArray getData() {
+    public IIntArray getIntData() {
         return this.data;
     }
 
@@ -62,6 +61,7 @@ public class ServerTile extends TileEntity {
     public void read(BlockState state, CompoundNBT nbt) {
         itemHandler.deserializeNBT(nbt.getCompound("inv"));
         this.server = new Server(nbt.getCompound("server"));
+
         super.read(state, nbt);
     }
 

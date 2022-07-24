@@ -1,14 +1,13 @@
 package de.j3ramy.economy.block;
 
-import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.RouterContainer;
 import de.j3ramy.economy.item.ModItems;
 import de.j3ramy.economy.network.Network;
-import de.j3ramy.economy.network.SCPacketSendRouterData;
+import de.j3ramy.economy.network.SCPacketSendNetworkComponentData;
 import de.j3ramy.economy.tileentity.ModTileEntities;
+import de.j3ramy.economy.tileentity.NetworkComponentTile;
 import de.j3ramy.economy.tileentity.RouterTile;
-import de.j3ramy.economy.tileentity.SwitchTile;
-import de.j3ramy.economy.utils.Math;
+import de.j3ramy.economy.utils.NetworkComponentUtils;
 import de.j3ramy.economy.utils.enums.NetworkComponent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,8 +19,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -35,7 +32,6 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -59,67 +55,23 @@ public class RouterBlock extends DirectionalBlock {
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(!world.isRemote){
-            RouterTile tileEntity = (RouterTile) world.getTileEntity(pos);
+            NetworkComponentTile tileEntity = (NetworkComponentTile) world.getTileEntity(pos);
             if(tileEntity == null)
                 return ActionResultType.SUCCESS;
 
             ItemStack stack = player.getHeldItemMainhand();
             if(stack.getItem() == ModItems.ETHERNET_CABLE.get()){
-                if(tileEntity.getRouterData().getName().isEmpty()){
-                    player.sendMessage(new TranslationTextComponent("translation."+ EconomyMod.MOD_ID + ".chat.ethernet_cable.no_name_set"), player.getUniqueID());
-                    return ActionResultType.FAIL;
-                }
+                NetworkComponentUtils.onCableInteract(tileEntity, player, stack, pos, NetworkComponent.ROUTER);
+            }
+            else{
+                INamedContainerProvider containerProvider = createContainerProvider(world, pos);
+                NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
 
-                //set "to" (not implemented)
-                if(stack.hasTag()){
-                    CompoundNBT nbt = stack.getTag();
-                    if(nbt == null || !nbt.contains("pos"))
-                        return ActionResultType.FAIL;
-
-                    //disconnect
-                    if(Math.areBlockPosEqual(NBTUtil.readBlockPos(nbt.getCompound("pos")), pos)){
-                        stack.setTag(new CompoundNBT());
-                        tileEntity.getRouterData().setFrom(BlockPos.ZERO);
-                        tileEntity.getRouterData().setTo(BlockPos.ZERO);
-                        player.sendMessage(new TranslationTextComponent("translation."+ EconomyMod.MOD_ID + ".chat.ethernet_cable.removed_cable"), player.getUniqueID());
-
-                    }
-                    else{
-                        player.sendMessage(new TranslationTextComponent("translation."+ EconomyMod.MOD_ID + ".chat.ethernet_cable.cable_already_connected_to_other"), player.getUniqueID());
-
-                    }
-
-                    return ActionResultType.SUCCESS;
-
-                    //tileEntity.getRouterData().setTo(NBTUtil.readBlockPos(stack.getTag().getCompound("pos")));
-                    //stack.shrink(1);
-                }
-                else if(!Math.areBlockPosEqual(tileEntity.getRouterData().getFrom(), BlockPos.ZERO)){
-                        player.sendMessage(new TranslationTextComponent("translation."+ EconomyMod.MOD_ID + ".chat.ethernet_cable.cable_already_connected_to_this"), player.getUniqueID());
-                        return ActionResultType.FAIL;
-                }
-                else{
-                    tileEntity.getRouterData().setComponent(NetworkComponent.ROUTER);
-                    CompoundNBT nbt = new CompoundNBT();
-                    nbt.put("pos", NBTUtil.writeBlockPos(pos));
-                    nbt.putString("from", tileEntity.getRouterData().getName());
-                    nbt.putString("component", tileEntity.getRouterData().getComponent().name());
-                    stack.setTag(nbt);
-
-                    //tileEntity.getRouterData().setFrom(NBTUtil.readBlockPos(stack.getTag().getCompound("pos")));
-
-                    player.sendMessage(new TranslationTextComponent("translation."+ EconomyMod.MOD_ID + ".chat.ethernet_cable.cable_connected",
-                            tileEntity.getRouterData().getName(), "(" + tileEntity.getRouterData().getComponent().name() + ")"), player.getUniqueID());
-                }
-
-                return ActionResultType.SUCCESS;
+                if(tileEntity.getData() != null)
+                    Network.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SCPacketSendNetworkComponentData(tileEntity.getData()));
             }
 
-            INamedContainerProvider containerProvider = createContainerProvider(world, pos);
-            NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
 
-            if(tileEntity.getRouterData() != null)
-                Network.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SCPacketSendRouterData(tileEntity.getRouterData()));
         }
 
         return ActionResultType.SUCCESS;
@@ -147,32 +99,7 @@ public class RouterBlock extends DirectionalBlock {
         if(worldIn.isRemote())
             return;
 
-        RouterTile routerTile = (RouterTile) worldIn.getTileEntity(pos);
-
-        if(routerTile == null)
-            return;
-
-        BlockPos toPos = routerTile.getRouterData().getTo();
-        TileEntity toTileEntity = worldIn.getTileEntity(toPos);
-
-        if(toTileEntity instanceof SwitchTile){
-
-            for(int i = 0; i < ((SwitchTile) toTileEntity).getSwitchData().getPorts().length; i++){
-                BlockPos portPos = ((SwitchTile) toTileEntity).getSwitchData().getPort(i).getFrom();
-
-                if(Math.areBlockPosEqual(pos, portPos)){
-                    System.out.println("REMOVE");
-                    ((SwitchTile) toTileEntity).getItemHandler().getStackInSlot(i).setTag(new CompoundNBT());
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state) {
-        super.onPlayerDestroy(worldIn, pos, state);
-
-
+        NetworkComponentUtils.destroySwitchConnection(worldIn, pos);
     }
 
     @Override

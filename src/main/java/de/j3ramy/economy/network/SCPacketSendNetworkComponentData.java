@@ -10,14 +10,14 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class SCPacketSendRouterData {
+public class SCPacketSendNetworkComponentData {
     private final NetworkComponentData data;
 
-    public SCPacketSendRouterData(PacketBuffer buf){
+    public SCPacketSendNetworkComponentData(PacketBuffer buf){
        data = new NetworkComponentData(Objects.requireNonNull(buf.readCompoundTag()));
     }
 
-    public SCPacketSendRouterData(NetworkComponentData data){
+    public SCPacketSendNetworkComponentData(NetworkComponentData data){
         this.data = data;
     }
 

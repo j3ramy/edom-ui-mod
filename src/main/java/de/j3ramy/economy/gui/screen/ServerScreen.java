@@ -73,7 +73,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.playerInventoryTitleX = 1000;
         this.renderBackground(matrixStack);
 
-        new Desktop(300, 169, 3, Color.LIGHT_GRAY_HEX, Color.ORANGE_HEX).render(this, matrixStack);
+        new Desktop(TEXTURE_WIDTH, TEXTURE_HEIGHT - 20, 3, Color.PURPLE_HEX, Color.BLACK_HEX).render(this, matrixStack);
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
@@ -196,7 +196,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.addButton(this.saveServerButton = new ImageButton(this.xPos + 191, this.yPos + 41, 20, 18, 0, 0, 19, Texture.SAVE_BUTTON, (click)->{
 
             //check if drive is plugged in
-            if(this.container.getTileEntity().getData().get(0) == 0){
+            if(this.container.getTileEntity().getIntData().get(0) == 0){
                 this.overviewScreen.setAlertPopUp(this.alertPopUp = new AlertPopUp(
                         this,
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.no_drive_found").getString(),
@@ -206,7 +206,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             }
 
             //check if drive has tag
-            if(this.container.getTileEntity().getData().get(1) == 1){
+            if(this.container.getTileEntity().getIntData().get(1) == 1){
                 this.overviewScreen.setConfirmPopUp(this.confirmPopUp = new ConfirmPopUp(
                         this,
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drive_has_data").getString(),
@@ -239,7 +239,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.addButton(this.loadServerButton = new ImageButton(this.xPos + 218, this.yPos + 41, 20, 18, 0, 0, 19, Texture.LOAD_BUTTON, (click)->{
 
             //check if drive is plugged in
-            if(this.container.getTileEntity().getData().get(0) == 0){
+            if(this.container.getTileEntity().getIntData().get(0) == 0){
                 this.overviewScreen.setAlertPopUp(this.alertPopUp = new AlertPopUp(
                         this,
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.no_drive_found").getString(),
@@ -249,7 +249,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             }
 
             //check if drive has backup
-            if(this.container.getTileEntity().getData().get(1) == 0){
+            if(this.container.getTileEntity().getIntData().get(1) == 0){
                 this.overviewScreen.setAlertPopUp(this.alertPopUp = new AlertPopUp(
                         this,
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drive_no_data").getString(),

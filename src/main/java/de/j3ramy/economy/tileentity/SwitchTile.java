@@ -1,6 +1,7 @@
 package de.j3ramy.economy.tileentity;
 
 import de.j3ramy.economy.item.ModItems;
+import de.j3ramy.economy.utils.NetworkComponentUtils;
 import de.j3ramy.economy.utils.data.NetworkComponentData;
 import de.j3ramy.economy.utils.data.SwitchData;
 import de.j3ramy.economy.utils.enums.NetworkComponent;
@@ -79,41 +80,14 @@ public class SwitchTile extends TileEntity {
 
                 this.portsCopy[slot] = data.getPort(slot);
                 CompoundNBT nbt = itemHandler.getStackInSlot(slot).getTag();
-                NetworkComponentData newData = new NetworkComponentData(new CompoundNBT());
 
-                if(nbt == null || !nbt.contains("pos") ||
-                        slot == 0 && newData.getComponent() != NetworkComponent.SWITCH ||
-                        slot == 0 && newData.getComponent() != NetworkComponent.SERVER ||
-                        world.getTileEntity(NBTUtil.readBlockPos(nbt.getCompound("pos"))) == null){
-
-                    data.setPort(slot, newData);
-                    data.setPortState(slot, itemHandler.getStackInSlot(slot).isEmpty() ? SwitchData.PortState.NOT_CONNECTED : SwitchData.PortState.CONNECTED_NO_INTERNET);
-
-                    if(portsCopy[slot].getFrom() != BlockPos.ZERO){
-                        TileEntity componentTile = world.getTileEntity(portsCopy[slot].getFrom());
-
-                        if(componentTile instanceof RouterTile){
-                            ((RouterTile) componentTile).getRouterData().setTo(BlockPos.ZERO);
-                        }
-
-                        portsCopy[slot] = new NetworkComponentData(newData.getData());
-                    }
-
-                    return;
-                }
-
-                newData.setFrom(NBTUtil.readBlockPos(nbt.getCompound("pos")));
-                newData.setTo(pos);
-                newData.setName(nbt.getString("from"));
-                newData.setComponent(NetworkComponent.valueOf(nbt.getString("component")));
-
-                data.setPort(slot, newData);
-                data.setPortState(slot, SwitchData.PortState.CONNECTED);
-
-                TileEntity componentTile = world.getTileEntity(newData.getFrom());
-                if(componentTile instanceof RouterTile){
-                    ((RouterTile) componentTile).getRouterData().setTo(pos);
-                }
+                //if nbt is null or keys not exist or slot is 0 and cable is not connected to a server
+                if(nbt == null || !nbt.contains("pos") || world.getTileEntity(NBTUtil.readBlockPos(nbt.getCompound("pos"))) == null ||
+                slot == 0 && nbt.contains("component") && NetworkComponent.valueOf(nbt.getString("component")) != NetworkComponent.SERVER ||
+                slot > 0 && nbt.contains("component") && NetworkComponent.valueOf(nbt.getString("component")) == NetworkComponent.SERVER)
+                    NetworkComponentUtils.disconnectFromPort(slot, data, portsCopy, itemHandler, world);
+                else
+                    NetworkComponentUtils.connectToPort(slot, nbt, data, world, pos);
 
             }
 

@@ -53,6 +53,7 @@ public class CSPacketSendServerData {
             }
             else{
                 tile.setServer(this.server);
+                tile.getData().setName(tile.getServer().getIp());
             }
 
         });

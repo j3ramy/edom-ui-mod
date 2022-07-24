@@ -1,5 +1,6 @@
 package de.j3ramy.economy.utils.data;
 
+import de.j3ramy.economy.utils.Math;
 import de.j3ramy.economy.utils.enums.NetworkComponent;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -7,9 +8,9 @@ import net.minecraft.util.math.BlockPos;
 
 public class NetworkComponentData {
 
-    private String name;
-    private BlockPos from; //Normally Component position
-    private BlockPos to; //Normally Switch position
+    private String name; //set when name edited in screen
+    private BlockPos from; //normally Component position; set when cable connected
+    private BlockPos to; //normally Switch position; set when put in switch port
     private NetworkComponent component = NetworkComponent.NONE;
 
 
@@ -57,7 +58,7 @@ public class NetworkComponentData {
     }
 
     public boolean isSet(){
-        return !this.name.isEmpty();
+        return !Math.areBlockPosEqual(this.from, BlockPos.ZERO);
     }
 
     public void setComponent(NetworkComponent component) {

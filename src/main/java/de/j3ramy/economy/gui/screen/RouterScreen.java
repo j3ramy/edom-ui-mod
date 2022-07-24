@@ -6,7 +6,7 @@ import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.RouterContainer;
 import de.j3ramy.economy.gui.widgets.AlertPopUp;
 import de.j3ramy.economy.gui.widgets.Button;
-import de.j3ramy.economy.network.CSPacketSendRouterData;
+import de.j3ramy.economy.network.CSPacketSendNetworkComponentData;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.Texture;
@@ -62,7 +62,7 @@ public class RouterScreen extends ContainerScreen<RouterContainer> {
 
     private void saveName(){
         this.data.setName(this.nameField.getText().replace(' ', '_'));
-        Network.INSTANCE.sendToServer(new CSPacketSendRouterData(this.data, this.container.getTileEntity().getPos()));
+        Network.INSTANCE.sendToServer(new CSPacketSendNetworkComponentData(this.data, this.container.getTileEntity().getPos()));
         this.screen.setAlertPopUp(new AlertPopUp(this, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.changes_saved").getString(),
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.changes_saved").getString(), AlertPopUp.ColorType.DEFAULT));
     }

@@ -10,16 +10,16 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class CSPacketSendRouterData {
+public class CSPacketSendNetworkComponentData {
     private final NetworkComponentData data;
     private final BlockPos pos;
 
-    public CSPacketSendRouterData(PacketBuffer buf){
+    public CSPacketSendNetworkComponentData(PacketBuffer buf){
         this.data = new NetworkComponentData(Objects.requireNonNull(buf.readCompoundTag()));
         this.pos = buf.readBlockPos();
     }
 
-    public CSPacketSendRouterData(NetworkComponentData data, BlockPos pos){
+    public CSPacketSendNetworkComponentData(NetworkComponentData data, BlockPos pos){
         this.data = data;
         this.pos = pos;
     }
@@ -35,7 +35,7 @@ public class CSPacketSendRouterData {
             RouterTile tile = (RouterTile) world.getTileEntity(pos);
 
             if(tile != null){
-                tile.setRouterData(data);
+                tile.setData(data);
             }
         });
 
