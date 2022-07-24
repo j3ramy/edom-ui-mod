@@ -2,6 +2,7 @@ package de.j3ramy.economy.utils;
 
 import de.j3ramy.economy.EconomyMod;
 import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.util.ReadOnlyStringMap;
 
 public class Texture {
     public static final ResourceLocation BLANK_GUI = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/blank_gui.png");
@@ -17,5 +18,5 @@ public class Texture {
     public static final ResourceLocation SAVE_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/save_button_gui.png");
     public static final ResourceLocation LOAD_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/load_button_gui.png");
     public static final ResourceLocation PRINT_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/print_button_gui.png");
-
+    public static final ResourceLocation OS_LOGO = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/os_logo.png");
 }
