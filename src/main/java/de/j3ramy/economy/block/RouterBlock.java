@@ -63,7 +63,6 @@ public class RouterBlock extends DirectionalBlock {
             if(tileEntity == null)
                 return ActionResultType.SUCCESS;
 
-            System.out.println(tileEntity.getRouterData().getTo());
             ItemStack stack = player.getHeldItemMainhand();
             if(stack.getItem() == ModItems.ETHERNET_CABLE.get()){
                 if(tileEntity.getRouterData().getName().isEmpty()){
@@ -83,32 +82,35 @@ public class RouterBlock extends DirectionalBlock {
                         tileEntity.getRouterData().setFrom(BlockPos.ZERO);
                         tileEntity.getRouterData().setTo(BlockPos.ZERO);
                         player.sendMessage(new TranslationTextComponent("translation."+ EconomyMod.MOD_ID + ".chat.ethernet_cable.removed_cable"), player.getUniqueID());
-                        return ActionResultType.FAIL;
+
                     }
+                    else{
+                        player.sendMessage(new TranslationTextComponent("translation."+ EconomyMod.MOD_ID + ".chat.ethernet_cable.cable_already_connected_to_other"), player.getUniqueID());
+
+                    }
+
+                    return ActionResultType.SUCCESS;
 
                     //tileEntity.getRouterData().setTo(NBTUtil.readBlockPos(stack.getTag().getCompound("pos")));
                     //stack.shrink(1);
                 }
-                //set "from"
-                else{
-                    if(!Math.areBlockPosEqual(tileEntity.getRouterData().getFrom(), BlockPos.ZERO)){
-                        player.sendMessage(new TranslationTextComponent("translation."+ EconomyMod.MOD_ID + ".chat.ethernet_cable.cable_already_connected"), player.getUniqueID());
+                else if(!Math.areBlockPosEqual(tileEntity.getRouterData().getFrom(), BlockPos.ZERO)){
+                        player.sendMessage(new TranslationTextComponent("translation."+ EconomyMod.MOD_ID + ".chat.ethernet_cable.cable_already_connected_to_this"), player.getUniqueID());
                         return ActionResultType.FAIL;
-                    }
-
+                }
+                else{
+                    tileEntity.getRouterData().setComponent(NetworkComponent.ROUTER);
                     CompoundNBT nbt = new CompoundNBT();
                     nbt.put("pos", NBTUtil.writeBlockPos(pos));
                     nbt.putString("from", tileEntity.getRouterData().getName());
-                    nbt.putInt("component", NetworkComponent.ROUTER.ordinal());
-
+                    nbt.putString("component", tileEntity.getRouterData().getComponent().name());
                     stack.setTag(nbt);
 
-                    tileEntity.getRouterData().setFrom(NBTUtil.readBlockPos(stack.getTag().getCompound("pos")));
-                }
+                    //tileEntity.getRouterData().setFrom(NBTUtil.readBlockPos(stack.getTag().getCompound("pos")));
 
-                tileEntity.getRouterData().setComponent(NetworkComponent.ROUTER);
-                player.sendMessage(new TranslationTextComponent("translation."+ EconomyMod.MOD_ID + ".chat.ethernet_cable.cable_connected",
-                        tileEntity.getRouterData().getName(), "(" + tileEntity.getRouterData().getComponent().name() + ")"), player.getUniqueID());
+                    player.sendMessage(new TranslationTextComponent("translation."+ EconomyMod.MOD_ID + ".chat.ethernet_cable.cable_connected",
+                            tileEntity.getRouterData().getName(), "(" + tileEntity.getRouterData().getComponent().name() + ")"), player.getUniqueID());
+                }
 
                 return ActionResultType.SUCCESS;
             }
@@ -158,7 +160,7 @@ public class RouterBlock extends DirectionalBlock {
             for(int i = 0; i < ((SwitchTile) toTileEntity).getSwitchData().getPorts().length; i++){
                 BlockPos portPos = ((SwitchTile) toTileEntity).getSwitchData().getPort(i).getFrom();
 
-                if(Math.areBlockPosEqual(toPos, portPos)){
+                if(Math.areBlockPosEqual(pos, portPos)){
                     System.out.println("REMOVE");
                     ((SwitchTile) toTileEntity).getItemHandler().getStackInSlot(i).setTag(new CompoundNBT());
                 }

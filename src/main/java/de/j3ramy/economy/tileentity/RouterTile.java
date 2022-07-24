@@ -24,6 +24,7 @@ public class RouterTile extends TileEntity {
     @Override
     public void read(BlockState state, CompoundNBT nbt) {
         this.data = new NetworkComponentData(nbt.getCompound("data"));
+
         super.read(state, nbt);
     }
 

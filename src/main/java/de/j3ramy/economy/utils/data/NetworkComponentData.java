@@ -10,14 +10,16 @@ public class NetworkComponentData {
     private String name;
     private BlockPos from; //Normally Component position
     private BlockPos to; //Normally Switch position
-    private NetworkComponent component;
+    private NetworkComponent component = NetworkComponent.NONE;
 
 
     public NetworkComponentData(CompoundNBT nbt){
         this.name = nbt.getString("name");
         this.from = NBTUtil.readBlockPos(nbt.getCompound("from"));
         this.to = NBTUtil.readBlockPos(nbt.getCompound("to"));
-        this.component = NetworkComponent.values()[nbt.getInt("component")];
+
+        if(!nbt.getString("component").isEmpty())
+            this.component = NetworkComponent.valueOf(nbt.getString("component"));
     }
 
     public CompoundNBT getData(){
@@ -25,7 +27,7 @@ public class NetworkComponentData {
         nbt.putString("name", this.name);
         nbt.put("from", NBTUtil.writeBlockPos(this.from));
         nbt.put("to", NBTUtil.writeBlockPos(this.to));
-        nbt.putInt("component", this.component.ordinal());
+        nbt.putString("component", this.component.name());
 
         return nbt;
     }

@@ -102,11 +102,10 @@ public class SwitchTile extends TileEntity {
                     return;
                 }
 
-
                 newData.setFrom(NBTUtil.readBlockPos(nbt.getCompound("pos")));
                 newData.setTo(pos);
                 newData.setName(nbt.getString("from"));
-                newData.setComponent(NetworkComponent.values()[nbt.getInt("component")]);
+                newData.setComponent(NetworkComponent.valueOf(nbt.getString("component")));
 
                 data.setPort(slot, newData);
                 data.setPortState(slot, SwitchData.PortState.CONNECTED);
@@ -138,9 +137,5 @@ public class SwitchTile extends TileEntity {
                 return super.insertItem(slot, stack, simulate);
             }
         };
-    }
-
-    private void checkComponentConnection(){
-
     }
 }

@@ -91,9 +91,10 @@
 
 
   "translation.economy.chat.ethernet_cable.cable_connected": "\u00A7aCable successfully connected to: %1$s %2$s",
-  "translation.economy.chat.ethernet_cable.removed_cable": "\u00A7aYou have disconnected the from position successfully",
-  "translation.economy.chat.ethernet_cable.no_name_set": "\u00A74You cannot connect a cable to nameless devices",
-  "translation.economy.chat.ethernet_cable.cable_already_connected": "\u00A74You already connected the from position",
+  "translation.economy.chat.ethernet_cable.removed_cable": "\u00A7aCable successfully disconnected",
+  "translation.economy.chat.ethernet_cable.no_name_set": "\u00A74You cannot connect/disconnect cable without a name is set",
+  "translation.economy.chat.ethernet_cable.cable_already_connected_to_this": "\u00A74There is a cable already connected to this component",
+  "translation.economy.chat.ethernet_cable.cable_already_connected_to_other": "\u00A74This cable is currently connected to another component",
 
   "itemGroup.economy": "Edom Economy"
 
