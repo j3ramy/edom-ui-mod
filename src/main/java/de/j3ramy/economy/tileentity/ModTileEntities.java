@@ -31,6 +31,9 @@ public class ModTileEntities {
     public static RegistryObject<TileEntityType<NetworkSocketTile>> NETWORK_SOCKET_TILE = TILE_ENTITIES.register("network_socket_tile", () -> TileEntityType.Builder.create(
             NetworkSocketTile::new, ModBlocks.NETWORK_SOCKET.get()).build(null));
 
+    public static RegistryObject<TileEntityType<RouterTile>> ROUTER_TILE = TILE_ENTITIES.register("router_tile", () -> TileEntityType.Builder.create(
+            RouterTile::new, ModBlocks.ROUTER.get()).build(null));
+
     public static void register(IEventBus eventBus){
         TILE_ENTITIES.register(eventBus);
     }

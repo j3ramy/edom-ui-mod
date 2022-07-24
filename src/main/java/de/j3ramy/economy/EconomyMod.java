@@ -81,6 +81,7 @@ public class EconomyMod
             ScreenManager.registerFactory(ModContainers.COMPUTER_CONTAINER.get(), ComputerScreen::new);
             ScreenManager.registerFactory(ModContainers.SWITCH_CONTAINER.get(), SwitchScreen::new);
             ScreenManager.registerFactory(ModContainers.NETWORK_SOCKET_CONTAINER.get(), NetworkSocketScreen::new);
+            ScreenManager.registerFactory(ModContainers.ROUTER_CONTAINER.get(), RouterScreen::new);
 
             RenderTypeLookup.setRenderLayer(ModBlocks.CREDIT_CART_PRINTER.get(), RenderType.getCutout());
             RenderTypeLookup.setRenderLayer(ModBlocks.ROUTER.get(), RenderType.getCutout());

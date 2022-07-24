@@ -24,5 +24,7 @@ public class Network {
         INSTANCE.registerMessage(getNextId(), CSPacketLoadBackup.class, CSPacketLoadBackup::toBytes, CSPacketLoadBackup::new, CSPacketLoadBackup::handle);
         INSTANCE.registerMessage(getNextId(), SCPacketSendSwitchData.class, SCPacketSendSwitchData::toBytes, SCPacketSendSwitchData::new, SCPacketSendSwitchData::handle);
         INSTANCE.registerMessage(getNextId(), CSPacketSendSwitchData.class, CSPacketSendSwitchData::toBytes, CSPacketSendSwitchData::new, CSPacketSendSwitchData::handle);
+        INSTANCE.registerMessage(getNextId(), SCPacketSendRouterData.class, SCPacketSendRouterData::toBytes, SCPacketSendRouterData::new, SCPacketSendRouterData::handle);
+        INSTANCE.registerMessage(getNextId(), CSPacketSendRouterData.class, CSPacketSendRouterData::toBytes, CSPacketSendRouterData::new, CSPacketSendRouterData::handle);
     }
 }

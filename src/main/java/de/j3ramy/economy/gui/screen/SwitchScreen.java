@@ -1,12 +1,13 @@
 package de.j3ramy.economy.gui.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.j3ramy.economy.container.SwitchContainer;
-import de.j3ramy.economy.network.CSPacketSendServerData;
 import de.j3ramy.economy.network.CSPacketSendSwitchData;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.Color;
+import de.j3ramy.economy.utils.Math;
 import de.j3ramy.economy.utils.Texture;
 import de.j3ramy.economy.utils.data.SwitchData;
 import net.minecraft.client.Minecraft;
@@ -14,6 +15,7 @@ import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 
 public class SwitchScreen extends ContainerScreen<SwitchContainer> {
@@ -52,6 +54,14 @@ public class SwitchScreen extends ContainerScreen<SwitchContainer> {
 
         this.update();
 
+        GlStateManager.pushMatrix();
+        GlStateManager.scalef(.5f, .5f, .5f);
+
+        drawCenteredString(matrixStack, this.font, "Input", (this.xOffset + 28) * 2, (this.yOffset + 7) * 2, Color.YELLOW);
+        drawCenteredString(matrixStack, this.font, "Output", (this.xOffset + 156) * 2, (this.yOffset + 7) * 2, Color.YELLOW);
+
+        GlStateManager.popMatrix();
+
         for(int i = 0; i < this.data.getPortStates().length; i++){
 
             int xPos = this.xOffset + (i == 0 ? 33 : 92 + (39 * (i - 1)));
@@ -64,6 +74,21 @@ public class SwitchScreen extends ContainerScreen<SwitchContainer> {
                     AbstractGui.fill(matrixStack, xPos, this.yOffset + 27, xPos + 2, this.yOffset + 27 + 2, Color.GREEN_HEX);
                     break;
             }
+
+            GlStateManager.pushMatrix();
+            GlStateManager.scalef(.5f, .5f, .5f);
+
+            BlockPos pos = this.data.getPort(i).getFrom();
+            if(!Math.areBlockPosEqual(pos, BlockPos.ZERO)){
+                //show component name
+                drawCenteredString(matrixStack, this.font, this.data.getPort(i).getName(), (xPos - 4) * 2, (this.yOffset + 17) * 2, Color.WHITE);
+                //show component type
+                drawCenteredString(matrixStack, this.font, this.data.getPort(i).getComponent().name(), (xPos - 4) * 2, (this.yOffset + 47) * 2, Color.WHITE);
+                //show pos
+                drawCenteredString(matrixStack, this.font, " [" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "]", (xPos - 6) * 2, (this.yOffset + 55) * 2, Color.WHITE);
+            }
+
+            GlStateManager.popMatrix();
         }
 
     }

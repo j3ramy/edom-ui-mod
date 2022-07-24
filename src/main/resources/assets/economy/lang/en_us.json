@@ -26,6 +26,7 @@
   "screen.economy.placeholder.owner": "Account Owner",
   "screen.economy.placeholder.ip": "IP Address",
   "screen.economy.placeholder.search": "Search query",
+  "screen.economy.placeholder.name": "Name",
 
   "screen.economy.label.accNr": "Account Number:",
   "screen.economy.label.validity": "Validity:",
@@ -36,6 +37,7 @@
   "screen.economy.label.amount_tables": "Amount Tables:",
   "screen.economy.label.amount_entries": "Amount Entries:",
   "screen.economy.label.total_accesses": "Amount Accesses:",
+  "screen.economy.label.name": " %1$s Name:",
 
   "screen.economy.button.save": "Save",
   "screen.economy.button.close": "Close",
@@ -73,6 +75,7 @@
   "screen.economy.popup.title.drive_no_data": "No Backup Available",
   "screen.economy.popup.title.backup_overwrite": "Backup Overwrite",
   "screen.economy.popup.title.backup_loaded": "Backup Loaded",
+  "screen.economy.popup.title.changes_saved": "Changes Saved",
 
   "screen.economy.popup.content.drop_table": "Do you really want to drop this table?",
   "screen.economy.popup.content.delete_entry": "Do you really want to delete this entry?",
@@ -84,6 +87,13 @@
   "screen.economy.popup.content.drive_no_data": "The current does not contain any backup.",
   "screen.economy.popup.content.backup_overwrite": "Do you really want to load the backup?",
   "screen.economy.popup.content.backup_loaded": "Backup successfully loaded. Please close the screen.",
+  "screen.economy.popup.content.changes_saved": "Your changes have been saved",
+
+
+  "translation.economy.chat.ethernet_cable.cable_connected": "\u00A7aCable successfully connected to: %1$s %2$s",
+  "translation.economy.chat.ethernet_cable.removed_cable": "\u00A7aYou have disconnected the from position successfully",
+  "translation.economy.chat.ethernet_cable.no_name_set": "\u00A74You cannot connect a cable to nameless devices",
+  "translation.economy.chat.ethernet_cable.cable_already_connected": "\u00A74You already connected the from position",
 
   "itemGroup.economy": "Edom Economy"
 

@@ -3,6 +3,7 @@ package de.j3ramy.economy.events;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.gui.screen.ComputerScreen;
 import de.j3ramy.economy.gui.screen.ModScreen;
+import de.j3ramy.economy.gui.screen.RouterScreen;
 import de.j3ramy.economy.gui.screen.ServerScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -26,6 +27,9 @@ public class ModEvents {
                 screen.onClick();
             }
             else if(Minecraft.getInstance().currentScreen instanceof ComputerScreen){ // 0 = Left mouse button
+                screen.onClick();
+            }
+            else if(Minecraft.getInstance().currentScreen instanceof RouterScreen){ // 0 = Left mouse button
                 screen.onClick();
             }
         }

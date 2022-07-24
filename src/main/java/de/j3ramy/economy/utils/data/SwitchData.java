@@ -15,7 +15,7 @@ public class SwitchData {
     }
 
     private boolean isOn;
-    private final BlockPos[] ports = new BlockPos[PORT_COUNT];
+    private final NetworkComponentData[] ports = new NetworkComponentData[PORT_COUNT];
     private final PortState[] portStates = new PortState[PORT_COUNT];
 
 
@@ -25,11 +25,11 @@ public class SwitchData {
         //this.dnsServer = NBTUtil.readBlockPos(nbt.getCompound("dns"));
 
         for(int i = 0; i < this.ports.length; i++){
-            this.ports[i] = new BlockPos(BlockPos.ZERO);
+            this.ports[i] = new NetworkComponentData(new CompoundNBT());
             this.portStates[i] = PortState.NOT_CONNECTED;
 
             if(nbt.contains("port_" + i))
-                this.ports[i] = NBTUtil.readBlockPos(nbt.getCompound("port_" + i));
+                this.ports[i] = new NetworkComponentData(nbt.getCompound("port_" + i));
 
             if(nbt.contains("portState_" + i))
                 this.portStates[i] = PortState.values()[nbt.getInt("portState_" + i)];
@@ -43,7 +43,7 @@ public class SwitchData {
         //nbt.put("dns", NBTUtil.writeBlockPos(this.dnsServer));
 
         for(int i = 0; i < this.ports.length; i++){
-            nbt.put("port_" + i, NBTUtil.writeBlockPos(this.ports[i]));
+            nbt.put("port_" + i, this.ports[i].getData());
             nbt.putInt("portState_" + i, this.portStates[i].ordinal());
         }
 
@@ -65,15 +65,15 @@ public class SwitchData {
         this.isOn = on;
     }
 
-    public void setPort(int port, BlockPos pos){
-        this.ports[port] = pos;
+    public void setPort(int port, NetworkComponentData data){
+        this.ports[port] = data;
     }
 
-    public BlockPos getPort(int index) {
+    public NetworkComponentData getPort(int index) {
         return this.ports[index];
     }
 
-    public BlockPos[] getPorts() {
+    public NetworkComponentData[] getPorts() {
         return this.ports;
     }
 

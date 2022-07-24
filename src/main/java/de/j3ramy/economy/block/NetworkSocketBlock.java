@@ -68,6 +68,7 @@ public class NetworkSocketBlock extends HorizontalBlock {
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
 
         if(!world.isRemote){
+            System.out.println("TEST");
             NetworkSocketTile tileEntity = (NetworkSocketTile) world.getTileEntity(pos);
 
             if(tileEntity == null)

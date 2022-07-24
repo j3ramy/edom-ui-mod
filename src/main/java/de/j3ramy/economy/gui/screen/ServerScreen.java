@@ -57,7 +57,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     @Override
     public void init(Minecraft minecraft, int width, int height) {
         super.init(minecraft, width, height);
-        System.out.println(this.width + " | " + this.height);
+
         this.setUpScreen.clearScreen();
         this.overviewScreen.clearScreen();
 
@@ -73,7 +73,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.playerInventoryTitleX = 1000;
         this.renderBackground(matrixStack);
 
-        new Desktop(300, 169, 3, Color.DARK_GRAY_HEX, Color.ORANGE_HEX).render(this, matrixStack);
+        new Desktop(300, 169, 3, Color.LIGHT_GRAY_HEX, Color.ORANGE_HEX).render(this, matrixStack);
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 

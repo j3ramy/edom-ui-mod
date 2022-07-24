@@ -1,5 +1,7 @@
 package de.j3ramy.economy.item;
 
+import de.j3ramy.economy.utils.enums.NetworkComponent;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -8,8 +10,13 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class EthernetCable extends Item {
     public EthernetCable(Properties props) {
@@ -17,17 +24,18 @@ public class EthernetCable extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
 
-        if(worldIn.isRemote())
-            return super.onItemRightClick(worldIn, playerIn, handIn);
+        if(stack.hasTag()){
+            CompoundNBT nbt = stack.getTag();
 
-        CompoundNBT nbt = new CompoundNBT();
-        nbt.put("pos", NBTUtil.writeBlockPos(new BlockPos(5, 5, 5)));
-        playerIn.getHeldItemMainhand().setTag(nbt);
+            if(nbt == null || !nbt.contains("from") || !nbt.contains("pos") || !nbt.contains("component"))
+                return;
 
-        playerIn.sendMessage(new StringTextComponent(NBTUtil.readBlockPos(nbt.getCompound("pos")).getCoordinatesAsString()), playerIn.getUniqueID());
-
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+            BlockPos pos = NBTUtil.readBlockPos(nbt.getCompound("pos"));
+            String component = NetworkComponent.values()[nbt.getInt("component")].name();
+            tooltip.add(new StringTextComponent(TextFormatting.GRAY + component + ": " + nbt.getString("from") + " [" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "]"));
+        }
     }
 }
