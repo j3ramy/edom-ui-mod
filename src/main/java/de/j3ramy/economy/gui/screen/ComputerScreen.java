@@ -12,6 +12,7 @@ import de.j3ramy.economy.utils.server.Entry;
 import de.j3ramy.economy.utils.server.Server;
 import de.j3ramy.economy.utils.server.Table;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -20,29 +21,27 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-
 import java.util.ArrayList;
 
 public class ComputerScreen extends ContainerScreen<ComputerContainer> {
-    private final int TEXTURE_WIDTH = 256;
-    private final int TEXTURE_HEIGHT = 148;
+    private final int TEXTURE_WIDTH = 300;
+    private final int TEXTURE_HEIGHT = 169;
     private final ModScreen tableOverviewScreen;
     private final ModScreen createTableScreen;
     private final ModScreen createEntryScreen;
     private final ModScreen updateEntryScreen;
 
-    private int xPos;
-    private int yPos;
+    private int xLeft;
+    private int xRight;
+    private int yTop;
+    private int yBottom;
 
     private ImageButton createTableButton;
     private ImageButton dropTableButton;
     private ImageButton createEntryButton;
     private ImageButton deleteEntryButton;
     private ImageButton updateEntryButton;
-    private Button cancelButton = new Button(xPos + TEXTURE_WIDTH - 50 - 8 - 50 - 5, yPos + TEXTURE_HEIGHT - 18 - 8, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.cancel"), (onClick)->{
-        this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
-    });
-    private Button saveButton = new Button(xPos + TEXTURE_WIDTH - 50 - 8, yPos + TEXTURE_HEIGHT - 18 - 8, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onClick)->{
+    private Button saveButton = new Button(xRight - 50 - 2, yBottom - 18 - 2, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onClick)->{
         switch(this.screenState){
             case CREATE_TABLE_SCREEN:
                 System.out.println("CREATE_TABLE_SCREEN");
@@ -57,6 +56,9 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
                 this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
                 break;
         }
+    });
+    private Button cancelButton = new Button(xRight - 50 - 2 - 50 - 3, yBottom, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.cancel"), (onClick)->{
+        this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
     });
     private TextFieldWidget searchField;
     private ScrollableList tableList;
@@ -101,8 +103,11 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.createEntryScreen.clearScreen();
         this.updateEntryScreen.clearScreen();
 
-        this.xPos = (this.width / 2) - (TEXTURE_WIDTH / 2);
-        this.yPos = this.height / 2 - 75;
+        this.xLeft = (this.width / 2) - (TEXTURE_WIDTH / 2);
+        this.xRight = (this.width / 2) + (TEXTURE_WIDTH / 2);
+        this.yTop = (this.height / 2) - (TEXTURE_HEIGHT / 2);
+        this.yBottom = (this.height / 2) + (TEXTURE_HEIGHT / 2);
+        System.out.println(yBottom);
 
         this.server = new Server(Server.DBType.CUSTOM, "Berdi's Leben ist eine Freude IP", this.container.getTileEntity().getPos());
 
@@ -140,12 +145,12 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         initUpdateEntryScreen();
 
         //Cancel and Save Buttons for CreateTable, CreateEntry, UpdateEntry
+        this.saveButton.x = xRight - 50 - 5;
+        this.saveButton.y = yBottom - 18 - 2;
 
-        this.cancelButton.x = xPos + TEXTURE_WIDTH - 50 - 8 - 50 - 5;
-        this.cancelButton.y = yPos + TEXTURE_HEIGHT - 18 - 8;
+        this.cancelButton.x = xRight - 50 - 5 - 50 - 5;
+        this.cancelButton.y = yBottom - 18 - 2;
 
-        this.saveButton.x = xPos + TEXTURE_WIDTH - 50 - 8;
-        this.saveButton.y = yPos + TEXTURE_HEIGHT - 18 -8;
         for (Table table : this.server.getDatabase().getTables()){
             this.tableList.addToList(table.getName(), true, this.tableList.getFGColor(), (onClick)->{
                 this.table.clear();
@@ -166,14 +171,18 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.playerInventoryTitleX = 1000;
+
+        new Desktop(TEXTURE_WIDTH, TEXTURE_HEIGHT, 3, Color.BACKGROUND_GRAY_HEX, Color.BORDER_OLIVE_HEX).render(this, matrixStack);
+        AbstractGui.fill(matrixStack, xLeft, yTop, xRight, yTop + 8, Color.DARK_GRAY_HEX);
+
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         //Heading
         GlStateManager.pushMatrix();
         GlStateManager.scalef(.5f, .5f, .5f);
         String titleText = new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.computer").getString();
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, titleText + " | " + this.server.getIp() + "/" + this.server.getDatabase().getName() + " | " + GuiUtils.formatTime(this.container.getTileEntity().getWorld().getDayTime()), (this.xPos + 4) * 2, (this.yPos + 4) * 2, Color.WHITE);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, titleText + " | " + this.server.getIp() + "/" + this.server.getDatabase().getName() + " | " + GuiUtils.formatTime(this.container.getTileEntity().getWorld().getDayTime()), (this.xLeft + 2) * 2, (this.yTop + 2) * 2, Color.WHITE);
         GlStateManager.popMatrix();
 
         //draw screens
@@ -200,11 +209,11 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     //region TABLE_OVERVIEW_SCREEN
     public void initTableOverviewScreen() {
         //<Buttons>
-        this.addButton(this.createTableButton = new ImageButton(this.xPos + 5, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) -> {
+        this.addButton(this.createTableButton = new ImageButton(this.xLeft + 2, this.yTop + 11, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) -> {
             this.screenState = ComputerScreenState.CREATE_TABLE_SCREEN;
         }));
 
-        this.addButton(this.dropTableButton = new ImageButton(this.xPos + 30, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) -> {
+        this.addButton(this.dropTableButton = new ImageButton(this.xLeft + 27, this.yTop + 11, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) -> {
             this.tableOverviewScreen.setConfirmPopUp(confirmDropTable = new ConfirmPopUp(this,
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drop_table").getString(),
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drop_table").getString(),
@@ -215,12 +224,12 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         }));
         dropTableButton.active = false;
 
-        this.addButton(this.createEntryButton = new ImageButton(this.xPos + 180, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) ->{
+        this.addButton(this.createEntryButton = new ImageButton(this.xRight - 2 - 25 - 25 -20, this.yTop + 11, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) ->{
             this.screenState = ComputerScreenState.CREATE_ENTRY_SCREEN;
             this.hideTableOverviewScreen();
         }));
 
-        this.addButton(this.deleteEntryButton = new ImageButton(this.xPos + 205, this.yPos + 13, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) ->{
+        this.addButton(this.deleteEntryButton = new ImageButton(this.xRight - 2 - 25 - 20, this.yTop + 11, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) ->{
             this.tableOverviewScreen.setConfirmPopUp(confirmDeleteEntry = new ConfirmPopUp(
                     this,
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.delete_entry").getString(),
@@ -232,7 +241,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         }));
         this.deleteEntryButton.active = false;
 
-        this.addButton(this.updateEntryButton = new ImageButton(this.xPos + 230, this.yPos + 13, 20, 18, 0, 0, 19, Texture.PEN_BUTTON, (button) ->{
+        this.addButton(this.updateEntryButton = new ImageButton(this.xRight - 2 - 20, this.yTop + 11, 20, 18, 0, 0, 19, Texture.PEN_BUTTON, (button) ->{
             this.screenState = ComputerScreenState.UPDATE_ENTRY_SCREEN;
             hideTableOverviewScreen();
         }));
@@ -248,17 +257,17 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         //</Tooltips>
 
         //Search field
-        this.searchField = new TextFieldWidget(this.font, (this.xPos + 85), (this.yPos + 16), 80, 12, new StringTextComponent(""));
+        this.searchField = new TextFieldWidget(this.font, (this.xLeft + 82), (this.yTop + 14), 80, 12, new StringTextComponent(""));
         this.searchField.setText(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".placeholder.search").getString());
         this.searchField.setCanLoseFocus(true);
         this.searchField.setTextColor(Color.WHITE);
         this.children.add(this.searchField);
 
         //List of tables
-        this.tableOverviewScreen.addList(this.tableList = new ScrollableList(this.xPos + 5, this.yPos + 36, 75, 105, 13));
+        this.tableOverviewScreen.addList(this.tableList = new ScrollableList(this.xLeft + 2, this.yTop + 34, 75, yBottom - 2 - (this.yTop + 34), 13));
 
         //List of Entries in Table
-        this.tableOverviewScreen.addTable(table = new ScrollableTable(this.xPos + 85, this.yPos + 36, 165, 105, 10, true));
+        this.tableOverviewScreen.addTable(table = new ScrollableTable(this.xLeft + 82, this.yTop + 34, this.xRight - 2 - (this.xLeft + 82), yBottom - 2 - (this.yTop + 34), 10, true));
     }
 
     private void renderTableOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -403,9 +412,9 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
         assert this.minecraft != null;
-        this.minecraft.getTextureManager().bindTexture(Texture.SCREEN_GUI);
+        this.minecraft.getTextureManager().bindTexture(Texture.BLANK_GUI);
 
-        this.blit(matrixStack, this.xPos, this.yPos, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+        this.blit(matrixStack, this.xLeft, this.yTop, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
     @Override
