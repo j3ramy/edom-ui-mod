@@ -68,4 +68,8 @@ public class NetworkComponentData {
     public NetworkComponent getComponent() {
         return this.component;
     }
+
+    public boolean emitsWifi(){
+        return !Math.areBlockPosEqual(this.from, BlockPos.ZERO) && !Math.areBlockPosEqual(this.to, BlockPos.ZERO);
+    }
 }

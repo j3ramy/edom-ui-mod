@@ -2,6 +2,7 @@ package de.j3ramy.economy.utils;
 
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.tileentity.NetworkComponentTile;
+import de.j3ramy.economy.tileentity.RouterTile;
 import de.j3ramy.economy.tileentity.SwitchTile;
 import de.j3ramy.economy.utils.data.NetworkComponentData;
 import de.j3ramy.economy.utils.data.SwitchData;
@@ -15,8 +16,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
+import org.antlr.v4.runtime.misc.NotNull;
+
+import java.util.ArrayList;
 
 public class NetworkComponentUtils {
+    //region CABLE
     public static void onCableInteract(NetworkComponentTile tileEntity, PlayerEntity player, ItemStack cable, BlockPos pos, NetworkComponent component){
         if(tileEntity.getData().getName().isEmpty() && component != NetworkComponent.SERVER){
             player.sendMessage(new TranslationTextComponent("translation."+ EconomyMod.MOD_ID + ".chat.ethernet_cable.no_name_set"), player.getUniqueID());
@@ -123,4 +128,53 @@ public class NetworkComponentUtils {
         }
     }
     //endregion
+    //endregion
+
+    private static final int WIFI_SEARCH_RANGE = 50;
+    @NotNull
+    public static ArrayList<NetworkComponentData> lookForWifi(@NotNull World world, @NotNull BlockPos pos){
+        ArrayList<NetworkComponentData> foundComponents = new ArrayList<>();
+
+        if(world.isRemote())
+            return foundComponents;
+
+        BlockPos startPos = new BlockPos(pos.getX() - (WIFI_SEARCH_RANGE / 2), pos.getY() - (WIFI_SEARCH_RANGE / 2), pos.getZ() - (WIFI_SEARCH_RANGE / 2));
+        BlockPos endPos = new BlockPos(pos.getX() + (WIFI_SEARCH_RANGE / 2), pos.getY() + (WIFI_SEARCH_RANGE / 2), pos.getZ() + (WIFI_SEARCH_RANGE / 2));
+        Iterable<BlockPos> blocks = BlockPos.getAllInBoxMutable(startPos, endPos);
+
+        for(BlockPos blockPos : blocks){
+            TileEntity tileEntity = world.getTileEntity(blockPos);
+
+            if(tileEntity instanceof RouterTile){
+                NetworkComponentData data = (((RouterTile)tileEntity).getData());
+                if(data.emitsWifi())
+                    foundComponents.add(data);
+            }
+        }
+
+        return foundComponents;
+    }
+
+    /*
+    private enum WifiStrength{
+        WEAK,
+        NORMAL,
+        STRONG
+    }
+
+    private static final float WEAK_PERCENTAGE = 0.35f;
+    private static final float STRONG_PERCENTAGE = 0.70f;
+    public static WifiStrength getWifiStrength(BlockPos routerPos, BlockPos componentPos){
+        int distance = routerPos.manhattanDistance(componentPos);
+        float percentage = 1 - (float)distance / WIFI_SEARCH_RANGE;
+        System.out.println(distance);
+        if(percentage >= STRONG_PERCENTAGE)
+            return WifiStrength.STRONG;
+        else if(percentage >= WEAK_PERCENTAGE)
+            return WifiStrength.NORMAL;
+        else
+            return WifiStrength.WEAK;
+    }
+
+     */
 }
