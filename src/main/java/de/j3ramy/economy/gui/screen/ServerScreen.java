@@ -16,14 +16,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import org.apache.logging.log4j.util.PropertySource;
-import org.apache.logging.log4j.util.SystemPropertiesPropertySource;
 
 import java.util.Objects;
 
@@ -97,8 +96,8 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                 this.renderSetUpScreen(matrixStack, mouseX, mouseY, partialTicks);
                 this.updateSetUpScreen();
 
-                this.ipField.active = true;
-                this.passwordField.active = false;
+                this.ipField.setEnabled(true);
+                this.passwordField.setEnabled(false);
 
                 this.resetServerButton.visible = false;
                 this.resetServerButton.active = false;
@@ -119,7 +118,11 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                 if(this.overviewScreen.isPopUpVisible())
                     return;
 
+                this.ipField.setEnabled(false);
                 this.passwordField.setEnabled(true);
+                this.adminUsernameField.setEnabled(true);
+                this.adminPasswordField.setEnabled(true);
+
                 this.resetServerButton.visible = true;
                 this.resetServerButton.active = true;
                 this.saveServerButton.visible = true;
@@ -142,7 +145,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     }
 
     //region OVERVIEW SCREEN
-    private TextFieldWidget passwordField;
+    private TextFieldWidget passwordField, adminUsernameField, adminPasswordField;
     private Button onButton, offButton;
     private ImageButton resetServerButton, saveServerButton, loadServerButton, savePasswordButton;
     private Tooltip resetServerButtonTooltip, saveServerButtonTooltip, loadServerTooltip, savePasswordTooltip;
@@ -156,22 +159,54 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.overviewScreen.setBlankPopUp(this.blankPopUp = new BlankPopUp(this, 180, 120,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.admin_settings"),
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.submit"), (action) ->{
-            System.out.println("TEST");
+            this.adminUsernameField.setEnabled(false);
+            this.adminUsernameField.setVisible(false);
+            this.adminPasswordField.setEnabled(false);
+            this.adminPasswordField.setVisible(false);
+
+            this.passwordField.setEnabled(true);
         }));
         this.blankPopUp.hide();
 
         this.overviewScreen.addButton(new Button(this.xPos + TEXTURE_WIDTH - 60 - 10, this.yPos + 69, 60, 14,
                 new StringTextComponent("Admin"), (action) ->{
             this.blankPopUp.show();
+            this.adminUsernameField.setEnabled(true);
+            this.adminUsernameField.setVisible(true);
+            this.adminPasswordField.setEnabled(true);
+            this.adminPasswordField.setVisible(true);
+
+            this.passwordField.setEnabled(false);
         }));
 
 
         //add password text field
-        this.passwordField = new TextFieldWidget(this.font, this.xPos + 70, this.yPos + 62, 60, 12, new StringTextComponent(""));
+        this.passwordField = new TextFieldWidget(this.font, this.xPos + 71, this.yPos + 61, 60, 12, new StringTextComponent(""));
         this.passwordField.setCanLoseFocus(true);
         this.passwordField.setTextColor(Color.WHITE);
         this.passwordField.setMaxStringLength(20);
         this.children.add(this.passwordField);
+
+        //add admin username text field
+        this.adminUsernameField = new TextFieldWidget(this.font, this.xPos + TEXTURE_WIDTH / 2 - 50, this.yPos + 50, 100, 18, new StringTextComponent(""));
+        this.adminUsernameField.setText(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".placeholder.username").getString());
+        this.adminUsernameField.setCanLoseFocus(true);
+        this.adminUsernameField.setTextColor(Color.WHITE);
+        this.adminUsernameField.setMaxStringLength(20);
+        this.adminUsernameField.setEnabled(false);
+        this.adminUsernameField.setVisible(false);
+        this.children.add(this.adminUsernameField);
+
+        //add admin password text field
+        this.adminPasswordField = new TextFieldWidget(this.font, this.xPos + TEXTURE_WIDTH / 2 - 50, this.yPos + 75, 100, 18, new StringTextComponent(""));
+        this.adminPasswordField.setText(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".placeholder.password").getString());
+        this.adminPasswordField.setCanLoseFocus(true);
+        this.adminPasswordField.setTextColor(Color.WHITE);
+        this.adminPasswordField.setMaxStringLength(20);
+        this.adminPasswordField.setEnabled(false);
+        this.adminPasswordField.setVisible(false);
+        this.children.add(this.adminPasswordField);
+
 
         this.addButton(this.savePasswordButton = new ImageButton(this.xPos + 70 + 61 + 2, this.yPos + 59, 20, 19, 0, 0, 19, Texture.SAVE_BUTTON, (click)-> {
             this.server.setPassword(this.passwordField.getText());
@@ -364,6 +399,12 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                 this.xPos + TEXTURE_WIDTH - 50 - 15, this.yPos + TEXTURE_HEIGHT - 10 - 22, this.server.isOn() ? Color.GREEN_HEX : Color.RED_HEX);
 
         this.overviewScreen.render(matrixStack, mouseX, mouseY, partialTicks);
+
+        if(this.overviewScreen.isPopUpVisible()){
+            this.adminUsernameField.render(matrixStack, mouseX, mouseY, partialTicks);
+            this.adminPasswordField.render(matrixStack, mouseX, mouseY, partialTicks);
+        }
+
     }
 
     private void drawGeneralInfo(MatrixStack matrixStack){
@@ -474,6 +515,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                 this.blankPopUp != null && !this.blankPopUp.isHidden()){
 
             this.passwordField.setEnabled(false);
+
             this.resetServerButton.active = false;
             this.saveServerButton.active = false;
             this.loadServerButton.active = false;
@@ -556,6 +598,8 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     public void resize(Minecraft minecraft, int width, int height) {
         this.ipField.setText(this.ipField.getText());
         this.passwordField.setText(this.passwordField.getText());
+        this.adminUsernameField.setText(this.adminUsernameField.getText());
+        this.adminPasswordField.setText(this.adminPasswordField.getText());
     }
 
     @Override
@@ -565,11 +609,15 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             assert this.minecraft.player != null;
             this.minecraft.player.closeScreen();
         }
-
+System.out.println(this.passwordField.active);
         if(this.ipField.active)
             return this.ipField.keyPressed(keyCode, scanCode, modifiers) || this.ipField.canWrite() || super.keyPressed(keyCode, scanCode, modifiers);
         else if(this.passwordField.active)
             return this.passwordField.keyPressed(keyCode, scanCode, modifiers) || this.passwordField.canWrite() || super.keyPressed(keyCode, scanCode, modifiers);
+        else if(this.adminUsernameField.active && this.adminUsernameField.isFocused())
+            return this.adminUsernameField.keyPressed(keyCode, scanCode, modifiers) || this.adminUsernameField.canWrite() || super.keyPressed(keyCode, scanCode, modifiers);
+        //else if(this.adminPasswordField.active && this.adminPasswordField.isFocused())
+        //   return this.adminPasswordField.keyPressed(keyCode, scanCode, modifiers) || this.adminPasswordField.canWrite() || super.keyPressed(keyCode, scanCode, modifiers);
 
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -579,6 +627,8 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         super.tick();
         this.ipField.tick();
         this.passwordField.tick();
+        this.adminUsernameField.tick();
+        this.adminPasswordField.tick();
     }
     //endregion
 

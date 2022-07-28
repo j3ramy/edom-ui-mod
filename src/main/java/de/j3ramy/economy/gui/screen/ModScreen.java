@@ -14,6 +14,7 @@ public class ModScreen extends Screen {
     private AlertPopUp alertPopUp;
     private ConfirmPopUp confirmPopUp;
     private BlankPopUp blankPopUp;
+    private Taskbar taskbar;
     private final List<Button> buttons = new ArrayList<>();
     private final List<DropDown> dropDowns = new ArrayList<>();
     private final List<Tooltip> tooltips = new ArrayList<>();
@@ -143,6 +144,10 @@ public class ModScreen extends Screen {
             this.blankPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
         }
 
+        if(this.taskbar != null){
+            this.taskbar.render(matrixStack, mouseX, mouseY, partialTicks);
+        }
+
         for(Tooltip tooltip : this.tooltips){
             if(tooltip != null)
                 tooltip.render(matrixStack, mouseX, mouseY);
@@ -194,6 +199,9 @@ public class ModScreen extends Screen {
 
         if(this.blankPopUp != null)
             this.blankPopUp.onClick();
+
+        if(this.taskbar != null)
+            this.taskbar.onClick();
     }
 
     public void onScroll(int scrollDelta){
