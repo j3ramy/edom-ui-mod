@@ -26,6 +26,7 @@ public class ScrollableList extends Widget {
     private final int maxWordLength;
     private final int elementHeight;
     private int selectedIndex = -1;
+    private boolean isHidden;
 
 
     public ScrollableList(int x, int y, int width, int height, int elementHeight){
@@ -78,13 +79,21 @@ public class ScrollableList extends Widget {
         this.clearSelectedIndex();
     }
 
+    public void hide(){
+        this.isHidden = true;
+    }
+
+    public void show(){
+        this.isHidden = false;
+    }
+
     public void clearSelectedIndex(){
         this.selectedIndex = -1;
     }
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        if(this.mousePosition == null)
+        if(this.mousePosition == null || this.isHidden)
             return;
 
         AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, Color.DARK_GRAY_HEX);

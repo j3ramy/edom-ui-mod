@@ -22,6 +22,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import org.apache.logging.log4j.util.PropertySource;
+import org.apache.logging.log4j.util.SystemPropertiesPropertySource;
 
 import java.util.Objects;
 
@@ -73,8 +75,6 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.playerInventoryTitleX = 1000;
         this.renderBackground(matrixStack);
 
-        new Desktop(TEXTURE_WIDTH, TEXTURE_HEIGHT - 20, 3, Color.PURPLE_HEX, Color.BLACK_HEX).render(this, matrixStack);
-
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         this.screenState = this.server.isSet() ? ServerScreenState.OVERVIEW : ServerScreenState.SET_UP;
@@ -116,9 +116,10 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                 this.renderOverviewScreen(matrixStack, mouseX, mouseY, partialTicks);
                 this.updateOverviewScreen(mouseX, mouseY);
 
-                this.ipField.active = false;
-                this.passwordField.active = true;
+                if(this.overviewScreen.isPopUpVisible())
+                    return;
 
+                this.passwordField.setEnabled(true);
                 this.resetServerButton.visible = true;
                 this.resetServerButton.active = true;
                 this.saveServerButton.visible = true;
@@ -136,7 +137,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
         assert this.minecraft != null;
 
-        this.minecraft.getTextureManager().bindTexture(Texture.BLANK_GUI);
+        this.minecraft.getTextureManager().bindTexture(Texture.SCREEN_GUI_INV);
         this.blit(matrixStack, this.xPos, this.yPos, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
@@ -147,9 +148,24 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     private Tooltip resetServerButtonTooltip, saveServerButtonTooltip, loadServerTooltip, savePasswordTooltip;
     private ConfirmPopUp confirmPopUp;
     private AlertPopUp alertPopUp;
+    private BlankPopUp blankPopUp;
 
 
     public void initOverviewScreen(){
+        //admin settings
+        this.overviewScreen.setBlankPopUp(this.blankPopUp = new BlankPopUp(this, 180, 120,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.admin_settings"),
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.submit"), (action) ->{
+            System.out.println("TEST");
+        }));
+        this.blankPopUp.hide();
+
+        this.overviewScreen.addButton(new Button(this.xPos + TEXTURE_WIDTH - 60 - 10, this.yPos + 69, 60, 14,
+                new StringTextComponent("Admin"), (action) ->{
+            this.blankPopUp.show();
+        }));
+
+
         //add password text field
         this.passwordField = new TextFieldWidget(this.font, this.xPos + 70, this.yPos + 62, 60, 12, new StringTextComponent(""));
         this.passwordField.setCanLoseFocus(true);
@@ -193,7 +209,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         //right area
         this.overviewScreen.addVerticalLine(new VerticalLine(this.xPos + 175, this.yPos + 35, 100, Color.WHITE_HEX));
 
-        this.addButton(this.saveServerButton = new ImageButton(this.xPos + 191, this.yPos + 41, 20, 18, 0, 0, 19, Texture.SAVE_BUTTON, (click)->{
+        this.addButton(this.saveServerButton = new ImageButton(this.xPos + 191, this.yPos + 36, 20, 18, 0, 0, 19, Texture.SAVE_BUTTON, (click)->{
 
             //check if drive is plugged in
             if(this.container.getTileEntity().getIntData().get(0) == 0){
@@ -236,7 +252,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
         }));
 
-        this.addButton(this.loadServerButton = new ImageButton(this.xPos + 218, this.yPos + 41, 20, 18, 0, 0, 19, Texture.LOAD_BUTTON, (click)->{
+        this.addButton(this.loadServerButton = new ImageButton(this.xPos + 218, this.yPos + 36, 20, 18, 0, 0, 19, Texture.LOAD_BUTTON, (click)->{
 
             //check if drive is plugged in
             if(this.container.getTileEntity().getIntData().get(0) == 0){
@@ -454,9 +470,10 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             this.offButton.active = true;
         }
 
-        if(this.confirmPopUp != null && !this.confirmPopUp.isHidden() || this.alertPopUp != null && !this.alertPopUp.isHidden()){
-            this.onButton.active = false;
-            this.offButton.active = false;
+        if(this.confirmPopUp != null && !this.confirmPopUp.isHidden() || this.alertPopUp != null && !this.alertPopUp.isHidden() ||
+                this.blankPopUp != null && !this.blankPopUp.isHidden()){
+
+            this.passwordField.setEnabled(false);
             this.resetServerButton.active = false;
             this.saveServerButton.active = false;
             this.loadServerButton.active = false;

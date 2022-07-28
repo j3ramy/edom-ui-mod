@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.j3ramy.economy.container.SwitchContainer;
+import de.j3ramy.economy.gui.widgets.BlankPopUp;
 import de.j3ramy.economy.network.CSPacketSendSwitchData;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.Color;
@@ -31,8 +32,12 @@ public class SwitchScreen extends ContainerScreen<SwitchContainer> {
     }
 
 
+    ModScreen screen;
+    BlankPopUp popUp;
     public SwitchScreen(SwitchContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(screenContainer, inv, titleIn);
+
+        this.screen = new ModScreen();
     }
 
 
@@ -42,7 +47,6 @@ public class SwitchScreen extends ContainerScreen<SwitchContainer> {
 
         this.xOffset = this.width / 2 - (TEXTURE_WIDTH / 2);
         this.yOffset = this.height / 2 - 65;
-
     }
 
     @Override
@@ -90,7 +94,6 @@ public class SwitchScreen extends ContainerScreen<SwitchContainer> {
 
             GlStateManager.popMatrix();
         }
-
     }
 
     @Override

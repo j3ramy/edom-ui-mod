@@ -27,6 +27,8 @@
   "screen.economy.placeholder.ip": "IP Address",
   "screen.economy.placeholder.search": "Search query",
   "screen.economy.placeholder.name": "Name",
+  "screen.economy.placeholder.username": "Username",
+  "screen.economy.placeholder.password": "Password",
 
   "screen.economy.label.accNr": "Account Number:",
   "screen.economy.label.validity": "Validity:",
@@ -46,6 +48,7 @@
   "screen.economy.button.yes": "Yes",
   "screen.economy.button.no": "No",
   "screen.economy.button.cancel": "Cancel",
+  "screen.economy.button.submit": "Submit",
 
   "screen.economy.heading.credit_cart_printer": "Card Printer",
   "screen.economy.heading.server": "Server Control Terminal v1.0",
@@ -76,6 +79,7 @@
   "screen.economy.popup.title.backup_overwrite": "Backup Overwrite",
   "screen.economy.popup.title.backup_loaded": "Backup Loaded",
   "screen.economy.popup.title.changes_saved": "Changes Saved",
+  "screen.economy.popup.title.admin_settings": "Admin Settings",
 
   "screen.economy.popup.content.drop_table": "Do you really want to drop this table?",
   "screen.economy.popup.content.delete_entry": "Do you really want to delete this entry?",
@@ -88,7 +92,6 @@
   "screen.economy.popup.content.backup_overwrite": "Do you really want to load the backup?",
   "screen.economy.popup.content.backup_loaded": "Backup successfully loaded. Please close the screen.",
   "screen.economy.popup.content.changes_saved": "Your changes have been saved",
-
 
   "translation.economy.chat.ethernet_cable.cable_connected": "\u00A7aCable successfully connected to: %1$s %2$s",
   "translation.economy.chat.ethernet_cable.removed_cable": "\u00A7aCable successfully disconnected",

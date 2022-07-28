@@ -13,6 +13,7 @@ public class ModScreen extends Screen {
     private boolean disableScreen;
     private AlertPopUp alertPopUp;
     private ConfirmPopUp confirmPopUp;
+    private BlankPopUp blankPopUp;
     private final List<Button> buttons = new ArrayList<>();
     private final List<DropDown> dropDowns = new ArrayList<>();
     private final List<Tooltip> tooltips = new ArrayList<>();
@@ -28,6 +29,11 @@ public class ModScreen extends Screen {
     public void setConfirmPopUp(ConfirmPopUp confirmPopUp){
         this.confirmPopUp = confirmPopUp;
     }
+
+    public void setBlankPopUp(BlankPopUp blankPopUp) {
+        this.blankPopUp = blankPopUp;
+    }
+
     public void addButton(Button button){
         this.buttons.add(button);
     }
@@ -132,6 +138,11 @@ public class ModScreen extends Screen {
             this.confirmPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
         }
 
+        if(this.blankPopUp != null){
+            this.blankPopUp.updateMousePosition(mouseX, mouseY);
+            this.blankPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
+        }
+
         for(Tooltip tooltip : this.tooltips){
             if(tooltip != null)
                 tooltip.render(matrixStack, mouseX, mouseY);
@@ -141,6 +152,19 @@ public class ModScreen extends Screen {
     public void onClick(){
         if(this.disableScreen)
             return;
+
+        if(this.isPopUpVisible()){
+            if(this.alertPopUp != null)
+                this.alertPopUp.onClick();
+
+            if(this.blankPopUp != null)
+                this.blankPopUp.onClick();
+
+            if(this.confirmPopUp != null)
+                this.confirmPopUp.onClick();
+
+            return;
+        }
 
         for(DropDown dropDown : this.dropDowns){
             if(dropDown != null)
@@ -167,6 +191,9 @@ public class ModScreen extends Screen {
 
         if(this.confirmPopUp != null)
             this.confirmPopUp.onClick();
+
+        if(this.blankPopUp != null)
+            this.blankPopUp.onClick();
     }
 
     public void onScroll(int scrollDelta){
@@ -192,6 +219,7 @@ public class ModScreen extends Screen {
     public void clearScreen(){
         this.confirmPopUp = null;
         this.alertPopUp = null;
+        this.blankPopUp = null;
         this.buttons.clear();
         this.dropDowns.clear();
         this.tooltips.clear();
@@ -208,5 +236,15 @@ public class ModScreen extends Screen {
 
     public void disable(){
         this.disableScreen = true;
+    }
+
+    public boolean isPopUpVisible(){
+        if(this.alertPopUp != null && !this.alertPopUp.isHidden())
+            return true;
+
+        if(this.confirmPopUp != null && !this.confirmPopUp.isHidden())
+            return true;
+
+        return this.blankPopUp != null && !this.blankPopUp.isHidden();
     }
 }

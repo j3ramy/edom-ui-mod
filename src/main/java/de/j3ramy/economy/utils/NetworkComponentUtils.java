@@ -3,10 +3,13 @@ package de.j3ramy.economy.utils;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.tileentity.NetworkComponentTile;
 import de.j3ramy.economy.tileentity.RouterTile;
+import de.j3ramy.economy.tileentity.ServerTile;
 import de.j3ramy.economy.tileentity.SwitchTile;
 import de.j3ramy.economy.utils.data.NetworkComponentData;
 import de.j3ramy.economy.utils.data.SwitchData;
 import de.j3ramy.economy.utils.enums.NetworkComponent;
+import de.j3ramy.economy.utils.server.Server;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class NetworkComponentUtils {
@@ -177,4 +181,28 @@ public class NetworkComponentUtils {
     }
 
      */
+
+    @Nullable
+    public static Server getServer(NetworkComponentData connectedRouter, World world){
+        if(world == null || !connectedRouter.emitsWifi())
+            return null;
+
+        BlockPos switchPos = connectedRouter.getTo();
+        SwitchTile switchTile = (SwitchTile) world.getTileEntity(switchPos);
+
+        if(switchTile != null){
+
+            NetworkComponentData port = switchTile.getSwitchData().getPort(0);
+
+            if(port != null && port.getComponent() == NetworkComponent.SERVER){
+                ServerTile serverTile = (ServerTile) world.getTileEntity(port.getFrom());
+
+                if(serverTile != null){
+                    return serverTile.getServer();
+                }
+            }
+        }
+
+        return null;
+    }
 }
