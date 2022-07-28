@@ -122,6 +122,9 @@ public class ScrollableList extends Widget {
     }
 
     public void onClick(){
+        if(this.isHidden)
+            return;
+
         for(int i = 0; i < this.contentFields.size(); i++){
             if(this.contentFields.get(i) != null && this.contentFields.get(i).isMouseOver(this.mousePosition.x, this.mousePosition.y)){
                 this.selectedIndex = i;
@@ -137,7 +140,7 @@ public class ScrollableList extends Widget {
 
     private float currentScrollIndex = 0;
     public void onScroll(int scrollDelta){
-        if(!this.isMouseOverList())
+        if(!this.isMouseOverList() || this.isHidden)
             return;
 
         if(!this.needsScrolling())
