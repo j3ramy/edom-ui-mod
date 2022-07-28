@@ -35,6 +35,10 @@ public class ModScreen extends Screen {
         this.blankPopUp = blankPopUp;
     }
 
+    public void setTaskbar(Taskbar taskbar) {
+        this.taskbar = taskbar;
+    }
+
     public void addButton(Button button){
         this.buttons.add(button);
     }

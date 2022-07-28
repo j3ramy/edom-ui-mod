@@ -41,7 +41,8 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     private ImageButton createEntryButton;
     private ImageButton deleteEntryButton;
     private ImageButton updateEntryButton;
-    private Button saveButton = new Button(xRight - 50 - 2, yBottom - 18 - 2, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onClick)->{
+    //X und Y werden jeweils in der init Methode festgelegt
+    private Button saveButton = new Button(0, 0, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onClick)->{
         switch(this.screenState){
             case CREATE_TABLE_SCREEN:
                 System.out.println("CREATE_TABLE_SCREEN");
@@ -57,7 +58,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
                 break;
         }
     });
-    private Button cancelButton = new Button(xRight - 50 - 2 - 50 - 3, yBottom, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.cancel"), (onClick)->{
+    private Button cancelButton = new Button(0, 0, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.cancel"), (onClick)->{
         this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
     });
     private TextFieldWidget searchField;
@@ -70,6 +71,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     private Tooltip updateEntryButtonTooltip;
     private ConfirmPopUp confirmDropTable;
     private ConfirmPopUp confirmDeleteEntry;
+    private Taskbar taskbar;
 
     private Server server = new Server(new CompoundNBT());
     public void setServer(Server server) {
@@ -107,7 +109,6 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.xRight = (this.width / 2) + (TEXTURE_WIDTH / 2);
         this.yTop = (this.height / 2) - (TEXTURE_HEIGHT / 2);
         this.yBottom = (this.height / 2) + (TEXTURE_HEIGHT / 2);
-        System.out.println(yBottom);
 
         this.server = new Server(Server.DBType.CUSTOM, "Berdi's Leben ist eine Freude IP", this.container.getTileEntity().getPos());
 
@@ -151,6 +152,9 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.cancelButton.x = xRight - 50 - 5 - 50 - 5;
         this.cancelButton.y = yBottom - 18 - 2;
 
+        //Taskbar
+        this.createTableScreen.setTaskbar(this.taskbar = new Taskbar(this.xLeft, this.yBottom - 14, TEXTURE_WIDTH));
+
         for (Table table : this.server.getDatabase().getTables()){
             this.tableList.addToList(table.getName(), true, this.tableList.getFGColor(), (onClick)->{
                 this.table.clear();
@@ -178,6 +182,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
+        //For every Screen
         //Heading
         GlStateManager.pushMatrix();
         GlStateManager.scalef(.5f, .5f, .5f);
@@ -185,7 +190,10 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, titleText + " | " + this.server.getIp() + "/" + this.server.getDatabase().getName() + " | " + GuiUtils.formatTime(this.container.getTileEntity().getWorld().getDayTime()), (this.xLeft + 2) * 2, (this.yTop + 2) * 2, Color.WHITE);
         GlStateManager.popMatrix();
 
-        //draw screens
+        //Taskbar
+        this.taskbar.render(matrixStack, mouseX, mouseY, partialTicks);
+
+        //Individual Screens
         switch(this.screenState){
             case TABLE_OVERVIEW_SCREEN:
                 this.renderTableOverviewScreen(matrixStack, mouseX, mouseY, partialTicks);
@@ -329,8 +337,8 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
 
     //region CREATE_TABLE_SCREEN
     private void initCreateTableScreen() {
-        this.createTableScreen.addButton(cancelButton);
-        this.createTableScreen.addButton(saveButton);
+//        this.createTableScreen.addButton(cancelButton);
+//        this.createTableScreen.addButton(saveButton);
     }
 
     private void renderCreateTableScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {

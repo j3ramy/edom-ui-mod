@@ -38,6 +38,10 @@ public class ScrollableList extends Widget {
         this.elementHeight = elementHeight;
     }
 
+    public boolean isHidden() {
+        return isHidden;
+    }
+
     public int getSelectedIndex() {
         return this.selectedIndex;
     }
