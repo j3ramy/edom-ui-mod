@@ -63,7 +63,7 @@ public class RouterScreen extends ContainerScreen<RouterContainer> {
     private void saveName(){
         this.data.setName(this.nameField.getText().replace(' ', '_'));
         Network.INSTANCE.sendToServer(new CSPacketSendNetworkComponentData(this.data, this.container.getTileEntity().getPos()));
-        this.screen.setAlertPopUp(new AlertPopUp(this, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.changes_saved").getString(),
+        this.screen.addAlertPopUp(new AlertPopUp(this, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.changes_saved").getString(),
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.changes_saved").getString(), AlertPopUp.ColorType.DEFAULT));
     }
 
@@ -121,7 +121,7 @@ public class RouterScreen extends ContainerScreen<RouterContainer> {
             this.saveName();
         }
         
-        return this.nameField.keyPressed(keyCode, scanCode, modifiers) || this.nameField.canWrite() || super.keyPressed(keyCode, scanCode, modifiers);
+        return true;
     }
 
     @Override

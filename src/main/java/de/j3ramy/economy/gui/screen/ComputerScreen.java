@@ -222,7 +222,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         }));
 
         this.addButton(this.dropTableButton = new ImageButton(this.xLeft + 27, this.yTop + 11, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) -> {
-            this.tableOverviewScreen.setConfirmPopUp(confirmDropTable = new ConfirmPopUp(this,
+            this.tableOverviewScreen.addConfirmPopUp(confirmDropTable = new ConfirmPopUp(this,
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drop_table").getString(),
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drop_table").getString(),
                     ConfirmPopUp.ColorType.DEFAULT,
@@ -238,7 +238,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         }));
 
         this.addButton(this.deleteEntryButton = new ImageButton(this.xRight - 2 - 25 - 20, this.yTop + 11, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) ->{
-            this.tableOverviewScreen.setConfirmPopUp(confirmDeleteEntry = new ConfirmPopUp(
+            this.tableOverviewScreen.addConfirmPopUp(confirmDeleteEntry = new ConfirmPopUp(
                     this,
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.delete_entry").getString(),
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.delete_entry").getString(),
@@ -257,11 +257,11 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         //</Buttons>
 
         //<Tooltips>
-        this.tableOverviewScreen.addTooltip(createTableButtonTooltip = new Tooltip(GuiUtils.getTranslationText("create_table")));
-        this.tableOverviewScreen.addTooltip(dropTableButtonTooltip = new Tooltip(GuiUtils.getTranslationText("drop_table")));
-        this.tableOverviewScreen.addTooltip(createEntryButtonTooltip = new Tooltip(GuiUtils.getTranslationText("create_entry")));
-        this.tableOverviewScreen.addTooltip(deleteEntryButtonTooltip = new Tooltip(GuiUtils.getTranslationText("delete_entry")));
-        this.tableOverviewScreen.addTooltip(updateEntryButtonTooltip = new Tooltip(GuiUtils.getTranslationText("update_entry")));
+        this.tableOverviewScreen.addTooltip(createTableButtonTooltip = new Tooltip(GuiUtils.getTranslationText("create_table"), this.createTableButton));
+        this.tableOverviewScreen.addTooltip(dropTableButtonTooltip = new Tooltip(GuiUtils.getTranslationText("drop_table"), this.dropTableButton));
+        this.tableOverviewScreen.addTooltip(createEntryButtonTooltip = new Tooltip(GuiUtils.getTranslationText("create_entry"), this.createEntryButton));
+        this.tableOverviewScreen.addTooltip(deleteEntryButtonTooltip = new Tooltip(GuiUtils.getTranslationText("delete_entry"), this.deleteEntryButton));
+        this.tableOverviewScreen.addTooltip(updateEntryButtonTooltip = new Tooltip(GuiUtils.getTranslationText("update_entry"), this.updateEntryButton));
         //</Tooltips>
 
         //Search field

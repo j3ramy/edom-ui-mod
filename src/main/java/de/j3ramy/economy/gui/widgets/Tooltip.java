@@ -6,14 +6,24 @@ import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.ImageButton;
+
+import javax.annotation.Nullable;
 
 public class Tooltip {
 
     private final String content;
+    private final ImageButton imageButton;
     public boolean isVisible = false;
 
-    public Tooltip(String content){
+    public Tooltip(String content, ImageButton button){
         this.content = content;
+        this.imageButton = button;
+    }
+
+    @Nullable
+    public ImageButton getButton() {
+        return this.imageButton;
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY){

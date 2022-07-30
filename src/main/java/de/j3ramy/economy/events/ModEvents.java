@@ -3,7 +3,9 @@ package de.j3ramy.economy.events;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.gui.screen.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -16,23 +18,61 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void onMouseClickEvent(GuiScreenEvent.MouseClickedEvent event){
-        if(event.getButton() != 0)
+        for(ModScreen screen : ModEvents.screens){
+            if(Minecraft.getInstance().currentScreen instanceof ServerScreen){
+                screen.onClick(event.getButton());
+            }
+            else if(Minecraft.getInstance().currentScreen instanceof ComputerScreen){
+                screen.onClick(event.getButton());
+            }
+            else if(Minecraft.getInstance().currentScreen instanceof RouterScreen){
+                screen.onClick(event.getButton());
+            }
+            else if (Minecraft.getInstance().currentScreen instanceof SwitchScreen) {
+                screen.onClick(event.getButton());
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onKeyPressedEvent(GuiScreenEvent.KeyboardKeyPressedEvent event){
+        for(ModScreen screen : ModEvents.screens){
+            if(Minecraft.getInstance().currentScreen instanceof ServerScreen){
+                screen.onKeyPressed(event.getKeyCode());
+            }
+            else if(Minecraft.getInstance().currentScreen instanceof ComputerScreen){
+                screen.onKeyPressed(event.getKeyCode());
+            }
+            else if(Minecraft.getInstance().currentScreen instanceof RouterScreen){
+                screen.onKeyPressed(event.getKeyCode());
+            }
+            else if (Minecraft.getInstance().currentScreen instanceof SwitchScreen) {
+                screen.onKeyPressed(event.getKeyCode());
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onCharTypedEvent(GuiScreenEvent.KeyboardCharTypedEvent event){
+        if(event.isCanceled())
             return;
 
         for(ModScreen screen : ModEvents.screens){
-            if(Minecraft.getInstance().currentScreen instanceof ServerScreen){ // 0 = Left mouse button
-                screen.onClick();
+            if(Minecraft.getInstance().currentScreen instanceof ServerScreen){
+                screen.onCharTyped(event.getCodePoint());
             }
-            else if(Minecraft.getInstance().currentScreen instanceof ComputerScreen){ // 0 = Left mouse button
-                screen.onClick();
+            else if(Minecraft.getInstance().currentScreen instanceof ComputerScreen){
+                screen.onCharTyped(event.getCodePoint());
             }
-            else if(Minecraft.getInstance().currentScreen instanceof RouterScreen){ // 0 = Left mouse button
-                screen.onClick();
+            else if(Minecraft.getInstance().currentScreen instanceof RouterScreen){
+                screen.onCharTyped(event.getCodePoint());
             }
             else if (Minecraft.getInstance().currentScreen instanceof SwitchScreen) {
-                screen.onClick();
+                screen.onCharTyped(event.getCodePoint());
             }
         }
+
+        event.setCanceled(true);
     }
 
     @SubscribeEvent

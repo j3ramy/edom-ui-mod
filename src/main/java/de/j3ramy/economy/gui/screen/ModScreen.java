@@ -2,45 +2,50 @@ package de.j3ramy.economy.gui.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.j3ramy.economy.events.ModEvents;
+import de.j3ramy.economy.gui.widgets.Button;
 import de.j3ramy.economy.gui.widgets.*;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.util.text.StringTextComponent;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ModScreen extends Screen {
     private boolean disableScreen;
-    private AlertPopUp alertPopUp;
-    private ConfirmPopUp confirmPopUp;
-    private BlankPopUp blankPopUp;
+    private final List<AlertPopUp> alertPopUps = new ArrayList<>();
+    private final List<ConfirmPopUp> confirmPopUps = new ArrayList<>();
     private Taskbar taskbar;
     private final List<Button> buttons = new ArrayList<>();
+    private final List<ImageButton> imageButtons = new ArrayList<>();
     private final List<DropDown> dropDowns = new ArrayList<>();
     private final List<Tooltip> tooltips = new ArrayList<>();
     private final List<ScrollableTable> tables = new ArrayList<>();
     private final List<ScrollableList> scrollableList = new ArrayList<>();
     private final List<HorizontalLine> horizontalLines = new ArrayList<>();
+    private final List<TextFieldWidget> textFields = new ArrayList<>();
     private final List<CenteredHorizontalLine> centeredHorizontalLines = new ArrayList<>();
     private final List<VerticalLine> verticalLines = new ArrayList<>();
 
-    public void setAlertPopUp(AlertPopUp alertPopUp){
-        this.alertPopUp = alertPopUp;
+    public void addAlertPopUp(AlertPopUp alertPopUp){
+        this.alertPopUps.add(alertPopUp);
     }
-    public void setConfirmPopUp(ConfirmPopUp confirmPopUp){
-        this.confirmPopUp = confirmPopUp;
+    public void addConfirmPopUp(ConfirmPopUp confirmPopUp){
+        this.confirmPopUps.add(confirmPopUp);
     }
-
-    public void setBlankPopUp(BlankPopUp blankPopUp) {
-        this.blankPopUp = blankPopUp;
-    }
-
     public void setTaskbar(Taskbar taskbar) {
         this.taskbar = taskbar;
     }
-
     public void addButton(Button button){
         this.buttons.add(button);
+    }
+    public void addImageButton(ImageButton button){
+        this.imageButtons.add(button);
+    }
+    public void addTextField(TextFieldWidget textField){
+        this.textFields.add(textField);
     }
     public void addDropDown(DropDown dropDown){
         this.dropDowns.add(dropDown);
@@ -64,6 +69,7 @@ public class ModScreen extends Screen {
         this.verticalLines.add(verticalLine);
     }
 
+    private final Point mousePosition = new Point();
 
     public ModScreen() {
         super(new StringTextComponent(""));
@@ -71,16 +77,33 @@ public class ModScreen extends Screen {
         ModEvents.screens.add(this);
     }
 
+    private void update(int mouseX, int mouseY){
+        this.mousePosition.x = mouseX;
+        this.mousePosition.y = mouseY;
+
+        for(Tooltip tooltip : this.tooltips){
+            if(tooltip.getButton() != null)
+                tooltip.isVisible = tooltip.getButton().isMouseOver(mouseX, mouseY);
+        }
+    }
+
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if(this.disableScreen)
             return;
 
+        this.update(mouseX, mouseY);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         for(Button button : this.buttons){
             if(button != null){
                 button.updateMousePosition(mouseX, mouseY);
+                button.render(matrixStack, mouseX, mouseY, partialTicks);
+            }
+        }
+
+        for(ImageButton button : this.imageButtons){
+            if(button != null){
                 button.render(matrixStack, mouseX, mouseY, partialTicks);
             }
         }
@@ -112,6 +135,13 @@ public class ModScreen extends Screen {
 
         }
 
+        for(TextFieldWidget textField : this.textFields){
+            if(textField != null){
+                textField.render(matrixStack, mouseX, mouseY, partialTicks);
+                //textField.tick();
+            }
+        }
+
         for(HorizontalLine horizontalLine : this.horizontalLines){
             if(horizontalLine != null){
                 horizontalLine.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -133,78 +163,86 @@ public class ModScreen extends Screen {
 
         }
 
-        if(this.alertPopUp != null){
-            this.alertPopUp.updateMousePosition(mouseX, mouseY);
-            this.alertPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
-        }
-
-        if(this.confirmPopUp != null){
-            this.confirmPopUp.updateMousePosition(mouseX, mouseY);
-            this.confirmPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
-        }
-
-        if(this.blankPopUp != null){
-            this.blankPopUp.updateMousePosition(mouseX, mouseY);
-            this.blankPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
-        }
-
         if(this.taskbar != null){
             this.taskbar.render(matrixStack, mouseX, mouseY, partialTicks);
         }
 
-        for(Tooltip tooltip : this.tooltips){
-            if(tooltip != null)
-                tooltip.render(matrixStack, mouseX, mouseY);
+        for(AlertPopUp alertPopUp : this.alertPopUps){
+            if(alertPopUp != null){
+                alertPopUp.updateMousePosition(mouseX, mouseY);
+                alertPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
+            }
+        }
+
+        for(ConfirmPopUp confirmPopUp : this.confirmPopUps){
+            if(confirmPopUp != null){
+                confirmPopUp.updateMousePosition(mouseX, mouseY);
+                confirmPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
+            }
+        }
+
+        if(!this.isPopUpVisible()){
+            for(Tooltip tooltip : this.tooltips){
+                if(tooltip != null)
+                    tooltip.render(matrixStack, mouseX, mouseY);
+            }
         }
     }
 
-    public void onClick(){
+    public void onClick(int mouseButton){
         if(this.disableScreen)
             return;
 
-        if(this.isPopUpVisible()){
-            if(this.alertPopUp != null)
-                this.alertPopUp.onClick();
+        if(this.isPopUpVisible() && mouseButton == 0){
+            for(AlertPopUp alertPopUp : this.alertPopUps) {
+                if (alertPopUp != null) {
+                    alertPopUp.onClick();
+                }
+            }
 
-            if(this.blankPopUp != null)
-                this.blankPopUp.onClick();
-
-            if(this.confirmPopUp != null)
-                this.confirmPopUp.onClick();
+            for(ConfirmPopUp confirmPopUp : this.confirmPopUps) {
+                if (confirmPopUp != null) {
+                    confirmPopUp.onClick();
+                }
+            }
 
             return;
         }
 
         for(DropDown dropDown : this.dropDowns){
-            if(dropDown != null)
+            if(dropDown != null && mouseButton == 0)
                 dropDown.onClick();
         }
 
         for(ScrollableList scrollableList : this.scrollableList){
-            if(scrollableList != null)
+            if(scrollableList != null && mouseButton == 0)
                 scrollableList.onClick();
         }
 
         for(ScrollableTable scrollableTable : this.tables){
-            if(scrollableTable != null)
+            if(scrollableTable != null && mouseButton == 0)
                 scrollableTable.onClick();
         }
 
+        for(TextFieldWidget textField : this.textFields){
+            if(textField != null)
+                textField.mouseClicked(this.mousePosition.x, this.mousePosition.y, mouseButton);
+        }
+
         for(Button button : this.buttons){
-            if(button != null)
+            if(button != null && mouseButton == 0)
                 button.onClick();
         }
 
-        if(this.alertPopUp != null)
-            this.alertPopUp.onClick();
+        for(ImageButton button : this.imageButtons){
+            if(button != null && mouseButton == 0){
+                if(button.isMouseOver(this.mousePosition.x, this.mousePosition.y))
+                    button.onClick(this.mousePosition.x, this.mousePosition.y);
+            }
 
-        if(this.confirmPopUp != null)
-            this.confirmPopUp.onClick();
+        }
 
-        if(this.blankPopUp != null)
-            this.blankPopUp.onClick();
-
-        if(this.taskbar != null)
+        if(this.taskbar != null && mouseButton == 0)
             this.taskbar.onClick();
     }
 
@@ -228,12 +266,27 @@ public class ModScreen extends Screen {
         }
     }
 
+    public void onKeyPressed(int keyCode){
+        for(TextFieldWidget textField : this.textFields){
+            if(textField != null)
+                textField.keyPressed(keyCode, -1, -1);
+        }
+    }
+
+    public void onCharTyped(char c){
+        for(TextFieldWidget textField : this.textFields){
+            if(textField != null)
+                textField.charTyped(c, -1);
+        }
+    }
+
     public void clearScreen(){
-        this.confirmPopUp = null;
-        this.alertPopUp = null;
-        this.blankPopUp = null;
+        this.confirmPopUps.clear();
+        this.alertPopUps.clear();
         this.buttons.clear();
+        this.imageButtons.clear();
         this.dropDowns.clear();
+        this.textFields.clear();
         this.tooltips.clear();
         this.tables.clear();
         this.scrollableList.clear();
@@ -251,12 +304,18 @@ public class ModScreen extends Screen {
     }
 
     public boolean isPopUpVisible(){
-        if(this.alertPopUp != null && !this.alertPopUp.isHidden())
-            return true;
+        for(AlertPopUp alertPopUp : this.alertPopUps) {
+            if (alertPopUp != null && !alertPopUp.isHidden()) {
+                return true;
+            }
+        }
 
-        if(this.confirmPopUp != null && !this.confirmPopUp.isHidden())
-            return true;
+        for(ConfirmPopUp confirmPopUp : this.confirmPopUps) {
+            if (confirmPopUp != null && !confirmPopUp.isHidden()) {
+                return true;
+            }
+        }
 
-        return this.blankPopUp != null && !this.blankPopUp.isHidden();
+        return false;
     }
 }

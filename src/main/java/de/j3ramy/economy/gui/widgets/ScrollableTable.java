@@ -108,7 +108,7 @@ public class ScrollableTable extends Widget {
     private void drawToolTip(MatrixStack matrixStack){
         if(this.isHovered()){
             if(this.getHoveredRow() != null){
-                Tooltip tooltip = new Tooltip(this.getHoveredRow().getHoveredColumnText());
+                Tooltip tooltip = new Tooltip(this.getHoveredRow().getHoveredColumnText(), null);
                 tooltip.render(matrixStack, this.mousePosition.x, this.mousePosition.y);
             }
         }
