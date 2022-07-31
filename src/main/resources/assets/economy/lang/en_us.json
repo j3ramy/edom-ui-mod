@@ -111,6 +111,7 @@
   "translation.economy.chat.ethernet_cable.no_name_set": "\u00A74You cannot connect/disconnect cable without a name is set",
   "translation.economy.chat.ethernet_cable.cable_already_connected_to_this": "\u00A74There is a cable already connected to this component",
   "translation.economy.chat.ethernet_cable.cable_already_connected_to_other": "\u00A74This cable is currently connected to another component",
+  "translation.economy.chat.inventory.inventory_full": "\u00A74Cables are connected to the switch. Remove them first.",
 
   "itemGroup.economy": "Edom Economy"
 

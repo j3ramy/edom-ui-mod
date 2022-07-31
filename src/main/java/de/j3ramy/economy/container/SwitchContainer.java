@@ -32,7 +32,6 @@ public class SwitchContainer extends Container {
         this.tileEntity = tile;
 
         if(this.tileEntity != null){
-            System.out.println(SwitchData.PORT_COUNT + " | " + tile.getItemHandler().getSlots());
             this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->{
                 addSlot(new SlotItemHandler(h, 0, -23, 29));
 

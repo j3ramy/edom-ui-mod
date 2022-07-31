@@ -25,22 +25,22 @@ public class ModBlocks {
             new MoneyChangerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(-1f)));
 
     public static final RegistryObject<Block> CREDIT_CART_PRINTER = registerBlock("credit_card_printer", () ->
-            new CreditCardPrinterBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid()));
+            new CreditCardPrinterBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid().setRequiresTool()));
 
     public static final RegistryObject<Block> SERVER = registerBlock("server", () ->
-            new ServerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid()));
+            new ServerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid().setRequiresTool()));
 
     public static final RegistryObject<Block> COMPUTER = registerBlock("computer", () ->
-            new ComputerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f)));
+            new ComputerBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).setRequiresTool()));
 
     public static final RegistryObject<Block> ROUTER = registerBlock("router", () ->
-            new RouterBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid()));
+            new RouterBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid().setRequiresTool()));
 
     public static final RegistryObject<Block> SWITCH = registerBlock("switch", () ->
-            new SwitchBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f)));
+            new SwitchBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).setRequiresTool()));
 
     public static final RegistryObject<Block> NETWORK_SOCKET = registerBlock("network_socket", () ->
-            new NetworkSocketBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid()));
+            new NetworkSocketBlock(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(10f).notSolid().setRequiresTool()));
 
 
     public static void register(IEventBus eventBus){

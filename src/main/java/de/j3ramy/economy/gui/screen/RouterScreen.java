@@ -48,6 +48,8 @@ public class RouterScreen extends ContainerScreen<RouterContainer> {
         this.xPos = this.width / 2;
         this.yPos = this.height / 2;
 
+        this.screen.clearScreen();
+
         screen.addTextField(this.nameField = new TextFieldWidget(this.font, this.xPos - 50, this.yPos - 50, 100, 20, new StringTextComponent("")));
         this.nameField.setCanLoseFocus(true);
         this.nameField.setTextColor(Color.WHITE);
@@ -86,7 +88,6 @@ public class RouterScreen extends ContainerScreen<RouterContainer> {
 
     private void update() {
         if (!this.isNameInitialSet && this.data.isSet()) {
-            System.out.println(this.data.getName());
             this.nameField.setText(this.data.getName());
             this.isNameInitialSet = true;
         }

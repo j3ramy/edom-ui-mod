@@ -433,7 +433,6 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
             this.minecraft.player.closeScreen();
         }
 
-        return (this.searchField.keyPressed(keyCode, scanCode, modifiers) || this.searchField.canWrite()) ||
-                super.keyPressed(keyCode, scanCode, modifiers);
+        return false;
     }
 }

@@ -667,7 +667,6 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             this.minecraft.player.closeScreen();
         }
 
-        return true;
-
+        return false;
     }
 }

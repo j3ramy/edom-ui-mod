@@ -1,17 +1,22 @@
 package de.j3ramy.economy.block;
 
+import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.SwitchContainer;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.network.SCPacketSendServerData;
 import de.j3ramy.economy.network.SCPacketSendSwitchData;
 import de.j3ramy.economy.tileentity.ModTileEntities;
 import de.j3ramy.economy.tileentity.SwitchTile;
+import de.j3ramy.economy.utils.data.SwitchData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ChestBlock;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
@@ -22,6 +27,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
@@ -71,15 +78,33 @@ public class SwitchBlock extends HorizontalBlock {
     }
 
     @Override
-    public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state) {
-        super.onPlayerDestroy(worldIn, pos, state);
+    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
 
-        if(worldIn.isRemote())
-            return;
 
-        //reset connected components
+        if(!worldIn.isRemote){
+            TileEntity tile = worldIn.getTileEntity(pos);
+
+            if(tile instanceof SwitchTile){
+                if(!isInvEmpty((SwitchTile) tile)){
+                    player.sendMessage(new TranslationTextComponent("translation."+ EconomyMod.MOD_ID + ".chat.inventory.inventory_full"), player.getUniqueID());
+                    return;
+                }
+
+                super.onBlockClicked(state, worldIn, pos, player);
+            }
+        }
     }
 
+
+    boolean isInvEmpty(SwitchTile tile){
+        boolean isEmpty = true;
+        for(int i = 0; i < SwitchData.PORT_COUNT; i++){
+            if(!tile.getItemHandler().getStackInSlot(i).isEmpty())
+                isEmpty = false;
+        }
+
+        return isEmpty;
+    }
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(HORIZONTAL_FACING);

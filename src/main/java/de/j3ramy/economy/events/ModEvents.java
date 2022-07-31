@@ -3,6 +3,7 @@ package de.j3ramy.economy.events;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.gui.screen.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.TickEvent;
@@ -54,21 +55,18 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void onCharTypedEvent(GuiScreenEvent.KeyboardCharTypedEvent event){
-        if(event.isCanceled())
-            return;
-
-        for(ModScreen screen : ModEvents.screens){
-            if(Minecraft.getInstance().currentScreen instanceof ServerScreen){
-                screen.onCharTyped(event.getCodePoint());
+        for(ModScreen s : ModEvents.screens){
+            if(event.getGui() instanceof ServerScreen){
+                s.onCharTyped(event.getCodePoint());
             }
-            else if(Minecraft.getInstance().currentScreen instanceof ComputerScreen){
-                screen.onCharTyped(event.getCodePoint());
+            else if(event.getGui() instanceof ComputerScreen){
+                s.onCharTyped(event.getCodePoint());
             }
-            else if(Minecraft.getInstance().currentScreen instanceof RouterScreen){
-                screen.onCharTyped(event.getCodePoint());
+            else if(event.getGui() instanceof RouterScreen){
+                s.onCharTyped(event.getCodePoint());
             }
-            else if (Minecraft.getInstance().currentScreen instanceof SwitchScreen) {
-                screen.onCharTyped(event.getCodePoint());
+            else if (event.getGui() instanceof SwitchScreen) {
+                s.onCharTyped(event.getCodePoint());
             }
         }
 
