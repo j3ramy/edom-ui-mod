@@ -42,24 +42,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     private ImageButton deleteEntryButton;
     private ImageButton updateEntryButton;
     //X und Y werden jeweils in der init Methode festgelegt
-    private Button saveButton = new Button(0, 0, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onClick)->{
-        switch(this.screenState){
-            case CREATE_TABLE_SCREEN:
-                System.out.println("CREATE_TABLE_SCREEN");
-//                this.createTableScreen.addProgressPopUp(new ProgressPopUp(this, "", 2, true, done->{
-                    this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
-//                }));
-                break;
-            case CREATE_ENTRY_SCREEN:
-                System.out.println("CREATE_ENTRY_SCREEN");
-                this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
-                break;
-            case UPDATE_ENTRY_SCREEN:
-                System.out.println("UPDATE_ENTRY_SCREEN");
-                this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
-                break;
-        }
-    });
+    private Button saveButton;
     private Button cancelButton = new Button(0, 0, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.cancel"), (onClick)->{
         this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
     });
@@ -145,11 +128,31 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.taskbar = new Taskbar(this.xLeft, this.yBottom - 14, TEXTURE_WIDTH);
 
         //Cancel and Save Buttons for CreateTable, CreateEntry, UpdateEntry
-        this.saveButton.x = xRight - 50 - 5;
-        this.saveButton.y = yBottom - 18 - 2;
+        this.saveButton = new Button(xRight - 50 - 5, yBottom - 18 - 2 - 15, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onClick)->{
+            switch(this.screenState){
+                case CREATE_TABLE_SCREEN:
+                    System.out.println("CREATE_TABLE_SCREEN");
+                    this.createTableScreen.addProgressPopUp(new ProgressPopUp(this, new TranslationTextComponent("screen.economy.popup.title.creating_table").getString(), 2, true, done->{
+                        this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
+                    }));
+                    break;
+                case CREATE_ENTRY_SCREEN:
+                    System.out.println("CREATE_ENTRY_SCREEN");
+                    this.createEntryScreen.addProgressPopUp(new ProgressPopUp(this, new TranslationTextComponent("screen.economy.popup.title.creating_entry").getString(), 2, true, done->{
+                        this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
+                    }));
+                    break;
+                case UPDATE_ENTRY_SCREEN:
+                    System.out.println("UPDATE_ENTRY_SCREEN");
+                    this.updateEntryScreen.addProgressPopUp(new ProgressPopUp(this, new TranslationTextComponent("screen.economy.popup.title.updating_entry").getString(), 2, true, done->{
+                        this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
+                    }));
+                    break;
+            }
+        });
 
         this.cancelButton.x = xRight - 50 - 5 - 50 - 5;
-        this.cancelButton.y = yBottom - 18 - 2;
+        this.cancelButton.y = yBottom - 18 - 2 - 15;
 
         initTableOverviewScreen();
         initCreateTableScreen();
@@ -228,7 +231,9 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drop_table").getString(),
                     ConfirmPopUp.ColorType.DEFAULT,
                     (onYesClick)-> {
-                        this.confirmDropTable.hide();
+                        this.tableOverviewScreen.addProgressPopUp(new ProgressPopUp(this, new TranslationTextComponent("screen.economy.popup.title.dropping_table").getString(), 2, true, done->{
+                            this.confirmDropTable.hide();
+                        }));
                     }));
         }));
         dropTableButton.active = false;
@@ -245,7 +250,9 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.delete_entry").getString(),
                     ConfirmPopUp.ColorType.DEFAULT,
                     (onYesClick)->{
-                        this.confirmDeleteEntry.hide();
+                        this.tableOverviewScreen.addProgressPopUp(new ProgressPopUp(this, new TranslationTextComponent("screen.economy.popup.title.deleting_entry").getString(), 2, true, done->{
+                            this.confirmDeleteEntry.hide();
+                        }));
                     }));
         }));
         this.deleteEntryButton.active = false;
@@ -272,10 +279,10 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.searchField.setTextColor(Color.WHITE);
 
         //List of tables
-        this.tableOverviewScreen.addList(this.tableList = new ScrollableList(this.xLeft + 2, this.yTop + 34, 75, yBottom - 2 - (this.yTop + 34), 13));
+        this.tableOverviewScreen.addList(this.tableList = new ScrollableList(this.xLeft + 2, this.yTop + 34, 75, 115, 13));
 
         //List of Entries in Table
-        this.tableOverviewScreen.addTable(table = new ScrollableTable(this.xLeft + 82, this.yTop + 34, this.xRight - 2 - (this.xLeft + 82), yBottom - 2 - (this.yTop + 34), 10, true));
+        this.tableOverviewScreen.addTable(table = new ScrollableTable(this.xLeft + 82, this.yTop + 34, this.xRight - 2 - (this.xLeft + 82), 115, 10, true));
 
         //Taskbar
         this.tableOverviewScreen.setTaskbar(this.taskbar);
@@ -308,8 +315,8 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
 
     //region CREATE_TABLE_SCREEN
     private void initCreateTableScreen() {
-//        this.createTableScreen.addButton(cancelButton);
-//        this.createTableScreen.addButton(saveButton);
+        this.createTableScreen.addButton(cancelButton);
+        this.createTableScreen.addButton(saveButton);
         this.createTableScreen.setTaskbar(this.taskbar);
     }
 

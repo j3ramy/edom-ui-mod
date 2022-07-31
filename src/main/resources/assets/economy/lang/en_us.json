@@ -81,6 +81,11 @@
 
   "screen.economy.popup.title.drop_table": "Drop Table",
   "screen.economy.popup.title.delete_entry": "Delete Entry",
+  "screen.economy.popup.title.creating_table": "Creating Table",
+  "screen.economy.popup.title.dropping_table": "Dropping Table",
+  "screen.economy.popup.title.creating_entry": "Creating Entry",
+  "screen.economy.popup.title.deleting_entry": "Deleting Entry",
+  "screen.economy.popup.title.updating_entry": "Updating Entry",
   "screen.economy.popup.title.save_password": "Change Password",
   "screen.economy.popup.title.server_reset": "Server Reset",
   "screen.economy.popup.title.no_drive_found": "No Drive Found",

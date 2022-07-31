@@ -44,7 +44,7 @@ public class Taskbar extends Widget {
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, this.backgroundColor);
         this.modScreen.render(matrixStack, mouseX, mouseY, partialTicks);
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.formatTime(Minecraft.getInstance().world.getDayTime()), (this.x + this.width - 30), (this.y + 5), this.textColor);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.formatTime(Minecraft.getInstance().world.getDayTime()), (this.x + this.width - 30), (this.y + 4), this.textColor);
     }
     private void wifiClick() {
         if (this.wifiList.isHidden()){
