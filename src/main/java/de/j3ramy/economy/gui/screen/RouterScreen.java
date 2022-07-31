@@ -48,19 +48,18 @@ public class RouterScreen extends ContainerScreen<RouterContainer> {
         this.xPos = this.width / 2;
         this.yPos = this.height / 2;
 
-        this.nameField = new TextFieldWidget(this.font, this.xPos - 50, this.yPos - 50, 100, 20, new StringTextComponent(""));
+        screen.addTextField(this.nameField = new TextFieldWidget(this.font, this.xPos - 50, this.yPos - 50, 100, 20, new StringTextComponent("")));
         this.nameField.setCanLoseFocus(true);
         this.nameField.setTextColor(Color.WHITE);
         this.nameField.setMaxStringLength(20);
-        this.children.add(this.nameField);
 
 
-        this.screen.addButton(new Button(this.xPos - 30, this.yPos - 20, 60, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onclick)->{
+        this.screen.addButton(new Button(this.xPos - 30, this.yPos - 20, 60, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onclick) -> {
             this.saveName();
         }));
     }
 
-    private void saveName(){
+    private void saveName() {
         this.data.setName(this.nameField.getText().replace(' ', '_'));
         Network.INSTANCE.sendToServer(new CSPacketSendNetworkComponentData(this.data, this.container.getTileEntity().getPos()));
         this.screen.addAlertPopUp(new AlertPopUp(this, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.changes_saved").getString(),
@@ -79,17 +78,17 @@ public class RouterScreen extends ContainerScreen<RouterContainer> {
                 (this.yPos - 80),
                 Color.WHITE);
 
-        this.nameField.render(matrixStack, mouseX, mouseY, partialTicks);
         this.screen.render(matrixStack, mouseX, mouseY, partialTicks);
-
         this.update();
     }
 
-    private boolean isPasswordInitialSet = false;
+    private boolean isNameInitialSet = false;
+
     private void update() {
-        if (!this.isPasswordInitialSet && this.data.isSet()) {
+        if (!this.isNameInitialSet && this.data.isSet()) {
+            System.out.println(this.data.getName());
             this.nameField.setText(this.data.getName());
-            this.isPasswordInitialSet = true;
+            this.isNameInitialSet = true;
         }
     }
 
@@ -105,11 +104,6 @@ public class RouterScreen extends ContainerScreen<RouterContainer> {
     }
 
     @Override
-    public void resize(Minecraft minecraft, int width, int height) {
-        this.nameField.setText(this.nameField.getText());
-    }
-
-    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == 256) {
             assert this.minecraft != null;
@@ -117,18 +111,10 @@ public class RouterScreen extends ContainerScreen<RouterContainer> {
             this.minecraft.player.closeScreen();
         }
 
-        if(keyCode == 257){
+        if (keyCode == 257) {
             this.saveName();
         }
-        
+
         return true;
     }
-
-    @Override
-    public void tick() {
-        super.tick();
-        this.nameField.tick();
-    }
-
-
 }

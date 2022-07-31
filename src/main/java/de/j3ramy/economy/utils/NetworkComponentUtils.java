@@ -134,7 +134,6 @@ public class NetworkComponentUtils {
     //endregion
     //endregion
 
-    private static final int WIFI_SEARCH_RANGE = 50;
     @NotNull
     public static ArrayList<NetworkComponentData> lookForWifi(@NotNull World world, @NotNull BlockPos pos){
         ArrayList<NetworkComponentData> foundComponents = new ArrayList<>();
@@ -142,8 +141,8 @@ public class NetworkComponentUtils {
         if(world.isRemote())
             return foundComponents;
 
-        BlockPos startPos = new BlockPos(pos.getX() - (WIFI_SEARCH_RANGE / 2), pos.getY() - (WIFI_SEARCH_RANGE / 2), pos.getZ() - (WIFI_SEARCH_RANGE / 2));
-        BlockPos endPos = new BlockPos(pos.getX() + (WIFI_SEARCH_RANGE / 2), pos.getY() + (WIFI_SEARCH_RANGE / 2), pos.getZ() + (WIFI_SEARCH_RANGE / 2));
+        BlockPos startPos = new BlockPos(pos.getX() - (RouterTile.WIFI_SEARCH_RANGE / 2), pos.getY() - (RouterTile.WIFI_SEARCH_RANGE / 2), pos.getZ() - (RouterTile.WIFI_SEARCH_RANGE / 2));
+        BlockPos endPos = new BlockPos(pos.getX() + (RouterTile.WIFI_SEARCH_RANGE / 2), pos.getY() + (RouterTile.WIFI_SEARCH_RANGE / 2), pos.getZ() + (RouterTile.WIFI_SEARCH_RANGE / 2));
         Iterable<BlockPos> blocks = BlockPos.getAllInBoxMutable(startPos, endPos);
 
         for(BlockPos blockPos : blocks){
@@ -151,8 +150,9 @@ public class NetworkComponentUtils {
 
             if(tileEntity instanceof RouterTile){
                 NetworkComponentData data = (((RouterTile)tileEntity).getData());
-                if(data.emitsWifi())
+                if(data.emitsWifi()){
                     foundComponents.add(data);
+                }
             }
         }
 
@@ -183,8 +183,8 @@ public class NetworkComponentUtils {
      */
 
     @Nullable
-    public static Server getServer(NetworkComponentData connectedRouter, World world){
-        if(world == null || !connectedRouter.emitsWifi())
+    public static Server queryServer(NetworkComponentData connectedRouter, World world){
+        if(world == null || world.isRemote() || !connectedRouter.emitsWifi())
             return null;
 
         BlockPos switchPos = connectedRouter.getTo();
@@ -198,7 +198,10 @@ public class NetworkComponentUtils {
                 ServerTile serverTile = (ServerTile) world.getTileEntity(port.getFrom());
 
                 if(serverTile != null){
-                    return serverTile.getServer();
+                    if(serverTile.getServer().isOn()){
+                        serverTile.getServer().increaseAccesses();
+                        return serverTile.getServer();
+                    }
                 }
             }
         }

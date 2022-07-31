@@ -2,7 +2,9 @@ package de.j3ramy.economy.item;
 
 import de.j3ramy.economy.utils.NetworkComponentUtils;
 import de.j3ramy.economy.utils.data.NetworkComponentData;
+import de.j3ramy.economy.utils.server.Entry;
 import de.j3ramy.economy.utils.server.Server;
+import de.j3ramy.economy.utils.server.Table;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,7 +33,17 @@ public class FivehundredEuro extends Item {
         if(router == null)
             return super.onItemRightClick(worldIn, playerIn, handIn);
 
-        Server server = NetworkComponentUtils.getServer(router, worldIn);
+        System.out.println(router.getName());
+
+        Server server = NetworkComponentUtils.queryServer(router, worldIn);
+        if(server != null){
+            for(Table table : server.getDatabase().getTables())
+                System.out.println(table.getName());
+            System.out.println("----------------------------------------");
+            for(Entry entry : server.getDatabase().getTable("user").getAllEntries())
+                System.out.println(entry.getColumnsContent());
+        }
+
         //... use server for whatever
 
         return super.onItemRightClick(worldIn, playerIn, handIn);

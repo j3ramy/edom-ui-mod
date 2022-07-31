@@ -1,8 +1,11 @@
 package de.j3ramy.economy.utils.server;
 
+import com.mojang.realmsclient.dto.RealmsServer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.ArrayList;
 
 public class Server {
 
@@ -12,10 +15,12 @@ public class Server {
     }
 
     private final DBType serverType;
-    private final String ip;
+    private String ip;
     private BlockPos pos;
     private final Database db;
     private String password = "";
+    private String adminUsername = "";
+    private String adminPassword = "";
     private boolean isOn;
     private int accesses;
 
@@ -40,6 +45,66 @@ public class Server {
         this.password = nbt.getString("password");
         this.isOn = nbt.getBoolean("isOn");
         this.accesses = nbt.getInt("accesses");
+        this.adminUsername = nbt.getString("adminUsername");
+        this.adminPassword = nbt.getString("adminPassword");
+
+        if(this.getDatabase().getTableCount() == 0)
+            this.initialFillDatabase();
+    }
+
+    private void initialFillDatabase(){
+        ArrayList<String> attributes = new ArrayList<>();
+        attributes.add("username");
+        attributes.add("password");
+        attributes.add("isAdmin");
+        attributes.add("readOnly");
+        attributes.add("logins");
+        attributes.add("createdAt");
+        attributes.add("lastLogin");
+
+        this.db.createTable("user", attributes);
+        this.db.getTable("user").setAdminOnly(true);
+
+        attributes.clear();
+        attributes.add(this.adminUsername);
+        attributes.add(this.adminPassword);
+        attributes.add("true");
+        attributes.add("false");
+        attributes.add("0");
+        attributes.add(Entry.getCurrentTimestamp());
+        attributes.add("");
+        this.db.getTable("user").insert(new Entry(attributes));
+
+        switch(this.serverType){
+            case CUSTOM:
+                break;
+            case BANK:
+                attributes.clear();
+                attributes.add("accountNr");
+                attributes.add("pin");
+                attributes.add("balance");
+                attributes.add("dateOfBirth");
+                attributes.add("createdAt");
+                attributes.add("lastLogin");
+
+                this.db.createTable("bank_account", attributes);
+
+                attributes.clear();
+                attributes.add("pos");
+
+                this.db.createTable("atm", attributes);
+
+                attributes.clear();
+                attributes.add("type");
+                attributes.add("amount");
+                attributes.add("from");
+                attributes.add("to");
+                attributes.add("time");
+
+                this.db.createTable("transaction", attributes);
+                break;
+
+        }
     }
 
     public CompoundNBT getData(){
@@ -52,6 +117,8 @@ public class Server {
         nbt.put("db", this.db.getData());
         nbt.putString("password", this.password);
         nbt.putInt("accesses", this.accesses);
+        nbt.putString("adminUsername", this.adminUsername);
+        nbt.putString("adminPassword", this.adminPassword);
 
         return nbt;
     }
@@ -62,6 +129,10 @@ public class Server {
 
     public Database getDatabase() {
         return this.db;
+    }
+
+    public void increaseAccesses(){
+        this.accesses += 1;
     }
 
     public int getAccesses() {
@@ -98,5 +169,25 @@ public class Server {
 
     public String getPassword() {
         return this.password;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+    }
+
+    public void setAdminUsername(String adminUsername) {
+        this.adminUsername = adminUsername;
+    }
+
+    public String getAdminUsername() {
+        return this.adminUsername;
+    }
+
+    public String getAdminPassword() {
+        return this.adminPassword;
     }
 }

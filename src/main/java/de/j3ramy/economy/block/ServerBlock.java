@@ -34,6 +34,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
+import org.apache.logging.log4j.util.PropertySource;
+import org.apache.logging.log4j.util.SystemPropertiesPropertySource;
 
 import javax.annotation.Nullable;
 

@@ -64,11 +64,21 @@ public class Database {
         return null;
     }
 
-    public void dropTable(int index){
+    public boolean dropTable(int index){
+        if(index == 0)
+            return false;
+
         this.tableList.remove(index);
+        return true;
     }
-    public void dropTable(String name){
-        this.tableList.remove(name);
+
+    public int getTableIndex(String name){
+        for(int i = 0; i < this.tableList.size(); i++){
+            if(this.tableList.get(i).getName().equals(name))
+                return i;
+        }
+
+        return -1;
     }
 
     public boolean createTable(String name, List<String> attributes){

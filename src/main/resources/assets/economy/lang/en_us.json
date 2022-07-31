@@ -40,6 +40,9 @@
   "screen.economy.label.amount_entries": "Amount Entries:",
   "screen.economy.label.total_accesses": "Amount Accesses:",
   "screen.economy.label.name": " %1$s Name:",
+  "screen.economy.label.no_password": "No Password",
+  "screen.economy.label.admin_username": "Admin Username",
+  "screen.economy.label.admin_password": "Admin Password",
 
   "screen.economy.button.save": "Save",
   "screen.economy.button.close": "Close",
@@ -49,6 +52,9 @@
   "screen.economy.button.no": "No",
   "screen.economy.button.cancel": "Cancel",
   "screen.economy.button.submit": "Submit",
+  "screen.economy.button.back": "Back",
+  "screen.economy.button.more": "More...",
+  "screen.economy.button.admin": "Admin",
 
   "screen.economy.heading.credit_cart_printer": "Card Printer",
   "screen.economy.heading.server": "Server Control Terminal v1.0",
@@ -57,6 +63,11 @@
   "screen.economy.heading.server_overview.general": "General",
   "screen.economy.heading.server_overview.stats": "Database Stats",
   "screen.economy.heading.computer": "Computer",
+  "screen.economy.heading.more_settings": "More Settings",
+  "screen.economy.heading.more_settings.access_settings": "Access Settings",
+  "screen.economy.heading.more_settings.backup": "Backup",
+  "screen.economy.heading.more_settings.danger_zone": "Danger Zone",
+  "screen.economy.heading.admin_settings": "Admin Settings",
 
   "screen.economy.tooltip.create_table": "Create Table",
   "screen.economy.tooltip.drop_table": "Drop Table",
@@ -80,6 +91,7 @@
   "screen.economy.popup.title.backup_loaded": "Backup Loaded",
   "screen.economy.popup.title.changes_saved": "Changes Saved",
   "screen.economy.popup.title.admin_settings": "Admin Settings",
+  "screen.economy.popup.title.no_ip": "Empty IP Field",
 
   "screen.economy.popup.content.drop_table": "Do you really want to drop this table?",
   "screen.economy.popup.content.delete_entry": "Do you really want to delete this entry?",
@@ -92,6 +104,7 @@
   "screen.economy.popup.content.backup_overwrite": "Do you really want to load the backup?",
   "screen.economy.popup.content.backup_loaded": "Backup successfully loaded. Please close the screen.",
   "screen.economy.popup.content.changes_saved": "Your changes have been saved",
+  "screen.economy.popup.content.no_ip": "The IP must be set. Please enter an IP",
 
   "translation.economy.chat.ethernet_cable.cable_connected": "\u00A7aCable successfully connected to: %1$s %2$s",
   "translation.economy.chat.ethernet_cable.removed_cable": "\u00A7aCable successfully disconnected",

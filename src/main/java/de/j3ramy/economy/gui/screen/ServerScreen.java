@@ -11,6 +11,7 @@ import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.GuiUtils;
 import de.j3ramy.economy.utils.Texture;
+import de.j3ramy.economy.utils.server.Entry;
 import de.j3ramy.economy.utils.server.Server;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -23,12 +24,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ServerScreen extends ContainerScreen<ServerContainer> {
-    private final ModScreen setUpScreen;
-    private final ModScreen overviewScreen;
-    private final ModScreen adminScreen;
+    private final ModScreen setUpScreen, overviewScreen, settingsScreen, adminScreen;
     private final int TEXTURE_WIDTH = 256;
     private final int TEXTURE_HEIGHT = 170;
 
@@ -38,6 +38,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     private enum ServerScreenState{
         SET_UP,
         OVERVIEW,
+        MORE_SETTINGS,
         ADMIN
     }
     private ServerScreenState screenState = ServerScreenState.SET_UP;
@@ -53,6 +54,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
         this.setUpScreen = new ModScreen();
         this.overviewScreen = new ModScreen();
+        this.settingsScreen = new ModScreen();
         this.adminScreen = new ModScreen();
     }
 
@@ -61,11 +63,16 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     public void init(Minecraft minecraft, int width, int height) {
         super.init(minecraft, width, height);
 
+        this.setUpScreen.clearScreen();
+        this.overviewScreen.clearScreen();
+        this.settingsScreen.clearScreen();
+
         this.xPos = (this.width / 2) - (TEXTURE_WIDTH / 2);
         this.yPos = this.height / 2 - 75;
 
         this.initSetUpScreen();
         this.initOverviewScreen();
+        this.initSettingsScreen();
         this.initAdminScreen();
     }
 
@@ -76,7 +83,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        if(this.screenState != ServerScreenState.ADMIN)
+        if(this.screenState != ServerScreenState.MORE_SETTINGS && this.screenState != ServerScreenState.ADMIN)
             this.screenState = this.server.isSet() ? ServerScreenState.OVERVIEW : ServerScreenState.SET_UP;
 
         //draw server title heading
@@ -92,24 +99,36 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         switch(screenState){
             case SET_UP:
                 this.overviewScreen.disable();
-                this.adminScreen.disable();
+                this.settingsScreen.disable();
                 this.setUpScreen.enable();
+                this.adminScreen.disable();
 
                 this.renderSetUpScreen(matrixStack, mouseX, mouseY, partialTicks);
                 this.updateSetUpScreen();
                 break;
             case OVERVIEW:
                 this.overviewScreen.enable();
-                this.adminScreen.disable();
+                this.settingsScreen.disable();
                 this.setUpScreen.disable();
+                this.adminScreen.disable();
 
                 this.renderOverviewScreen(matrixStack, mouseX, mouseY, partialTicks);
                 this.updateOverviewScreen();
                 break;
+            case MORE_SETTINGS:
+                this.overviewScreen.disable();
+                this.settingsScreen.enable();
+                this.setUpScreen.disable();
+                this.adminScreen.disable();
+
+                this.renderSettingsScreen(matrixStack, mouseX, mouseY, partialTicks);
+                this.updateSettingsScreen();
+                break;
             case ADMIN:
                 this.overviewScreen.disable();
-                this.adminScreen.enable();
+                this.settingsScreen.disable();
                 this.setUpScreen.disable();
+                this.adminScreen.enable();
 
                 this.renderAdminScreen(matrixStack, mouseX, mouseY, partialTicks);
                 this.updateAdminScreen();
@@ -126,141 +145,17 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     }
 
     //region OVERVIEW SCREEN
-    private TextFieldWidget passwordField;
     private Button onButton, offButton;
-    private ConfirmPopUp confirmPopUp;
-
 
     public void initOverviewScreen(){
-        //admin settings
-        this.overviewScreen.addButton(new Button(this.xPos + TEXTURE_WIDTH - 60 - 10, this.yPos + 69, 60, 14,
-                new StringTextComponent("Admin"), (action) ->{
+        this.overviewScreen.addButton(new Button(this.xPos + TEXTURE_WIDTH - 60 - 10, this.yPos + 36, 60, 16,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.admin"), (action) ->{
             this.screenState = ServerScreenState.ADMIN;
         }));
 
-        //add password text field
-        this.overviewScreen.addTextField(this.passwordField = new TextFieldWidget(this.font, this.xPos + 71, this.yPos + 62, 60, 12, new StringTextComponent("")));
-        this.passwordField.setCanLoseFocus(true);
-        this.passwordField.setTextColor(Color.WHITE);
-        this.passwordField.setMaxStringLength(20);
-
-        ImageButton savePasswordButton;
-        this.overviewScreen.addImageButton(savePasswordButton = new ImageButton(this.xPos + 70 + 61 + 2, this.yPos + 59, 20, 19, 0, 0, 19, Texture.SAVE_BUTTON, (click)-> {
-            this.server.setPassword(this.passwordField.getText());
-
-            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
-
-            this.overviewScreen.addAlertPopUp(new AlertPopUp(
-                    this,
-                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.save_password").getString(),
-                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.save_password").getString(),
-                    AlertPopUp.ColorType.DEFAULT));
-        }));
-
-        //danger area bottom
-        ImageButton resetServerButton;
-        this.overviewScreen.addImageButton(resetServerButton = new ImageButton(this.xPos + 15, this.yPos + TEXTURE_HEIGHT - 18 - 10 - 22, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (click)-> this.overviewScreen.addConfirmPopUp(this.confirmPopUp = new ConfirmPopUp(
-                this,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.server_reset").getString(),
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.server_reset").getString(),
-                ConfirmPopUp.ColorType.ERROR,
-                (yesAction)->{
-                    this.server = new Server(new CompoundNBT());
-                    this.server.setPos(this.container.getTileEntity().getPos());
-                    Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
-
-                    this.confirmPopUp.hide();
-                    this.passwordField.setText("");
-                }))));
-
-        //right area
-        this.overviewScreen.addVerticalLine(new VerticalLine(this.xPos + 175, this.yPos + 35, 100, Color.WHITE_HEX));
-
-        ImageButton saveServerButton;
-        this.overviewScreen.addImageButton(saveServerButton = new ImageButton(this.xPos + 191, this.yPos + 36, 20, 18, 0, 0, 19, Texture.SAVE_BUTTON, (click)->{
-
-            //check if drive is plugged in
-            if(this.container.getTileEntity().getIntData().get(0) == 0){
-                this.overviewScreen.addAlertPopUp(new AlertPopUp(
-                        this,
-                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.no_drive_found").getString(),
-                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.no_drive_found").getString(),
-                        AlertPopUp.ColorType.NOTICE));
-                return;
-            }
-
-            //check if drive has tag
-            if(this.container.getTileEntity().getIntData().get(1) == 1){
-                this.overviewScreen.addConfirmPopUp(this.confirmPopUp = new ConfirmPopUp(
-                        this,
-                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drive_has_data").getString(),
-                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drive_has_data").getString(),
-                        ConfirmPopUp.ColorType.NOTICE,
-                        (yesAction)->{
-                            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, true));
-
-                            this.confirmPopUp.hide();
-                            this.overviewScreen.addAlertPopUp(new AlertPopUp(
-                                    this,
-                                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_created").getString(),
-                                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_created").getString(),
-                                    AlertPopUp.ColorType.DEFAULT));
-                        }));
-            }
-            else{
-                Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, true));
-
-                this.overviewScreen.addAlertPopUp(new AlertPopUp(
-                        this,
-                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_created").getString(),
-                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_created").getString(),
-                        AlertPopUp.ColorType.DEFAULT));
-            }
-
-
-        }));
-
-        ImageButton loadServerButton;
-        this.overviewScreen.addImageButton(loadServerButton = new ImageButton(this.xPos + 218, this.yPos + 36, 20, 18, 0, 0, 19, Texture.LOAD_BUTTON, (click)->{
-
-            //check if drive is plugged in
-            if(this.container.getTileEntity().getIntData().get(0) == 0){
-                this.overviewScreen.addAlertPopUp(new AlertPopUp(
-                        this,
-                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.no_drive_found").getString(),
-                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.no_drive_found").getString(),
-                        AlertPopUp.ColorType.NOTICE));
-                return;
-            }
-
-            //check if drive has backup
-            if(this.container.getTileEntity().getIntData().get(1) == 0){
-                this.overviewScreen.addAlertPopUp(new AlertPopUp(
-                        this,
-                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drive_no_data").getString(),
-                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drive_no_data").getString(),
-                        AlertPopUp.ColorType.ERROR));
-                return;
-            }
-
-            this.overviewScreen.addConfirmPopUp(this.confirmPopUp = new ConfirmPopUp(
-                    this,
-                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_overwrite").getString(),
-                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_overwrite").getString(),
-                    ConfirmPopUp.ColorType.NOTICE,
-                    (yesAction)->{
-                        Network.INSTANCE.sendToServer(new CSPacketLoadBackup(this.server.getPos()));
-
-                        this.confirmPopUp.hide();
-                        this.overviewScreen.addAlertPopUp(new AlertPopUp(
-                                this,
-                                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_loaded").getString(),
-                                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_loaded").getString(),
-                                AlertPopUp.ColorType.DEFAULT));
-
-                    }));
-
-
+        this.overviewScreen.addButton(new Button(this.xPos + TEXTURE_WIDTH - 60 - 10, this.yPos + 57, 60, 16,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.more"), (action) ->{
+            this.screenState = ServerScreenState.MORE_SETTINGS;
         }));
 
         this.overviewScreen.addButton(this.onButton = new Button(this.xPos + TEXTURE_WIDTH - 50 - 10, this.yPos + TEXTURE_HEIGHT - 18 - 15 - 22 - 18, 50, 18,
@@ -277,12 +172,8 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
         }));
 
-
-        //tooltips
-        this.overviewScreen.addTooltip(new Tooltip(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip.reset_server").getString(), resetServerButton));
-        this.overviewScreen.addTooltip(new Tooltip(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip.load_from_drive").getString(), loadServerButton));
-        this.overviewScreen.addTooltip(new Tooltip(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip.save_to_drive").getString(), saveServerButton));
-        this.overviewScreen.addTooltip(new Tooltip(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip.save_password").getString(), savePasswordButton));
+        //right area
+        this.overviewScreen.addVerticalLine(new VerticalLine(this.xPos + 175, this.yPos + 35, 100, Color.WHITE_HEX));
     }
 
     private void renderOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
@@ -290,8 +181,6 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                 (this.width / 2),
                 (this.yPos + 20),
                 Color.WHITE);
-
-        this.passwordField.render(matrixStack, mouseX, mouseY, partialTicks);
 
         //stats
         this.drawGeneralInfo(matrixStack);
@@ -340,6 +229,21 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         Minecraft.getInstance().fontRenderer.drawString(matrixStack,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.password").getString(),
                 (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 62) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+
+        StringBuilder password = new StringBuilder();
+        password.append(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.no_password").getString());
+
+        if(!this.server.getPassword().isEmpty()){
+            password.delete(0, password.length());
+            for(int i = 0; i < this.server.getPassword().length(); i++)
+                password.append("*");
+        }
+
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                password.toString(),
+                (int) ((this.xPos + 70) * GuiUtils.getScalingPositionMultiplier(.5f)),
                 (int) ((this.yPos + 62) * GuiUtils.getScalingPositionMultiplier(.5f)),
                 Color.WHITE);
         GlStateManager.popMatrix();
@@ -391,14 +295,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         GlStateManager.popMatrix();
     }
 
-    private boolean isPasswordInitialSet = false;
     private void updateOverviewScreen(){
-
-        if(!this.isPasswordInitialSet && this.server.isSet()){
-            this.passwordField.setText(this.server.getPassword());
-            this.isPasswordInitialSet = true;
-        }
-
         if(!this.server.isOn()){
             this.onButton.active = true;
             this.offButton.active = false;
@@ -464,17 +361,303 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     }
     //endregion
 
-    private void initAdminScreen(){
+    //region SETTINGS
+    private TextFieldWidget changeIpField, passwordField;
+    private ConfirmPopUp confirmPopUp;
 
+    private void initSettingsScreen(){
+        this.settingsScreen.addButton(new Button(this.xPos + 10, this.yPos + this.TEXTURE_HEIGHT - 22 - 10 - 16, 60, 16,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (click) -> {
+
+            if(this.changeIpField.getText().isEmpty()){
+                this.settingsScreen.addAlertPopUp(new AlertPopUp(
+                        this,
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.no_ip").getString(),
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.no_ip").getString(),
+                        AlertPopUp.ColorType.ERROR
+                        ));
+
+                return;
+            }
+
+            this.server.setIp(this.changeIpField.getText());
+            this.server.setPassword(this.passwordField.getText());
+
+            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
+            this.screenState = ServerScreenState.OVERVIEW;
+        }));
+
+        this.settingsScreen.addButton(new Button(this.xPos + TEXTURE_WIDTH - 10 - 60, this.yPos + this.TEXTURE_HEIGHT - 22 - 10 - 16, 60, 16,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.back"), (click) -> {
+            this.screenState = ServerScreenState.OVERVIEW;
+        }));
+
+        //add ip text field
+        this.settingsScreen.addTextField(this.changeIpField = new TextFieldWidget(this.font, this.xPos + 71, this.yPos + 45, 85, 14, new StringTextComponent("")));
+        this.changeIpField.setCanLoseFocus(true);
+        this.changeIpField.setTextColor(Color.WHITE);
+        this.changeIpField.setMaxStringLength(20);
+
+        //add password text field
+        this.settingsScreen.addTextField(this.passwordField = new TextFieldWidget(this.font, this.xPos + 71, this.yPos + 65, 85, 14, new StringTextComponent("")));
+        this.passwordField.setCanLoseFocus(true);
+        this.passwordField.setTextColor(Color.WHITE);
+        this.passwordField.setMaxStringLength(20);
+
+        //danger area bottom
+        ImageButton resetServerButton;
+        this.settingsScreen.addImageButton(resetServerButton = new ImageButton(this.xPos + (TEXTURE_WIDTH / 2) + 15, this.yPos + 95, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (click)-> {
+            this.settingsScreen.addConfirmPopUp(this.confirmPopUp = new ConfirmPopUp(
+                    this,
+                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.server_reset").getString(),
+                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.server_reset").getString(),
+                    ConfirmPopUp.ColorType.ERROR,
+                    (yesAction)->{
+                        this.server = new Server(new CompoundNBT());
+                        this.server.setPos(this.container.getTileEntity().getPos());
+                        Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
+
+                        this.confirmPopUp.hide();
+                        this.passwordField.setText("");
+                    }));
+        }));
+
+        ImageButton saveServerButton;
+        this.settingsScreen.addImageButton(saveServerButton = new ImageButton(this.xPos + 15, this.yPos + 95, 20, 18, 0, 0, 19, Texture.SAVE_BUTTON, (click)->{
+
+            //check if drive is plugged in
+            if(this.container.getTileEntity().getIntData().get(0) == 0){
+                this.settingsScreen.addAlertPopUp(new AlertPopUp(
+                        this,
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.no_drive_found").getString(),
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.no_drive_found").getString(),
+                        AlertPopUp.ColorType.NOTICE));
+                return;
+            }
+
+            //check if drive has tag
+            if(this.container.getTileEntity().getIntData().get(1) == 1){
+                this.settingsScreen.addConfirmPopUp(this.confirmPopUp = new ConfirmPopUp(
+                        this,
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drive_has_data").getString(),
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drive_has_data").getString(),
+                        ConfirmPopUp.ColorType.NOTICE,
+                        (yesAction)->{
+                            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, true));
+
+                            this.confirmPopUp.hide();
+                            this.overviewScreen.addAlertPopUp(new AlertPopUp(
+                                    this,
+                                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_created").getString(),
+                                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_created").getString(),
+                                    AlertPopUp.ColorType.DEFAULT));
+                        }));
+            }
+            else{
+                Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, true));
+
+                this.settingsScreen.addAlertPopUp(new AlertPopUp(
+                        this,
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_created").getString(),
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_created").getString(),
+                        AlertPopUp.ColorType.DEFAULT));
+            }
+
+
+        }));
+
+        ImageButton loadServerButton;
+        this.settingsScreen.addImageButton(loadServerButton = new ImageButton(this.xPos + 40, this.yPos + 95, 20, 18, 0, 0, 19, Texture.LOAD_BUTTON, (click)->{
+
+            //check if drive is plugged in
+            if(this.container.getTileEntity().getIntData().get(0) == 0){
+                this.settingsScreen.addAlertPopUp(new AlertPopUp(
+                        this,
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.no_drive_found").getString(),
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.no_drive_found").getString(),
+                        AlertPopUp.ColorType.NOTICE));
+                return;
+            }
+
+            //check if drive has backup
+            if(this.container.getTileEntity().getIntData().get(1) == 0){
+                this.settingsScreen.addAlertPopUp(new AlertPopUp(
+                        this,
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drive_no_data").getString(),
+                        new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drive_no_data").getString(),
+                        AlertPopUp.ColorType.ERROR));
+                return;
+            }
+
+            this.settingsScreen.addConfirmPopUp(this.confirmPopUp = new ConfirmPopUp(
+                    this,
+                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_overwrite").getString(),
+                    new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_overwrite").getString(),
+                    ConfirmPopUp.ColorType.NOTICE,
+                    (yesAction)->{
+                        Network.INSTANCE.sendToServer(new CSPacketLoadBackup(this.server.getPos()));
+
+                        this.confirmPopUp.hide();
+                        this.settingsScreen.addAlertPopUp(new AlertPopUp(
+                                this,
+                                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_loaded").getString(),
+                                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_loaded").getString(),
+                                AlertPopUp.ColorType.DEFAULT));
+
+                    }));
+        }));
+
+        //tooltips
+        this.settingsScreen.addTooltip(new Tooltip(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip.reset_server").getString(), resetServerButton));
+        this.settingsScreen.addTooltip(new Tooltip(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip.load_from_drive").getString(), loadServerButton));
+        this.settingsScreen.addTooltip(new Tooltip(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".tooltip.save_to_drive").getString(), saveServerButton));
+    }
+
+    private void renderSettingsScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
+        drawCenteredString(matrixStack, this.font, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.more_settings").getString(),
+                (this.width / 2),
+                (this.yPos + 20),
+                Color.WHITE);
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scalef(.75f, .75f, .75f);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.more_settings.access_settings").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.75f)),
+                (int) ((this.yPos + 35) * GuiUtils.getScalingPositionMultiplier(.75f)),
+                Color.WHITE);
+        GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scalef(.5f, .5f, .5f);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.server_ip").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 45) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.password").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 65) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+        GlStateManager.popMatrix();
+
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scalef(.75f, .75f, .75f);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.more_settings.backup").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.75f)),
+                (int) ((this.yPos + 85) * GuiUtils.getScalingPositionMultiplier(.75f)),
+                Color.WHITE);
+        GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scalef(.75f, .75f, .75f);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.more_settings.danger_zone").getString(),
+                (int) ((this.xPos + (TEXTURE_WIDTH / 2) + 15) * GuiUtils.getScalingPositionMultiplier(.75f)),
+                (int) ((this.yPos + 85) * GuiUtils.getScalingPositionMultiplier(.75f)),
+                Color.RED);
+        GlStateManager.popMatrix();
+
+        this.settingsScreen.render(matrixStack, mouseX, mouseY, partialTicks);
+    }
+
+    private boolean isIpInitialSet = false;
+    private boolean isPasswordInitialSet = false;
+    private void updateSettingsScreen(){
+        if(!this.isIpInitialSet && this.server.isSet()){
+            this.changeIpField.setText(this.server.getIp());
+            this.isIpInitialSet = true;
+        }
+
+        if(!this.isPasswordInitialSet && this.server.isSet()){
+            this.passwordField.setText(this.server.getPassword());
+            this.isPasswordInitialSet = true;
+        }
+    }
+
+    //endregion
+
+    //region ADMIN
+    private TextFieldWidget adminUsernameField, adminPasswordField;
+    private void initAdminScreen(){
+        this.adminScreen.addButton(new Button(this.xPos + 10, this.yPos + this.TEXTURE_HEIGHT - 22 - 10 - 16, 60, 16,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (click) -> {
+            this.server.setAdminUsername(this.adminUsernameField.getText());
+            this.server.setAdminPassword(this.adminPasswordField.getText());
+
+            Entry entry = this.server.getDatabase().getTable("user").getEntry(0);
+            ArrayList<String> content = entry.getColumnsContent();
+            content.set(0, this.server.getAdminUsername());
+            content.set(1, this.server.getAdminPassword());
+            this.server.getDatabase().getTable("user").update(0, content);
+
+            Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
+            this.screenState = ServerScreenState.OVERVIEW;
+        }));
+
+        this.adminScreen.addButton(new Button(this.xPos + TEXTURE_WIDTH - 10 - 60, this.yPos + this.TEXTURE_HEIGHT - 22 - 10 - 16, 60, 16,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.back"), (click) -> {
+            this.screenState = ServerScreenState.OVERVIEW;
+        }));
+
+        //add ip text field
+        this.adminScreen.addTextField(this.adminUsernameField = new TextFieldWidget(this.font, this.xPos + 71, this.yPos + 45, 85, 14, new StringTextComponent("")));
+        this.adminUsernameField.setCanLoseFocus(true);
+        this.adminUsernameField.setTextColor(Color.WHITE);
+        this.adminUsernameField.setMaxStringLength(20);
+
+        //add password text field
+        this.adminScreen.addTextField(this.adminPasswordField = new TextFieldWidget(this.font, this.xPos + 71, this.yPos + 65, 85, 14, new StringTextComponent("")));
+        this.adminPasswordField.setCanLoseFocus(true);
+        this.adminPasswordField.setTextColor(Color.WHITE);
+        this.adminPasswordField.setMaxStringLength(20);
     }
 
     private void renderAdminScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
+        drawCenteredString(matrixStack, this.font, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.admin_settings").getString(),
+                (this.width / 2),
+                (this.yPos + 20),
+                Color.WHITE);
 
+        GlStateManager.pushMatrix();
+        GlStateManager.scalef(.75f, .75f, .75f);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.more_settings.access_settings").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.75f)),
+                (int) ((this.yPos + 35) * GuiUtils.getScalingPositionMultiplier(.75f)),
+                Color.WHITE);
+        GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scalef(.5f, .5f, .5f);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.admin_username").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 45) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.admin_password").getString(),
+                (int) ((this.xPos + 15) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                (int) ((this.yPos + 65) * GuiUtils.getScalingPositionMultiplier(.5f)),
+                Color.WHITE);
+        GlStateManager.popMatrix();
+
+        this.adminScreen.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
+    private boolean isAdminNameInitialSet = false;
+    private boolean isAdminPasswordInitialSet = false;
     private void updateAdminScreen(){
+        if(!this.isAdminNameInitialSet && this.server.isSet()){
+            this.adminUsernameField.setText(this.server.getAdminUsername());
+            this.isAdminNameInitialSet = true;
+        }
 
+        if(!this.isAdminPasswordInitialSet && this.server.isSet()){
+            this.adminPasswordField.setText(this.server.getAdminPassword());
+            this.isAdminPasswordInitialSet = true;
+        }
     }
+    //endregion
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {

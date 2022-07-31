@@ -67,6 +67,7 @@ public class RouterBlock extends DirectionalBlock {
                 INamedContainerProvider containerProvider = createContainerProvider(world, pos);
                 NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
 
+                System.out.println(tileEntity.getData().getName());
                 if(tileEntity.getData() != null)
                     Network.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new SCPacketSendNetworkComponentData(tileEntity.getData()));
             }

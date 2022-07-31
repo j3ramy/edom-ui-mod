@@ -2,11 +2,13 @@ package de.j3ramy.economy.utils.server;
 
 import net.minecraft.nbt.CompoundNBT;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Entry {
-    private List<String> columnsContent = new ArrayList<>();
+    private ArrayList<String> columnsContent = new ArrayList<>();
 
     public Entry(List<String> columnsContent){
         this.columnsContent.addAll(columnsContent);
@@ -30,7 +32,7 @@ public class Entry {
         return nbt;
     }
 
-    public List<String> getColumnsContent() {
+    public ArrayList<String> getColumnsContent() {
         return this.columnsContent;
     }
 
@@ -38,7 +40,12 @@ public class Entry {
         return this.columnsContent.get(index);
     }
 
-    public void setColumnsContent(List<String> columnsContent) {
+    public void setColumnsContent(ArrayList<String> columnsContent) {
         this.columnsContent = columnsContent;
+    }
+
+    public static String getCurrentTimestamp(){
+        SimpleDateFormat formatter = new SimpleDateFormat("MM.dd.yyyy HH:mm:ss");
+        return formatter.format(new Date());
     }
 }

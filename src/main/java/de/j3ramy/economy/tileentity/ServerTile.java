@@ -5,6 +5,7 @@ import de.j3ramy.economy.utils.server.Server;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraftforge.common.capabilities.Capability;
@@ -43,7 +44,7 @@ public class ServerTile extends NetworkComponentTile {
     public final ItemStackHandler itemHandler = createHandler();
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 
-    private Server server;
+    private Server server = new Server(new CompoundNBT());
     public Server getServer() {
         return this.server;
     }
@@ -59,20 +60,17 @@ public class ServerTile extends NetworkComponentTile {
 
     @Override
     public void read(BlockState state, CompoundNBT nbt) {
+        super.read(state, nbt);
+
         itemHandler.deserializeNBT(nbt.getCompound("inv"));
         this.server = new Server(nbt.getCompound("server"));
-
-        super.read(state, nbt);
     }
 
     @Override
     public CompoundNBT write(CompoundNBT nbt) {
         nbt.put("inv", itemHandler.serializeNBT());
-
-        if(this.server == null)
-            return super.write(nbt);
-
         nbt.put("server", this.server.getData());
+
         return super.write(nbt);
     }
     @Nonnull

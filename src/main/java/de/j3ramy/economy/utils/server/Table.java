@@ -10,6 +10,7 @@ public class Table {
     private String name;
     private final List<String> columnNames = new ArrayList<>();
     private final List<Entry> entries = new ArrayList<>();
+    private boolean adminOnly = false;
 
 
     public Table(String name, List<String> attributes){
@@ -19,6 +20,7 @@ public class Table {
 
     public Table(CompoundNBT nbt){
         this.name = nbt.getString("name");
+        this.adminOnly = nbt.getBoolean("adminOnly");
 
         int i = 0;
         while(nbt.contains("columnName" + i)){
@@ -37,6 +39,7 @@ public class Table {
         CompoundNBT nbt = new CompoundNBT();
 
         nbt.putString("name", this.name);
+        nbt.putBoolean("adminOnly", this.adminOnly);
 
         for(int i = 0; i < this.columnNames.size(); i++){
             nbt.putString("columnName" + i, this.columnNames.get(i));
@@ -78,19 +81,38 @@ public class Table {
         return this.columnNames.size();
     }
 
-    public void insert(Entry entry){
+    public boolean insert(Entry entry){
         this.entries.add(entry);
+        return true;
     }
 
-    public void delete(int index){
+    public boolean delete(int index){
+        if(this.name.equals("user") && index == 0){
+            return false;
+        }
+
         this.entries.remove(index);
+        return true;
     }
 
-    public void truncate(){
+    public boolean truncate(){
         this.entries.clear();
+        return true;
     }
 
-    public void update(int index, List<String> newValues){
+    public boolean update(int index, ArrayList<String> newValues){
         this.entries.get(index).setColumnsContent(newValues);
+        return true;
+    }
+    public int generateSequentialNumber(){
+        return this.getSize();
+    }
+
+    public boolean isAdminOnly() {
+        return this.adminOnly;
+    }
+
+    public void setAdminOnly(boolean adminOnly) {
+        this.adminOnly = adminOnly;
     }
 }
