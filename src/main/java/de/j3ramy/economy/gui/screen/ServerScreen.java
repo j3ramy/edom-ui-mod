@@ -582,6 +582,11 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     private void initAdminScreen(){
         this.adminScreen.addButton(new Button(this.xPos + 10, this.yPos + this.TEXTURE_HEIGHT - 22 - 10 - 16, 60, 16,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (click) -> {
+
+            this.adminScreen.addProgressPopUp(new ProgressPopUp(this, "Saving...", 1, true, (finished) ->{
+                this.screenState = ServerScreenState.OVERVIEW;
+            }));
+
             this.server.setAdminUsername(this.adminUsernameField.getText());
             this.server.setAdminPassword(this.adminPasswordField.getText());
 
@@ -592,7 +597,6 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             this.server.getDatabase().getTable("user").update(0, content);
 
             Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
-            this.screenState = ServerScreenState.OVERVIEW;
         }));
 
         this.adminScreen.addButton(new Button(this.xPos + TEXTURE_WIDTH - 10 - 60, this.yPos + this.TEXTURE_HEIGHT - 22 - 10 - 16, 60, 16,
@@ -667,6 +671,6 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             this.minecraft.player.closeScreen();
         }
 
-        return false;
+        return true;
     }
 }

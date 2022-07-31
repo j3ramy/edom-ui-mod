@@ -17,6 +17,7 @@ public class ModScreen extends Screen {
     private boolean disableScreen;
     private final List<AlertPopUp> alertPopUps = new ArrayList<>();
     private final List<ConfirmPopUp> confirmPopUps = new ArrayList<>();
+    private final List<ProgressPopUp> progressPopUps = new ArrayList<>();
     private Taskbar taskbar;
     private final List<Button> buttons = new ArrayList<>();
     private final List<ImageButton> imageButtons = new ArrayList<>();
@@ -31,6 +32,9 @@ public class ModScreen extends Screen {
 
     public void addAlertPopUp(AlertPopUp alertPopUp){
         this.alertPopUps.add(alertPopUp);
+    }
+    public void addProgressPopUp(ProgressPopUp progressPopUp){
+        this.progressPopUps.add(progressPopUp);
     }
     public void addConfirmPopUp(ConfirmPopUp confirmPopUp){
         this.confirmPopUps.add(confirmPopUp);
@@ -181,6 +185,12 @@ public class ModScreen extends Screen {
             }
         }
 
+        for(ProgressPopUp progressPopUp : this.progressPopUps){
+            if(progressPopUp != null){
+                progressPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
+            }
+        }
+
         if(!this.isPopUpVisible()){
             for(Tooltip tooltip : this.tooltips){
                 if(tooltip != null)
@@ -239,7 +249,6 @@ public class ModScreen extends Screen {
                 if(button.isMouseOver(this.mousePosition.x, this.mousePosition.y))
                     button.onClick(this.mousePosition.x, this.mousePosition.y);
             }
-
         }
 
         if(this.taskbar != null && mouseButton == 0)
@@ -283,6 +292,7 @@ public class ModScreen extends Screen {
     public void clearScreen(){
         this.confirmPopUps.clear();
         this.alertPopUps.clear();
+        this.progressPopUps.clear();
         this.buttons.clear();
         this.imageButtons.clear();
         this.dropDowns.clear();
@@ -312,6 +322,12 @@ public class ModScreen extends Screen {
 
         for(ConfirmPopUp confirmPopUp : this.confirmPopUps) {
             if (confirmPopUp != null && !confirmPopUp.isHidden()) {
+                return true;
+            }
+        }
+
+        for(ProgressPopUp progressPopUp : this.progressPopUps) {
+            if (progressPopUp != null && !progressPopUp.isHidden()) {
                 return true;
             }
         }
