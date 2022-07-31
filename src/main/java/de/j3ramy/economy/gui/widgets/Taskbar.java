@@ -34,18 +34,15 @@ public class Taskbar extends Widget {
 
         this.modScreen = new ModScreen();
 
-        this.osLogo = new ImageButton(this.x + 5, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClick)->{});
-        this.wifiButton = new ImageButton(this.x + this.width - 9 - 30 - 5, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClickWifi)->wifiClick());
-        this.modScreen.addList( this.wifiList = new ScrollableList(this.x + this.width - 9 - 30 - 5 - 100, this.y - 3 - 20, 100, 100, 13));
+        this.modScreen.addImageButton(this.osLogo = new ImageButton(this.x + 5, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClick)->{}));
+        this.modScreen.addImageButton(this.wifiButton = new ImageButton(this.x + this.width - 9 - 30 - 5, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClickWifi)->{}));
+        this.modScreen.addList(this.wifiList = new ScrollableList(this.x + 165, this.y - 103, 100, 100, 13));
         this.wifiList.hide();
     }
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, this.backgroundColor);
-        this.osLogo.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.wifiButton.render(matrixStack, mouseX, mouseY, partialTicks);
-//        this.wifiList.render(matrixStack, mouseX, mouseY, partialTicks);
         this.modScreen.render(matrixStack, mouseX, mouseY, partialTicks);
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.formatTime(Minecraft.getInstance().world.getDayTime()), (this.x + this.width - 30), (this.y + 5), this.textColor);
     }
@@ -60,7 +57,6 @@ public class Taskbar extends Widget {
             d1.setName("D1 Router");
             wifis.add(d1);
             wifis.add(d1);
-//            ArrayList<NetworkComponentData> wifis = NetworkComponentUtils.lookForWifi(Minecraft.getInstance().world, BlockPos.ZERO);
             for (NetworkComponentData data : wifis){
                 this.wifiList.addToList(data.getName(), true, Color.RED_HEX, onClick->{System.out.println(data.getName());});
             }
@@ -76,6 +72,8 @@ public class Taskbar extends Widget {
         }
 
         if (this.osLogo.isHovered()){
+            System.out.println("OS Logo doesn't have function yet");
+            this.osLogo.changeFocus(false);
         }
     }
 }
