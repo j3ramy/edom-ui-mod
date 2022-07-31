@@ -23,29 +23,46 @@ public class Taskbar extends Widget {
     public int backgroundColor = Color.DARK_GRAY_HEX;
     public int textColor = Color.WHITE;
     private ImageButton osLogo;
-    private ImageButton wifiButton;
-    private ScrollableList wifiList;
-    private ModScreen modScreen;
+    private final ImageButton wifiButton;
+    private final ScrollableList wifiList;
+    private final ModScreen modScreen;
+    private final boolean showTime;
 
-    public Taskbar(int x, int y, int width){
-        super(x, y, width, 15, new StringTextComponent(""));
+    public Taskbar(int x, int y, int width, int height, int backgroundColor, boolean showOsButton, boolean showTime){
+        super(x, y, width, height, new StringTextComponent(""));
 
         this.width = width;
+        this.height = height;
+        this.backgroundColor = backgroundColor;
+        this.showTime = showTime;
 
         this.modScreen = new ModScreen();
 
-        this.modScreen.addImageButton(this.osLogo = new ImageButton(this.x + 5, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClick)->{}));
-        this.modScreen.addImageButton(this.wifiButton = new ImageButton(this.x + this.width - 9 - 30 - 5, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClickWifi)->{}));
-        this.modScreen.addList(this.wifiList = new ScrollableList(this.x + 165, this.y - 103, 100, 100, 13));
+        if(showOsButton)
+            this.modScreen.addImageButton(this.osLogo = new ImageButton(this.x + 5, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClick)->{}));
+
+        if(showTime){
+            this.modScreen.addImageButton(this.wifiButton = new ImageButton(this.x + this.width - 9 - 30 - 5, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClickWifi)->{}));
+            this.modScreen.addList(this.wifiList = new ScrollableList(this.x + this.width - 10 - 30 - 5, this.y - this.height - 27, 85, 39, 13));
+        }
+        else{
+            this.modScreen.addImageButton(this.wifiButton = new ImageButton(this.x + this.width - 8 - 5, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClickWifi)->{}));
+            this.modScreen.addList(this.wifiList = new ScrollableList(this.x + this.width - 9 - 5, this.y - this.height - 27, 85, 39, 13));
+        }
+
         this.wifiList.hide();
     }
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, this.backgroundColor);
+
+        if(this.showTime)
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.formatTime(Minecraft.getInstance().world.getDayTime()), (this.x + this.width - 30), (this.y + 5), this.textColor);
+
         this.modScreen.render(matrixStack, mouseX, mouseY, partialTicks);
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.formatTime(Minecraft.getInstance().world.getDayTime()), (this.x + this.width - 30), (this.y + 5), this.textColor);
     }
+
     private void wifiClick() {
         if (this.wifiList.isHidden()){
             this.wifiList.show();
@@ -71,7 +88,7 @@ public class Taskbar extends Widget {
             wifiClick();
         }
 
-        if (this.osLogo.isHovered()){
+        if (this.osLogo != null && this.osLogo.isHovered()){
             System.out.println("OS Logo doesn't have function yet");
             this.osLogo.changeFocus(false);
         }

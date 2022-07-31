@@ -142,7 +142,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         content2.add("Viel Geld");
         this.server.getDatabase().getTable("Table2").insert(new Entry(content2));
 
-        this.taskbar = new Taskbar(this.xLeft, this.yBottom - 14, TEXTURE_WIDTH);
+        this.taskbar = new Taskbar(this.xLeft, this.yBottom - 14, TEXTURE_WIDTH, 15, Color.DARK_GRAY_HEX, true, true);
 
         //Cancel and Save Buttons for CreateTable, CreateEntry, UpdateEntry
         this.saveButton.x = xRight - 50 - 5;

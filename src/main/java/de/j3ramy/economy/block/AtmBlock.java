@@ -48,7 +48,6 @@ public class AtmBlock extends HorizontalBlock {
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-
         tooltip.add(new StringTextComponent(TextFormatting.DARK_PURPLE + "Creative only"));
     }
 
@@ -60,7 +59,6 @@ public class AtmBlock extends HorizontalBlock {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
-
         if(!world.isRemote){
             Direction blockDirection = getBlockFacing(state.getBlockState());
 
