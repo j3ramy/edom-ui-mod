@@ -46,9 +46,9 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         switch(this.screenState){
             case CREATE_TABLE_SCREEN:
                 System.out.println("CREATE_TABLE_SCREEN");
-                this.createTableScreen.addProgressPopUp(new ProgressPopUp(this, "", 2, true, done->{
+//                this.createTableScreen.addProgressPopUp(new ProgressPopUp(this, "", 2, true, done->{
                     this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
-                }));
+//                }));
                 break;
             case CREATE_ENTRY_SCREEN:
                 System.out.println("CREATE_ENTRY_SCREEN");
