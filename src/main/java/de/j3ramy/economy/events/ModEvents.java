@@ -54,7 +54,7 @@ public class ModEvents {
     }
 
     @SubscribeEvent
-    public static void onCharTypedEvent(GuiScreenEvent.KeyboardCharTypedEvent event){
+    public static void onCharTypedEvent(GuiScreenEvent.KeyboardCharTypedEvent.Post event){
         for(ModScreen s : ModEvents.screens){
             if(event.getGui() instanceof ServerScreen){
                 s.onCharTyped(event.getCodePoint());
@@ -69,8 +69,6 @@ public class ModEvents {
                 s.onCharTyped(event.getCodePoint());
             }
         }
-
-        event.setCanceled(true);
     }
 
     @SubscribeEvent
