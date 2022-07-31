@@ -192,6 +192,9 @@ public class NetworkComponentUtils {
 
         if(switchTile != null){
 
+            if(!switchTile.getSwitchData().isOn())
+                return null;
+
             NetworkComponentData port = switchTile.getSwitchData().getPort(0);
 
             if(port != null && port.getComponent() == NetworkComponent.SERVER){

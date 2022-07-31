@@ -32,15 +32,22 @@ public class SwitchContainer extends Container {
         this.tileEntity = tile;
 
         if(this.tileEntity != null){
+            System.out.println(SwitchData.PORT_COUNT + " | " + tile.getItemHandler().getSlots());
             this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->{
-                addSlot(new SlotItemHandler(h, 0, -20, 44));
-                addSlot(new SlotItemHandler(h, 1, 39, 44));
-                addSlot(new SlotItemHandler(h, 2, 78, 44));
-                addSlot(new SlotItemHandler(h, 3, 117, 44));
-                addSlot(new SlotItemHandler(h, 4, 156, 44));
+                addSlot(new SlotItemHandler(h, 0, -23, 29));
+
+                int rows = 2;
+                int columns = 5;
+                int counter = 1;
+                for(int i = 0; i < rows; i++){
+                    for(int j = 0; j < columns; j++){
+                        addSlot(new SlotItemHandler(h, counter, 24 + (40 * j), i == 0 ? 29 : 94));
+                        counter++;
+                    }
+                }
             });
 
-            layoutPlayerInventorySlots(6, 48); //Position of player inventory
+            layoutPlayerInventorySlots(8, 79); //Position of player inventory
 
         }
     }

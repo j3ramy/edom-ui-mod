@@ -77,10 +77,7 @@ public class SwitchBlock extends HorizontalBlock {
         if(worldIn.isRemote())
             return;
 
-        System.out.println("Switch destroyed");
-
-        //Scan for server around block
-        //...
+        //reset connected components
     }
 
     @Override

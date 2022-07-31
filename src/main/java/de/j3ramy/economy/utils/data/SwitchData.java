@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class SwitchData {
-    public static final int PORT_COUNT = 5;
+    public static final int PORT_COUNT = 11;
 
     public enum PortState{
         CONNECTED,
@@ -48,6 +48,10 @@ public class SwitchData {
         }
 
         return nbt;
+    }
+
+    public boolean isOn() {
+        return this.isOn;
     }
 
     public void setPortState(int port, PortState portState) {
