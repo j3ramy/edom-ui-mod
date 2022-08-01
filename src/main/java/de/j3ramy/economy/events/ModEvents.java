@@ -32,6 +32,9 @@ public class ModEvents {
             else if (Minecraft.getInstance().currentScreen instanceof SwitchScreen) {
                 screen.onClick(event.getButton());
             }
+            else if (Minecraft.getInstance().currentScreen instanceof CreditCartPrinterScreen) {
+                screen.onClick(event.getButton());
+            }
         }
     }
 
@@ -50,6 +53,9 @@ public class ModEvents {
             else if (Minecraft.getInstance().currentScreen instanceof SwitchScreen) {
                 screen.onKeyPressed(event.getKeyCode());
             }
+            else if (Minecraft.getInstance().currentScreen instanceof CreditCartPrinterScreen) {
+                screen.onKeyPressed(event.getKeyCode());
+            }
         }
     }
 
@@ -66,6 +72,9 @@ public class ModEvents {
                 s.onCharTyped(event.getCodePoint());
             }
             else if (event.getGui() instanceof SwitchScreen) {
+                s.onCharTyped(event.getCodePoint());
+            }
+            else if (event.getGui() instanceof CreditCartPrinterScreen) {
                 s.onCharTyped(event.getCodePoint());
             }
         }

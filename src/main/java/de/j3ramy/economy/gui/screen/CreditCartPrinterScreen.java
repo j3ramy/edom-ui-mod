@@ -5,6 +5,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.CreditCardPrinterContainer;
+import de.j3ramy.economy.gui.widgets.Taskbar;
+import de.j3ramy.economy.gui.widgets.Tooltip;
 import de.j3ramy.economy.network.CSPacketSendCreditCardData;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.Color;
@@ -13,7 +15,6 @@ import de.j3ramy.economy.utils.data.CreditCardData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.CheckboxButton;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -30,9 +31,9 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
     private final int TEXTURE_HEIGHT = 168;
     private int xOffset;
     private int yOffset;
-    private CheckboxButton createNewCardCheckbox;
     private TextFieldWidget ownerField;
     private ImageButton printButton;
+    private final ModScreen screen;
 
     private boolean isInsertSlotEmpty = false;
     private boolean isResultSlotEmpty = false;
@@ -40,6 +41,8 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
 
     public CreditCartPrinterScreen(CreditCardPrinterContainer screenContainer, PlayerInventory inv, ITextComponent title) {
         super(screenContainer, inv, title);
+
+        this.screen = new ModScreen();
     }
 
     @Override
@@ -48,6 +51,8 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
 
         this.xOffset = this.width / 2;
         this.yOffset = this.height / 2 - 75;
+
+        this.screen.clearScreen();
 
         /*
         this.createNewCardCheckbox = new CheckboxButton(0, 0, 20, 20, new StringTextComponent("TEST"), true);
@@ -58,16 +63,17 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
     }
 
     private void initWidgets(){
-        this.ownerField = new TextFieldWidget(this.font, this.guiLeft + 65, this.yOffset + 11, 100, 12, new StringTextComponent(""));
+        this.screen.addTextField(this.ownerField = new TextFieldWidget(this.font, this.guiLeft + 65, this.yOffset + 11, 100, 14, new StringTextComponent("")));
         this.ownerField.setText(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".placeholder.owner").getString());
         this.ownerField.setCanLoseFocus(true);
         this.ownerField.setTextColor(Color.WHITE);
         this.ownerField.setMaxStringLength(35);
-        this.children.add(this.ownerField);
 
-        this.addButton(this.printButton = new ImageButton(this.guiLeft + 145, this.yOffset + 56, 20, 18, 0, 0, 19, Texture.PRINT_BUTTON, (button) -> {
+        this.screen.addImageButton(this.printButton = new ImageButton(this.guiLeft + 145, this.yOffset + 56, 20, 18, 0, 0, 19, Texture.PRINT_BUTTON, (button) -> {
             this.printCard();
         }));
+
+        //this.screen.setTaskbar(new Taskbar(this.guiLeft + 62, this.yOffset + 64, 106, 13, Color.DARK_GRAY_HEX, false, false));
     }
 
     private CreditCardData creditCardData = new CreditCardData();
@@ -75,8 +81,6 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
-        this.ownerField.render(matrixStack, mouseX, mouseY, partialTicks);
 
         if(!this.isInsertSlotEmpty && !this.creditCardData.isSet()){
             this.creditCardData = new CreditCardData("John Doe");
@@ -85,6 +89,8 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
         this.updateSlotStates();
         this.updateWidgets();
         this.drawPrinterScreen(matrixStack);
+
+        this.screen.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     private void updateSlotStates(){
@@ -126,6 +132,7 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
         }
 
         this.accountNumbers.add(this.creditCardData.getAccountNumber());
+        this.ownerField.setText(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".placeholder.owner").getString());
 
         this.creditCardData.setOwner(this.ownerField.getText());
         Network.INSTANCE.sendToServer(new CSPacketSendCreditCardData(this.creditCardData, this.container.tileEntity.getPos()));
@@ -147,13 +154,6 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
         this.blit(matrixStack, this.xOffset - (TEXTURE_WIDTH / 2), this.yOffset, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
-    //----------------- INPUT FIELD METHODS ---------------------
-    @Override
-    public void resize(Minecraft minecraft, int width, int height) {
-        String s = this.ownerField.getText();
-        this.ownerField.setText(s);
-    }
-
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == 256) {
@@ -162,13 +162,6 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
             this.minecraft.player.closeScreen();
         }
 
-        return (this.ownerField.keyPressed(keyCode, scanCode, modifiers) || this.ownerField.canWrite()) ||
-                super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        this.ownerField.tick();
+        return true;
     }
 }

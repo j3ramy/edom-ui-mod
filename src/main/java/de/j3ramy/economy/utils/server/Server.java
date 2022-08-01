@@ -81,6 +81,7 @@ public class Server {
             case BANK:
                 attributes.clear();
                 attributes.add("accountNr");
+                attributes.add("owner");
                 attributes.add("pin");
                 attributes.add("balance");
                 attributes.add("dateOfBirth");
