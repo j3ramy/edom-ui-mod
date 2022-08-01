@@ -38,7 +38,7 @@ public class CreditCardPrinterContainer extends Container {
 
         layoutPlayerInventorySlots(8, 94); //Position of player inventory
 
-        this.trackIntArray(tileEntity.getData());
+        this.trackIntArray(tileEntity.getIntData());
     }
 
     @Override

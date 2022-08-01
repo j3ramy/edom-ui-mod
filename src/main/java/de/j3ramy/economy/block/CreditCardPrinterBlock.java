@@ -1,8 +1,11 @@
 package de.j3ramy.economy.block;
 
 import de.j3ramy.economy.container.CreditCardPrinterContainer;
+import de.j3ramy.economy.item.ModItems;
 import de.j3ramy.economy.tileentity.CreditCardPrinterTile;
 import de.j3ramy.economy.tileentity.ModTileEntities;
+import de.j3ramy.economy.utils.NetworkComponentUtils;
+import de.j3ramy.economy.utils.enums.NetworkComponent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -12,6 +15,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -91,9 +95,20 @@ public class CreditCardPrinterBlock extends HorizontalBlock {
             CreditCardPrinterTile tileEntity = (CreditCardPrinterTile) worldIn.getTileEntity(pos);
 
             if(tileEntity != null){
-                INamedContainerProvider containerProvider = createContainerProvider(worldIn, pos);
-                NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
+                if(tileEntity.getData() != null && tileEntity.getData().getName().isEmpty())
+                    tileEntity.getData().setName(tileEntity.generateName());
+
+                ItemStack stack = player.getHeldItemMainhand();
+                if(stack.getItem() == ModItems.ETHERNET_CABLE.get()){
+                    NetworkComponentUtils.onCableInteract(tileEntity, player, stack, pos, NetworkComponent.CCP);
+                }
+                else{
+                    INamedContainerProvider containerProvider = createContainerProvider(worldIn, pos);
+                    NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
+                }
             }
+
+
 
             /*
             StringTextComponent text = new StringTextComponent("Click Me");

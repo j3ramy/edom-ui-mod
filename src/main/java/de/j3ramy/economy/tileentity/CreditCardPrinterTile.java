@@ -17,8 +17,9 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Random;
 
-public class CreditCardPrinterTile extends TileEntity {
+public class CreditCardPrinterTile extends NetworkComponentTile {
 
     private final IIntArray data = new IIntArray() {
         public int get(int index) {
@@ -42,7 +43,7 @@ public class CreditCardPrinterTile extends TileEntity {
         }
     };
 
-    public IIntArray getData() {
+    public IIntArray getIntData() {
         return this.data;
     }
 
@@ -84,6 +85,10 @@ public class CreditCardPrinterTile extends TileEntity {
         nbt.putBoolean("isResultSlotOccupied", this.isResultSlotOccupied);
 
         return super.write(nbt);
+    }
+
+    public String generateName(){
+        return "CCP-" + (100000 + new Random().nextInt(999999));
     }
 
     @Nonnull

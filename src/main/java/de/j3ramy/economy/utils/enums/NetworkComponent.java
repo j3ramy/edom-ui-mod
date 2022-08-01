@@ -5,5 +5,6 @@ public enum NetworkComponent {
     SERVER,
     SWITCH,
     ROUTER,
-    NETWORK_SOCKET
+    NETWORK_SOCKET,
+    CCP
 }

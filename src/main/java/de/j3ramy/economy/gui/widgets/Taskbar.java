@@ -42,12 +42,12 @@ public class Taskbar extends Widget {
             this.modScreen.addImageButton(this.osLogo = new ImageButton(this.x + 5, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClick)->{}));
 
         if(showTime){
-            this.modScreen.addImageButton(this.wifiButton = new ImageButton(this.x + this.width - 9 - 30 - 5, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClickWifi)->{}));
-            this.modScreen.addList(this.wifiList = new ScrollableList(this.x + this.width - 10 - 30 - 5, this.y - this.height - 27, 85, 39, 13));
+            this.modScreen.addImageButton(this.wifiButton = new ImageButton(this.x + this.width - 44, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClickWifi)->{}));
+            this.modScreen.addList(this.wifiList = new ScrollableList(this.x + this.width - 35 - 85, this.y - this.height - 27, 85, 39, 13, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.GREEN_HEX));
         }
         else{
-            this.modScreen.addImageButton(this.wifiButton = new ImageButton(this.x + this.width - 8 - 5, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClickWifi)->{}));
-            this.modScreen.addList(this.wifiList = new ScrollableList(this.x + this.width - 9 - 5, this.y - this.height - 27, 85, 39, 13));
+            this.modScreen.addImageButton(this.wifiButton = new ImageButton(this.x + this.width - 13, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClickWifi)->{}));
+            this.modScreen.addList(this.wifiList = new ScrollableList(this.x + this.width - 4 - 85, this.y - this.height - 27, 85, 39, 13, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.GREEN_HEX));
         }
 
         this.wifiList.hide();
@@ -75,7 +75,7 @@ public class Taskbar extends Widget {
             wifis.add(d1);
             wifis.add(d1);
             for (NetworkComponentData data : wifis){
-                this.wifiList.addToList(data.getName(), true, Color.RED_HEX, onClick->{System.out.println(data.getName());});
+                this.wifiList.addToList(data.getName(), true, onClick->{System.out.println(data.getName());});
             }
         }
         else {

@@ -19,6 +19,7 @@ import java.util.List;
 public class ScrollableTable extends Widget {
     public static final int TEXT_COLOR = Color.WHITE;
     public static final int TEXT_Y_OFFSET = 2;
+    private static final int BORDER_WIDTH = 1;
 
     private final Point mousePosition;
     private final List<TableRow> contents = new ArrayList<>();
@@ -27,21 +28,29 @@ public class ScrollableTable extends Widget {
     private final int elementHeight;
     private final boolean isFixedAttributeRow;
     private int selectedIndex = -1;
+    private final int backgroundColor;
+    private final int borderColor;
+    private final int elementColor;
+    private final int headRowColor;
 
-    public ScrollableTable(int x, int y, int width, int height, int elementHeight, boolean fixedAttributeRow){
+    public ScrollableTable(int x, int y, int width, int height, int elementHeight, boolean fixedAttributeRow, int backgroundColor, int borderColor, int elementColor, int headRowColor){
         super(x, y, width, height, new StringTextComponent(""));
 
         this.mousePosition = new Point();
         this.maxVisibleListElements = this.height / elementHeight;
         this.elementHeight = elementHeight;
         this.isFixedAttributeRow = fixedAttributeRow;
+        this.backgroundColor = backgroundColor;
+        this.borderColor = borderColor;
+        this.elementColor = elementColor;
+        this.headRowColor = headRowColor;
     }
 
     public void setAttributeColumns(ArrayList<String> columnNames){
         if(!this.contents.isEmpty())
-            this.contents.set(0, new TableRow(this.x, this.y, this.width, this.elementHeight, columnNames, false, Color.GREEN_HEX, (click)->{}));
+            this.contents.set(0, new TableRow(this.x, this.y, this.width, this.elementHeight, columnNames, false, this.headRowColor, (click)->{}));
         else
-            this.addRow(columnNames, false, Color.GREEN_HEX, (click)->{});
+            this.addRow(columnNames, false, this.headRowColor, (click)->{});
     }
 
     @Nullable
@@ -100,7 +109,9 @@ public class ScrollableTable extends Widget {
         if(this.mousePosition == null)
             return;
 
-        AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, Color.DARK_GRAY_HEX);
+        AbstractGui.fill(matrixStack, this.x - BORDER_WIDTH, this.y - BORDER_WIDTH,
+                this.x + this.width + BORDER_WIDTH, this.y + this.height + BORDER_WIDTH, this.borderColor);
+        AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, this.backgroundColor);
         this.drawContent(matrixStack);
         this.drawToolTip(matrixStack);
     }
@@ -120,7 +131,7 @@ public class ScrollableTable extends Widget {
                 this.contentFields.get(i) .draw(matrixStack);
 
                 if(i != 0)
-                    this.contentFields.get(i).setBackgroundColor(i == this.selectedIndex ? Color.LIGHT_GRAY_HEX : Color.DARK_GRAY_HEX);
+                    this.contentFields.get(i).setBackgroundColor(i == this.selectedIndex ? Color.LIGHT_GRAY_HEX : this.elementColor);
             }
         }
     }

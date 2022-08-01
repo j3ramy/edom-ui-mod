@@ -18,6 +18,7 @@ import java.util.List;
 public class ScrollableList extends Widget {
     public static final int TEXT_COLOR = Color.WHITE;
     public static final int TEXT_Y_OFFSET = 4;
+    private static final int BORDER_WIDTH = 1;
 
     private final Point mousePosition;
     private final List<ListOption> contents = new ArrayList<>();
@@ -27,15 +28,21 @@ public class ScrollableList extends Widget {
     private final int elementHeight;
     private int selectedIndex = -1;
     private boolean isHidden;
+    private final int backgroundColor;
+    private final int borderColor;
+    private final int elementColor;
 
 
-    public ScrollableList(int x, int y, int width, int height, int elementHeight){
+    public ScrollableList(int x, int y, int width, int height, int elementHeight, int backgroundColor, int borderColor, int elementColor){
         super(x, y, width, height, new StringTextComponent(""));
 
         this.mousePosition = new Point();
         this.maxVisibleListElements = this.height / elementHeight;
         this.maxWordLength = (width - 20) / 6; //6 = width of letter;
         this.elementHeight = elementHeight;
+        this.backgroundColor = backgroundColor;
+        this.borderColor = borderColor;
+        this.elementColor = elementColor;
     }
 
     public boolean isHidden() {
@@ -50,7 +57,7 @@ public class ScrollableList extends Widget {
         return this.contents.get(index);
     }
 
-    public void addToList(String content, boolean isClickable, int backgroundColor, Button.IPressable onClick){
+    public void addToList(String content, boolean isClickable, Button.IPressable onClick){
         this.contents.add(new ListOption(this.x, this.y, this.width, this.elementHeight, GuiUtils.getFormattedLabel(this.maxWordLength, content), isClickable, backgroundColor, onClick));
 
         this.initList(0);
@@ -100,15 +107,17 @@ public class ScrollableList extends Widget {
         if(this.mousePosition == null || this.isHidden)
             return;
 
-        AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, Color.DARK_GRAY_HEX);
+        AbstractGui.fill(matrixStack, this.x - BORDER_WIDTH, this.y - BORDER_WIDTH,
+                this.x + this.width + BORDER_WIDTH, this.y + this.height + BORDER_WIDTH, this.borderColor);
+        AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, this.backgroundColor);
         this.drawContent(matrixStack);
     }
 
     private void drawContent(MatrixStack matrixStack){
         for (int i = 0; i < this.contentFields.size(); i++) {
             if (this.contentFields.get(i) != null){
-                this.contentFields.get(i) .draw(matrixStack);
-                this.contentFields.get(i).setBackgroundColor(i == this.selectedIndex ? Color.LIGHT_GRAY_HEX : Color.DARK_GRAY_HEX);
+                this.contentFields.get(i).draw(matrixStack);
+                this.contentFields.get(i).setBackgroundColor(i == this.selectedIndex ? Color.LIGHT_GRAY_HEX : this.elementColor);
             }
         }
     }

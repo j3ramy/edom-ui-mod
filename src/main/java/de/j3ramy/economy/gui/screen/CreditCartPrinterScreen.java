@@ -94,8 +94,8 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
     }
 
     private void updateSlotStates(){
-        this.isInsertSlotEmpty = this.container.tileEntity.getData().get(0) == 0;
-        this.isResultSlotEmpty = this.container.tileEntity.getData().get(1) == 0;
+        this.isInsertSlotEmpty = this.container.tileEntity.getIntData().get(0) == 0;
+        this.isResultSlotEmpty = this.container.tileEntity.getIntData().get(1) == 0;
     }
 
     private void updateWidgets(){

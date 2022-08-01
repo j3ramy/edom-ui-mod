@@ -73,8 +73,8 @@ public class CSPacketSendCreditCardData {
                 tile.getItemHandler().setStackInSlot(1, stack);
 
                 //update slot occupation
-                tile.getData().set(0, 0);
-                tile.getData().set(1, 1);
+                tile.getIntData().set(0, 0);
+                tile.getIntData().set(1, 1);
             }
         });
 
