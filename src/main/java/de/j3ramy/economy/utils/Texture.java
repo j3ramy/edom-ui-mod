@@ -19,4 +19,5 @@ public class Texture {
     public static final ResourceLocation LOAD_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/load_button_gui.png");
     public static final ResourceLocation PRINT_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/print_button_gui.png");
     public static final ResourceLocation OS_LOGO = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/os_logo.png");
+    public static final ResourceLocation WIFI_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/wifi_button_gui.png");
 }

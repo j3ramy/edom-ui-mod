@@ -55,6 +55,8 @@
   "screen.economy.button.back": "Back",
   "screen.economy.button.more": "More...",
   "screen.economy.button.admin": "Admin",
+  "screen.economy.button.settings": "Settings",
+  "screen.economy.button.logout": "Log out",
 
   "screen.economy.heading.credit_cart_printer": "Card Printer",
   "screen.economy.heading.server": "Server Control Terminal v1.0",
