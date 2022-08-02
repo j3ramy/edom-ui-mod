@@ -126,6 +126,12 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.server.getDatabase().getTable("Table2").insert(new Entry(content2));
 
         this.taskbar = new Taskbar(this.xLeft, this.yBottom - 14, TEXTURE_WIDTH, 15, Color.DARK_GRAY_HEX, true, true);
+        this.taskbar.addToOsLogoList(new TranslationTextComponent("screen.economy.button.settings").getString(), onClick->{
+            this.taskbar.hideOsLogoList();
+        });
+        this.taskbar.addToOsLogoList(new TranslationTextComponent("screen.economy.button.logout").getString(), onClick->{
+            this.taskbar.hideOsLogoList();
+        });
 
         //Cancel and Save Buttons for CreateTable, CreateEntry, UpdateEntry
         this.saveButton = new Button(xRight - 50 - 5, yBottom - 18 - 2 - 15, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onClick)->{
@@ -193,9 +199,6 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         String titleText = new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".heading.computer").getString();
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, titleText + " | " + this.server.getIp() + "/" + this.server.getDatabase().getName() + " | " + GuiUtils.formatTime(this.container.getTileEntity().getWorld().getDayTime()), (this.xLeft + 2) * 2, (this.yTop + 2) * 2, Color.WHITE);
         GlStateManager.popMatrix();
-
-        //Taskbar
-        //this.taskbar.render(matrixStack, mouseX, mouseY, partialTicks);
 
         //Individual Screens
         switch(this.screenState){

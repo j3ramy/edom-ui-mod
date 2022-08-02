@@ -10,6 +10,7 @@ import de.j3ramy.economy.utils.data.NetworkComponentData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
@@ -20,11 +21,13 @@ import java.util.ArrayList;
 
 public class Taskbar extends Widget {
     public static final int TEXT_Y_OFFSET = 2;
+    public final double yMitte;
     public int backgroundColor = Color.DARK_GRAY_HEX;
     public int textColor = Color.WHITE;
     private ImageButton osLogo;
     private final ImageButton wifiButton;
     private final ScrollableList wifiList;
+    private ScrollableList osLogoList;
     private final ModScreen modScreen;
     private final boolean showTime;
 
@@ -38,16 +41,28 @@ public class Taskbar extends Widget {
 
         this.modScreen = new ModScreen();
 
-        if(showOsButton)
-            this.modScreen.addImageButton(this.osLogo = new ImageButton(this.x + 5, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClick)->{}));
+        this.yMitte = (double)(this.height) / 2;
+        this.wifiButton = new ImageButton(0, this.y + (int)(this.yMitte - 4.5), 9, 9, 0, 0, 10, Texture.WIFI_BUTTON, (onClickWifi)->{});
+        this.wifiList = new ScrollableList(0, this.y - this.height - 27, 85, 39, 13);
+
+        if(showOsButton) {
+            this.modScreen.addImageButton(this.osLogo = new ImageButton(this.x + 5, this.y + (int) (this.yMitte - 4.5), 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClick) -> {
+            }));
+            this.modScreen.addList(this.osLogoList = new ScrollableList(this.x + 2, this.y - 85 - 2, 65, 85, 13));
+            osLogoList.hide();
+        }
 
         if(showTime){
-            this.modScreen.addImageButton(this.wifiButton = new ImageButton(this.x + this.width - 44, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClickWifi)->{}));
-            this.modScreen.addList(this.wifiList = new ScrollableList(this.x + this.width - 35 - 85, this.y - this.height - 27, 85, 39, 13, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.GREEN_HEX));
+            this.wifiButton.x = this.x + this.width - 9 - 30 - 5;
+            this.modScreen.addImageButton(this.wifiButton);
+            this.wifiList.x = this.x + this.width - 10 - 30 - 5;
+            this.modScreen.addList(this.wifiList);
         }
         else{
-            this.modScreen.addImageButton(this.wifiButton = new ImageButton(this.x + this.width - 13, this.y + 3, 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClickWifi)->{}));
-            this.modScreen.addList(this.wifiList = new ScrollableList(this.x + this.width - 4 - 85, this.y - this.height - 27, 85, 39, 13, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.GREEN_HEX));
+            this.wifiButton.x = this.x + this.width - 8 - 5;
+            this.modScreen.addImageButton(this.wifiButton);
+            this.wifiList.x = this.x + this.width - 9 - 5;
+            this.modScreen.addList(this.wifiList);
         }
 
         this.wifiList.hide();
@@ -58,7 +73,7 @@ public class Taskbar extends Widget {
         AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, this.backgroundColor);
 
         if(this.showTime)
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.formatTime(Minecraft.getInstance().world.getDayTime()), (this.x + this.width - 30), (this.y + 5), this.textColor);
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.formatTime(Minecraft.getInstance().world.getDayTime()), (this.x + this.width - 30), this.y + (int)(this.yMitte - 3.5), this.textColor);
 
         this.modScreen.render(matrixStack, mouseX, mouseY, partialTicks);
     }
@@ -75,11 +90,20 @@ public class Taskbar extends Widget {
             wifis.add(d1);
             wifis.add(d1);
             for (NetworkComponentData data : wifis){
-                this.wifiList.addToList(data.getName(), true, onClick->{System.out.println(data.getName());});
+                this.wifiList.addToList(data.getName(), true, Color.RED_HEX, onClick->{System.out.println(data.getName());});
             }
         }
         else {
             this.wifiList.hide();
+        }
+    }
+
+    private void osLogoClick() {
+        if (this.osLogoList.isHidden()){
+            this.osLogoList.show();
+        }
+        else {
+            this.osLogoList.hide();
         }
     }
 
@@ -89,8 +113,16 @@ public class Taskbar extends Widget {
         }
 
         if (this.osLogo != null && this.osLogo.isHovered()){
-            System.out.println("OS Logo doesn't have function yet");
-            this.osLogo.changeFocus(false);
+            osLogoClick();
         }
+    }
+
+    public void addToOsLogoList(String content, Button.IPressable onClick) {
+        this.osLogoList.addToList(content, true, Color.DARK_GRAY_HEX, onClick);
+    }
+
+    public void hideOsLogoList() {
+        this.osLogoList.hide();
+        this.osLogoList.clearSelectedIndex();
     }
 }
