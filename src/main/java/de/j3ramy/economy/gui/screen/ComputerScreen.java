@@ -160,7 +160,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         initUpdateEntryScreen();
 
         for (Table table : this.server.getDatabase().getTables()){
-            this.tableList.addToList(table.getName(), true, this.tableList.getFGColor(), (onClick)->{
+            this.tableList.addToList(table.getName(), true, (onClick)->{
                 this.table.clear();
                 this.deleteEntryButton.active = false;
                 this.updateEntryButton.active = false;
@@ -279,10 +279,10 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.searchField.setTextColor(Color.WHITE);
 
         //List of tables
-        this.tableOverviewScreen.addList(this.tableList = new ScrollableList(this.xLeft + 2, this.yTop + 34, 75, 115, 13));
+        this.tableOverviewScreen.addList(this.tableList = new ScrollableList(this.xLeft + 2, this.yTop + 34, 75, 115, 13, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.GREEN_HEX));
 
         //List of Entries in Table
-        this.tableOverviewScreen.addTable(table = new ScrollableTable(this.xLeft + 82, this.yTop + 34, this.xRight - 2 - (this.xLeft + 82), 115, 10, true));
+        this.tableOverviewScreen.addTable(table = new ScrollableTable(this.xLeft + 82, this.yTop + 34, this.xRight - 2 - (this.xLeft + 82), 115, 10, true, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.BORDER_OLIVE_HEX, Color.ORANGE_HEX));
 
         //Taskbar
         this.tableOverviewScreen.setTaskbar(this.taskbar);

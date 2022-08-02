@@ -2,6 +2,7 @@ package de.j3ramy.economy.network;
 
 import de.j3ramy.economy.item.ModItems;
 import de.j3ramy.economy.tileentity.CreditCardPrinterTile;
+import de.j3ramy.economy.utils.NetworkComponentUtils;
 import de.j3ramy.economy.utils.data.CreditCardData;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -50,6 +51,8 @@ public class CSPacketSendCreditCardData {
 
             CreditCardPrinterTile tile = (CreditCardPrinterTile) world.getTileEntity(pos);
             if(tile != null){
+                System.out.println(NetworkComponentUtils.queryServer(tile.getData(), world).getIp());
+                /*
                 //drop result item if occupied
                 ItemStack resultStack = tile.getItemHandler().getStackInSlot(1);
                 if(resultStack.getItem() == ModItems.CREDIT_CARD.get()){
@@ -75,6 +78,8 @@ public class CSPacketSendCreditCardData {
                 //update slot occupation
                 tile.getIntData().set(0, 0);
                 tile.getIntData().set(1, 1);
+
+                 */
             }
         });
 

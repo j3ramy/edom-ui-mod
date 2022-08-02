@@ -183,11 +183,11 @@ public class NetworkComponentUtils {
      */
 
     @Nullable
-    public static Server queryServer(NetworkComponentData connectedRouter, World world){
-        if(world == null || world.isRemote() || !connectedRouter.emitsWifi())
+    public static Server queryServer(NetworkComponentData componentData, World world){
+        if(world == null || world.isRemote() || !componentData.emitsWifi())
             return null;
 
-        BlockPos switchPos = connectedRouter.getTo();
+        BlockPos switchPos = componentData.getTo();
         SwitchTile switchTile = (SwitchTile) world.getTileEntity(switchPos);
 
         if(switchTile != null){
