@@ -24,6 +24,7 @@ public class FivehundredEuro extends Item {
         if(worldIn.isRemote())
             return super.onItemRightClick(worldIn, playerIn, handIn);
 
+        /*
         ArrayList<NetworkComponentData> wifis = NetworkComponentUtils.lookForWifi(worldIn, playerIn.getPosition());
 
         if(wifis.size() == 0)
@@ -33,18 +34,18 @@ public class FivehundredEuro extends Item {
         if(router == null)
             return super.onItemRightClick(worldIn, playerIn, handIn);
 
-        System.out.println(router.getName());
-
-        Server server = NetworkComponentUtils.queryServer(router, worldIn);
+        router.setWorld(worldIn);
+        Server server = NetworkComponentUtils.queryServer(router);
         if(server != null){
-            for(Table table : server.getDatabase().getTables())
-                System.out.println(table.getName());
-            System.out.println("----------------------------------------");
-            for(Entry entry : server.getDatabase().getTable("user").getAllEntries())
-                System.out.println(entry.getColumnsContent());
+            for(Entry s : server.getDatabase().getTable("bank_account").getAllEntries()){
+                System.out.println(s.getColumnsContent());
+            }
+
         }
 
         //... use server for whatever
+
+         */
 
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }

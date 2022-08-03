@@ -5,13 +5,11 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.CreditCardPrinterContainer;
-import de.j3ramy.economy.gui.widgets.Taskbar;
-import de.j3ramy.economy.gui.widgets.Tooltip;
-import de.j3ramy.economy.network.CSPacketSendCreditCardData;
+import de.j3ramy.economy.network.CSPacketSendBankAccountData;
 import de.j3ramy.economy.network.Network;
 import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.Texture;
-import de.j3ramy.economy.utils.data.CreditCardData;
+import de.j3ramy.economy.utils.data.BankAccountData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -59,6 +57,9 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
         this.addButton(this.createNewCardCheckbox);
          */
 
+        while(!this.isAccountNumberUnique(this.bankAccountData.getAccountNumber()))
+            this.bankAccountData = new BankAccountData();
+
         initWidgets();
     }
 
@@ -76,14 +77,15 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
         //this.screen.setTaskbar(new Taskbar(this.guiLeft + 62, this.yOffset + 64, 106, 13, Color.DARK_GRAY_HEX, false, false));
     }
 
-    private CreditCardData creditCardData = new CreditCardData();
+    private BankAccountData bankAccountData = new BankAccountData();
+
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        if(!this.isInsertSlotEmpty && !this.creditCardData.isSet()){
-            this.creditCardData = new CreditCardData("John Doe");
+        if(!this.isInsertSlotEmpty && !this.bankAccountData.isSet()){
+            this.bankAccountData = new BankAccountData("John Doe");
         }
 
         this.updateSlotStates();
@@ -116,30 +118,29 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.validity").getString(), (this.guiLeft + 65) * 2, (this.yOffset + 38) * 2, Color.WHITE);
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".label.pin").getString(), (this.guiLeft + 65) * 2, (this.yOffset + 45) * 2, Color.WHITE);
 
-        if(this.creditCardData.isSet()){
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.creditCardData.getAccountNumber(), (this.guiLeft + 120) * 2, (this.yOffset + 31) * 2, Color.WHITE);
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.creditCardData.getValidity(), (this.guiLeft + 120) * 2, (this.yOffset + 38) * 2, Color.WHITE);
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.creditCardData.getPin(), (this.guiLeft + 120) * 2, (this.yOffset + 45) * 2, Color.WHITE);
+        if(this.bankAccountData.isSet()){
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.bankAccountData.getAccountNumber(), (this.guiLeft + 120) * 2, (this.yOffset + 31) * 2, Color.WHITE);
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.bankAccountData.getValidity(), (this.guiLeft + 120) * 2, (this.yOffset + 38) * 2, Color.WHITE);
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.bankAccountData.getPin(), (this.guiLeft + 120) * 2, (this.yOffset + 45) * 2, Color.WHITE);
         }
 
         GlStateManager.popMatrix();
     }
 
     private void printCard(){
-        if(!this.isAccountNumberUnique(this.creditCardData.getAccountNumber())){
-            this.creditCardData = new CreditCardData();
-            return;
-        }
+        this.bankAccountData.setOwner(this.ownerField.getText());
+        Network.INSTANCE.sendToServer(new CSPacketSendBankAccountData(this.bankAccountData, this.container.tileEntity.getPos()));
 
-        this.accountNumbers.add(this.creditCardData.getAccountNumber());
+        this.bankAccountData = new BankAccountData();
         this.ownerField.setText(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".placeholder.owner").getString());
-
-        this.creditCardData.setOwner(this.ownerField.getText());
-        Network.INSTANCE.sendToServer(new CSPacketSendCreditCardData(this.creditCardData, this.container.tileEntity.getPos()));
-        this.creditCardData = new CreditCardData();
     }
 
-    private final List<String> accountNumbers = new ArrayList<>();
+    private List<String> accountNumbers = new ArrayList<>();
+
+    public void setAccountNumbers(List<String> accountNumbers) {
+        this.accountNumbers = accountNumbers;
+    }
+
     private boolean isAccountNumberUnique(String accountNumber){
         return !accountNumbers.contains(accountNumber);
     }

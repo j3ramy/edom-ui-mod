@@ -3,7 +3,7 @@ package de.j3ramy.economy.utils.data;
 import java.time.LocalDate;
 import java.util.Random;
 
-public class CreditCardData {
+public class BankAccountData {
     public static final int ACCOUNT_NUMBER_LENGTH = 9;
     public static final int PIN_LENGTH = 4;
     public static final int VALIDITY_IN_MONTHS = 6;
@@ -12,17 +12,20 @@ public class CreditCardData {
     private String accountNumber = "";
     private String validity = "";
     private String pin = "";
+    private int balance = 0;
+    private boolean isLocked;
+    private String dateOfBirth = "";
 
-    public CreditCardData(){}
+    public BankAccountData(){}
 
-    public CreditCardData(String owner){
+    public BankAccountData(String owner){
         this.owner = owner;
         this.accountNumber = this.generateAccountNumber();
         this.validity = this.generateValidityDate();
         this.pin = this.generatePin();
     }
 
-    public CreditCardData(String owner, String accountNumber, String validity, String pin){
+    public BankAccountData(String owner, String accountNumber, String validity, String pin){
         this.owner = owner;
         this.accountNumber = accountNumber;
         this.validity = validity;
@@ -63,6 +66,30 @@ public class CreditCardData {
 
     public boolean isSet(){
         return !this.owner.isEmpty() && !this.accountNumber.isEmpty() && !this.validity.isEmpty();
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked;
+    }
+
+    public int getBalance() {
+        return this.balance;
+    }
+
+    public String getDateOfBirth() {
+        return this.dateOfBirth;
+    }
+
+    public boolean isLocked() {
+        return this.isLocked;
     }
 
     private String generateAccountNumber(){

@@ -119,6 +119,7 @@
   "translation.economy.chat.ethernet_cable.cable_already_connected_to_this": "\u00A74There is a cable already connected to this component",
   "translation.economy.chat.ethernet_cable.cable_already_connected_to_other": "\u00A74This cable is currently connected to another component",
   "translation.economy.chat.inventory.inventory_full": "\u00A74Cables are connected to the switch. Remove them first.",
+  "translation.economy.chat.no_connection": "\u00A74No internet connection can be established",
 
   "itemGroup.economy": "Edom Economy"
 

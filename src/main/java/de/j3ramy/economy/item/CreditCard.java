@@ -2,8 +2,8 @@ package de.j3ramy.economy.item;
 
 import de.j3ramy.economy.container.CreditCardContainer;
 import de.j3ramy.economy.network.Network;
-import de.j3ramy.economy.network.SCPacketSendCreditCardData;
-import de.j3ramy.economy.utils.data.CreditCardData;
+import de.j3ramy.economy.network.SCPacketSendBankAccountData;
+import de.j3ramy.economy.utils.data.BankAccountData;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -48,8 +48,8 @@ public class CreditCard extends Item {
                 INamedContainerProvider containerProvider = createContainerProvider();
                 NetworkHooks.openGui((ServerPlayerEntity) playerIn, containerProvider, playerIn.getPosition());
 
-                CreditCardData data = new CreditCardData(nbt.getString("owner"), nbt.getString("accountNumber"), nbt.getString("validity"), nbt.getString("pin"));
-                Network.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerIn), new SCPacketSendCreditCardData(data));
+                BankAccountData data = new BankAccountData(nbt.getString("owner"), nbt.getString("accountNumber"), nbt.getString("validity"), nbt.getString("pin"));
+                Network.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerIn), new SCPacketSendBankAccountData(data));
             }
         }
 

@@ -183,12 +183,12 @@ public class NetworkComponentUtils {
      */
 
     @Nullable
-    public static Server queryServer(NetworkComponentData componentData, World world){
-        if(world == null || world.isRemote() || !componentData.emitsWifi())
+    public static Server queryServer(NetworkComponentData componentData){
+        if(componentData.getWorld() == null || componentData.getWorld().isRemote() || !componentData.emitsWifi())
             return null;
 
         BlockPos switchPos = componentData.getTo();
-        SwitchTile switchTile = (SwitchTile) world.getTileEntity(switchPos);
+        SwitchTile switchTile = (SwitchTile) componentData.getWorld().getTileEntity(switchPos);
 
         if(switchTile != null){
 
@@ -198,7 +198,7 @@ public class NetworkComponentUtils {
             NetworkComponentData port = switchTile.getSwitchData().getPort(0);
 
             if(port != null && port.getComponent() == NetworkComponent.SERVER){
-                ServerTile serverTile = (ServerTile) world.getTileEntity(port.getFrom());
+                ServerTile serverTile = (ServerTile) componentData.getWorld().getTileEntity(port.getFrom());
 
                 if(serverTile != null){
                     if(serverTile.getServer().isOn()){

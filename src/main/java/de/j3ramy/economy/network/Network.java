@@ -16,8 +16,8 @@ public class Network {
     public static void registerMessages(){
         INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(EconomyMod.MOD_ID, "network"), () -> "1.0", s -> true, s -> true);
 
-        INSTANCE.registerMessage(getNextId(), CSPacketSendCreditCardData.class, CSPacketSendCreditCardData::toBytes, CSPacketSendCreditCardData::new, CSPacketSendCreditCardData::handle);
-        INSTANCE.registerMessage(getNextId(), SCPacketSendCreditCardData.class, SCPacketSendCreditCardData::toBytes, SCPacketSendCreditCardData::new, SCPacketSendCreditCardData::handle);
+        INSTANCE.registerMessage(getNextId(), CSPacketSendBankAccountData.class, CSPacketSendBankAccountData::toBytes, CSPacketSendBankAccountData::new, CSPacketSendBankAccountData::handle);
+        INSTANCE.registerMessage(getNextId(), SCPacketSendBankAccountData.class, SCPacketSendBankAccountData::toBytes, SCPacketSendBankAccountData::new, SCPacketSendBankAccountData::handle);
         INSTANCE.registerMessage(getNextId(), SCPacketSendServerData.class, SCPacketSendServerData::toBytes, SCPacketSendServerData::new, SCPacketSendServerData::handle);
         INSTANCE.registerMessage(getNextId(), CSPacketSendServerData.class, CSPacketSendServerData::toBytes, CSPacketSendServerData::new, CSPacketSendServerData::handle);
         INSTANCE.registerMessage(getNextId(), CSPacketLoadBackup.class, CSPacketLoadBackup::toBytes, CSPacketLoadBackup::new, CSPacketLoadBackup::handle);
@@ -25,5 +25,7 @@ public class Network {
         INSTANCE.registerMessage(getNextId(), CSPacketSendSwitchData.class, CSPacketSendSwitchData::toBytes, CSPacketSendSwitchData::new, CSPacketSendSwitchData::handle);
         INSTANCE.registerMessage(getNextId(), SCPacketSendNetworkComponentData.class, SCPacketSendNetworkComponentData::toBytes, SCPacketSendNetworkComponentData::new, SCPacketSendNetworkComponentData::handle);
         INSTANCE.registerMessage(getNextId(), CSPacketSendNetworkComponentData.class, CSPacketSendNetworkComponentData::toBytes, CSPacketSendNetworkComponentData::new, CSPacketSendNetworkComponentData::handle);
+
+
     }
 }

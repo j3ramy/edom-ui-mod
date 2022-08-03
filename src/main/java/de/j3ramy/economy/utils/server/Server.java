@@ -1,6 +1,5 @@
 package de.j3ramy.economy.utils.server;
 
-import com.mojang.realmsclient.dto.RealmsServer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
@@ -85,10 +84,44 @@ public class Server {
                 attributes.add("pin");
                 attributes.add("balance");
                 attributes.add("dateOfBirth");
+                attributes.add("isLocked");
                 attributes.add("createdAt");
                 attributes.add("lastLogin");
 
                 this.db.createTable("bank_account", attributes);
+
+                //DEBUG
+                /*
+                attributes.clear();
+                attributes.add(CreditCardData.generateAccountNumber());
+                attributes.add("-");
+                attributes.add("-");
+                attributes.add("-");
+                attributes.add("-");
+                attributes.add("-");
+                attributes.add("-");
+                this.db.getTable("bank_account").insert(new Entry(attributes));
+                attributes.clear();
+                attributes.add(CreditCardData.generateAccountNumber());
+                attributes.add("-");
+                attributes.add("-");
+                attributes.add("-");
+                attributes.add("-");
+                attributes.add("-");
+                attributes.add("-");
+                this.db.getTable("bank_account").insert(new Entry(attributes));
+                attributes.clear();
+                attributes.add(CreditCardData.generateAccountNumber());
+                attributes.add("-");
+                attributes.add("-");
+                attributes.add("-");
+                attributes.add("-");
+                attributes.add("-");
+                attributes.add("-");
+                this.db.getTable("bank_account").insert(new Entry(attributes));
+
+                 */
+                //DEBUG END
 
                 attributes.clear();
                 attributes.add("pos");

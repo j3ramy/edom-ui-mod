@@ -5,6 +5,7 @@ import de.j3ramy.economy.utils.enums.NetworkComponent;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class NetworkComponentData {
 
@@ -12,6 +13,7 @@ public class NetworkComponentData {
     private BlockPos from; //normally Component position; set when cable connected
     private BlockPos to; //normally Switch position; set when put in switch port
     private NetworkComponent component = NetworkComponent.NONE;
+    private World world;
 
 
     public NetworkComponentData(CompoundNBT nbt){
@@ -59,6 +61,14 @@ public class NetworkComponentData {
 
     public boolean isSet(){
         return !Math.areBlockPosEqual(this.from, BlockPos.ZERO);
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
+    }
+
+    public World getWorld() {
+        return this.world;
     }
 
     public void setComponent(NetworkComponent component) {

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import de.j3ramy.economy.EconomyMod;
 import de.j3ramy.economy.container.ComputerContainer;
 import de.j3ramy.economy.gui.widgets.*;
+import de.j3ramy.economy.gui.windows.Desktop;
 import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.GuiUtils;
 import de.j3ramy.economy.utils.Texture;

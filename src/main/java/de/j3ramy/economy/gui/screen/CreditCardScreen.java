@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.j3ramy.economy.container.CreditCardContainer;
 import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.Texture;
-import de.j3ramy.economy.utils.data.CreditCardData;
+import de.j3ramy.economy.utils.data.BankAccountData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -18,10 +18,9 @@ public class CreditCardScreen extends ContainerScreen<CreditCardContainer> {
     private int xOffset;
     private int yOffset;
 
-    private CreditCardData creditCardData = new CreditCardData("John Doe");
-
-    public void setCreditCardData(CreditCardData creditCardData) {
-        this.creditCardData = creditCardData;
+    private BankAccountData bankAccountData = new BankAccountData("John Doe");
+    public void setCreditCardData(BankAccountData bankAccountData) {
+        this.bankAccountData = bankAccountData;
     }
 
     public CreditCardScreen(CreditCardContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
@@ -74,10 +73,10 @@ public class CreditCardScreen extends ContainerScreen<CreditCardContainer> {
 
         this.playerInventoryTitleX = 1000;
 
-        if(this.creditCardData.isSet()){
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.creditCardData.getOwner(), this.guiLeft + 20, this.yOffset + 66, Color.WHITE);
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.creditCardData.getAccountNumber(), this.guiLeft + 20, this.yOffset + 80, Color.WHITE);
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.creditCardData.getValidity(), this.guiLeft + 124, this.yOffset + 80, Color.WHITE);
+        if(this.bankAccountData.isSet()){
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.bankAccountData.getOwner(), this.guiLeft + 20, this.yOffset + 66, Color.WHITE);
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.bankAccountData.getAccountNumber(), this.guiLeft + 20, this.yOffset + 80, Color.WHITE);
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.bankAccountData.getValidity(), this.guiLeft + 124, this.yOffset + 80, Color.WHITE);
 
             //this.saveButton.visible = false;
         }

@@ -1,4 +1,4 @@
-package de.j3ramy.economy.gui.widgets;
+package de.j3ramy.economy.gui.windows;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.AbstractGui;

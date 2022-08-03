@@ -64,6 +64,15 @@ public class Database {
         return null;
     }
 
+    public boolean doesTableExist(String name){
+        for(Table table : this.tableList){
+            if(table.getName().equals(name))
+                return true;
+        }
+
+        return false;
+    }
+
     public boolean dropTable(int index){
         if(index == 0)
             return false;

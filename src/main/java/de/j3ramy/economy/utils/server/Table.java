@@ -69,6 +69,34 @@ public class Table {
     }
 
     @Nullable
+    public ArrayList<String> getAllColumns(String attributeName){
+        if(!this.doesAttributeExist(attributeName))
+            return null;
+
+        ArrayList<String> columnContents = new ArrayList<>();
+        int attributeIndex = this.getAttributeIndex(attributeName);
+
+        for(Entry entry : this.entries){
+            columnContents.add(entry.getColumnContent(attributeIndex));
+        }
+
+        return columnContents;
+    }
+
+    public boolean doesAttributeExist(String attributeName){
+        for(String name : this.columnNames){
+            if(name.equals(attributeName))
+                return true;
+        }
+
+        return false;
+    }
+
+    public int getAttributeIndex(String attributeName){
+        return this.columnNames.indexOf(attributeName);
+    }
+
+    @Nullable
     public Entry getEntry(int index){
         return this.entries.get(index);
     }
