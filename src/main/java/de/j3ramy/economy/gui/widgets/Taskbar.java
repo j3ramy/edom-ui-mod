@@ -39,25 +39,25 @@ public class Taskbar extends Widget {
 
         this.yCenter = (float) (this.height) / 2;
         this.wifiButton = new ImageButton(0, this.y + (int)(this.yCenter - 4.5), 9, 9, 0, 0, 10, Texture.WIFI_BUTTON, (onClickWifi)->{});
-        this.wifiList = new ScrollableList(0, this.y - this.height - 27, 85, 39, 13, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.ORANGE_HEX);
+        this.wifiList = new ScrollableList(0, this.y - this.height - 27, 85, 39, 13, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.PURPLE_HEX);
 
         if(showOsButton) {
             this.modScreen.addImageButton(this.osLogo = new ImageButton(this.x + 5, this.y + (int) (this.yCenter - 4.5), 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClick) -> {
             }));
-            this.modScreen.addList(this.osLogoList = new ScrollableList(this.x + 2, this.y - 85 - 2, 65, 85, 13, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.ORANGE_HEX));
+            this.modScreen.addList(this.osLogoList = new ScrollableList(this.x + 2, this.y - 85 - 2, 65, 85, 13, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.PURPLE_HEX));
             osLogoList.hide();
         }
 
         if(showTime){
-            this.wifiButton.x = this.x + this.width - 9 - 30 - 5;
+            this.wifiButton.x = this.x + this.width - 9 - 27 - 2;
             this.modScreen.addImageButton(this.wifiButton);
-            this.wifiList.x = this.x + this.width - 10 - 30 - 5;
+            this.wifiList.x = this.x + this.width - 2 - 27 - 85;
             this.modScreen.addList(this.wifiList);
         }
         else{
-            this.wifiButton.x = this.x + this.width - 8 - 5;
+            this.wifiButton.x = this.x + this.width - 9 - 2;
             this.modScreen.addImageButton(this.wifiButton);
-            this.wifiList.x = this.x + this.width - 9 - 5;
+            this.wifiList.x = this.x + this.width - 2 - 85;
             this.modScreen.addList(this.wifiList);
         }
 
@@ -69,7 +69,7 @@ public class Taskbar extends Widget {
         AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, this.backgroundColor);
 
         if(this.showTime)
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.formatTime(Minecraft.getInstance().world.getDayTime()), (this.x + this.width - 30), this.y + (int)(this.yCenter - 3.5), this.textColor);
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.formatTime(Minecraft.getInstance().world.getDayTime()), (this.x + this.width - 27), this.y + (int)(this.yCenter - 3.5), this.textColor);
 
         this.modScreen.render(matrixStack, mouseX, mouseY, partialTicks);
     }
