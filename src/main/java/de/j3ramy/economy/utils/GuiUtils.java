@@ -16,17 +16,17 @@ public class GuiUtils {
         return (length / 2 * LETTER_SIZE);
     }
 
-    public static StringTextComponent getFormattedLabel(int maxWordLength, String s){
+    public static String getFormattedLabel(int maxWordLength, String s){
         if(s == null || s.length() == 0)
-            return new StringTextComponent("");
+            return "";
 
         if(s.length() > maxWordLength){
             String s1 = s.substring(0, s.length() - (s.length() - maxWordLength));
             s1 += "...";
-            return new StringTextComponent(s1);
+            return s1;
         }
 
-        return new StringTextComponent(s);
+        return s;
     }
 
     public static float getScalingPositionMultiplier(float scaleFactor){

@@ -4,22 +4,11 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import de.j3ramy.economy.utils.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.util.text.StringTextComponent;
 
 import java.util.Random;
 
-public class ProgressPopUp extends Screen {
-
-    public final int WIDTH = 150;
-    public final int HEIGHT = 90;
-
-    private final int leftPos;
-    private final int topPos;
-    private final ContainerScreen<?> screen;
+public class ProgressPopUp extends Widget {
     private final String title;
-    private boolean isHidden;
     private final int duration;
     private final IFinished finishedAction;
     private final ProgressBar progressBar;
@@ -29,59 +18,45 @@ public class ProgressPopUp extends Screen {
         void onFinished(ProgressPopUp progressPopUp);
     }
 
-    public ProgressPopUp(ContainerScreen<?> screen, String title, int duration, boolean shouldProgressStop, IFinished finishedAction){
-        super(new StringTextComponent(""));
 
-        this.leftPos = screen.width / 2 - WIDTH / 2;
-        this.topPos = screen.height / 2 - HEIGHT / 2;
+    public ProgressPopUp(int x, int y, int width, int height, String title, int duration, boolean shouldProgressStop, IFinished finishedAction){
+        super(x, y, width, height);
 
-        this.screen = screen;
         this.title = title;
         this.duration = duration;
         this.finishedAction = finishedAction;
-        this.progressBar = new ProgressBar(screen.width / 2 - 50, this.topPos + 40, 100, 12, Color.DARK_GRAY_HEX, Color.GREEN_HEX);
+        this.progressBar = new ProgressBar(this.leftPos + this.width / 2 - 50, this.topPos + 40, 100, 12);
         this.shouldProgressStop = shouldProgressStop;
 
         if(this.shouldProgressStop)
             this.initProgressStop();
     }
 
-    float drawStopStart = new Random().nextFloat();
-    float drawStopEnd = new Random().nextFloat();
+    private final float drawStopStart = new Random().nextFloat();
+    private float drawStopEnd = new Random().nextFloat();
     private void initProgressStop(){
         while(drawStopEnd < drawStopStart)
             drawStopEnd = new Random().nextFloat();
     }
 
-    public boolean isHidden() {
-        return this.isHidden;
-    }
-
-    private void hide(){
-        this.isHidden = true;
-    }
-
-    @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
+    public void render(MatrixStack matrixStack){
         if(this.isHidden)
             return;
 
-        screen.renderBackground(matrixStack);
+        this.renderBackground(matrixStack);
 
-        AbstractGui.fill(matrixStack, leftPos, topPos, leftPos + WIDTH, topPos + HEIGHT, Color.DARK_GRAY_HEX);
+        AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, Color.LIGHT_GRAY_HEX);
 
         //background
         int CONTENT_MARGIN = 5;
-        int BACKGROUND_COLOR = Color.LIGHT_GRAY_HEX;
-        AbstractGui.fill(matrixStack, leftPos + CONTENT_MARGIN, topPos + CONTENT_MARGIN + 10,
-                leftPos + WIDTH - CONTENT_MARGIN, topPos + CONTENT_MARGIN + HEIGHT - 10,
-                BACKGROUND_COLOR);
+        AbstractGui.fill(matrixStack, this.leftPos + CONTENT_MARGIN, this.topPos + CONTENT_MARGIN + 10,
+                this.leftPos + this.width - CONTENT_MARGIN, this.topPos + CONTENT_MARGIN + this.height - 10,
+                this.backgroundColor);
 
         //title text
-        AbstractGui.drawCenteredString(matrixStack, screen.getMinecraft().fontRenderer, this.title, screen.width / 2, topPos + 4, Color.WHITE);
+        AbstractGui.drawCenteredString(matrixStack, this.font, this.title, this.leftPos + this.width / 2, topPos + 4, this.textColor);
 
         this.drawProgressBar(matrixStack);
-        this.update();
     }
 
     private void drawProgressBar(MatrixStack matrixStack){
@@ -93,45 +68,37 @@ public class ProgressPopUp extends Screen {
         }
     }
 
+    public void update(int x, int y){
+        super.update(x, y);
 
-    private void update(){
         this.progressBar.setProgress(this.duration);
         this.progressBar.setBarStopped(this.shouldProgressStop && this.progressBar.progress > this.drawStopStart && this.progressBar.progress < this.drawStopEnd);
     }
 
-    private class ProgressBar{
+    private static class ProgressBar{
 
-        private final int xPos;
-        private final int yPos;
-        private final int width;
-        private final int height;
-        private int backgroundColor;
-        private int barColor;
+        private final int xPos, yPos, width, height;
+        private int barBackgroundColor = Color.LIGHT_GRAY_HEX;
+        private int barColor = Color.WHITE_HEX;
         private float progress;
         private final float maxProgress = 1f;
         private boolean isBarStopped;
 
-        public ProgressBar(int x, int y, int width, int height, int backgroundColor, int barColor){
+
+        public ProgressBar(int x, int y, int width, int height){
             this.xPos = x;
             this.yPos = y;
             this.width = width;
             this.height = height;
-            this.backgroundColor = backgroundColor;
+        }
+
+
+        public void setBarColor(int barColor) {
             this.barColor = barColor;
         }
 
-        private float progressStop;
-        public void render(MatrixStack matrixStack){
-
-            AbstractGui.fill(matrixStack, this.xPos - 1, this.yPos - 1, this.xPos + this.width + 1, this.yPos + this.height + 1, this.backgroundColor);
-
-            float widthProgress = this.progress / this.maxProgress * this.width;
-            if(!this.isBarStopped){
-                this.progressStop = widthProgress;
-            }
-
-            AbstractGui.fill(matrixStack, this.xPos, this.yPos, (int) (this.xPos + (this.isBarStopped ? this.progressStop : widthProgress)),
-                    this.yPos + this.height, this.barColor);
+        public void setBackgroundColor(int backgroundColor) {
+            this.barBackgroundColor = backgroundColor;
         }
 
         public float getMaxProgress() {
@@ -151,16 +118,23 @@ public class ProgressPopUp extends Screen {
             this.progress += this.maxProgress / duration / frameRate;
         }
 
+
+        private float progressStop;
+        public void render(MatrixStack matrixStack){
+
+            AbstractGui.fill(matrixStack, this.xPos - 1, this.yPos - 1, this.xPos + this.width + 1, this.yPos + this.height + 1, this.barBackgroundColor);
+
+            float widthProgress = this.progress / this.maxProgress * this.width;
+            if(!this.isBarStopped){
+                this.progressStop = widthProgress;
+            }
+
+            AbstractGui.fill(matrixStack, this.xPos, this.yPos, (int) (this.xPos + (this.isBarStopped ? this.progressStop : widthProgress)),
+                    this.yPos + this.height, this.barColor);
+        }
+
         public boolean isFull(){
             return this.progress >= this.maxProgress;
-        }
-
-        public void setBarColor(int barColor) {
-            this.barColor = barColor;
-        }
-
-        public void setBackgroundColor(int backgroundColor) {
-            this.backgroundColor = backgroundColor;
         }
     }
 }

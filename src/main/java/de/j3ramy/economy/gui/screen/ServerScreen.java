@@ -149,31 +149,31 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
     public void initOverviewScreen(){
         this.overviewScreen.addButton(new Button(this.xPos + TEXTURE_WIDTH - 60 - 10, this.yPos + 36, 60, 16,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.admin"), (action) ->{
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.admin").getString(), () ->{
             this.screenState = ServerScreenState.ADMIN;
         }));
 
         this.overviewScreen.addButton(new Button(this.xPos + TEXTURE_WIDTH - 60 - 10, this.yPos + 57, 60, 16,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.more"), (action) ->{
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.more").getString(), () ->{
             this.screenState = ServerScreenState.MORE_SETTINGS;
         }));
 
         this.overviewScreen.addButton(this.onButton = new Button(this.xPos + TEXTURE_WIDTH - 50 - 10, this.yPos + TEXTURE_HEIGHT - 18 - 15 - 22 - 18, 50, 18,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.on"), (click)->{
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.on").getString(), ()->{
             this.server.setOn(true);
 
             Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
         }));
 
         this.overviewScreen.addButton(this.offButton = new Button(this.xPos + TEXTURE_WIDTH - 50 - 10, this.yPos + TEXTURE_HEIGHT - 18 - 10 - 22, 50, 18,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.off"), (click)->{
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.off").getString(), ()->{
             this.server.setOn(false);
 
             Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
         }));
 
         //right area
-        this.overviewScreen.addVerticalLine(new VerticalLine(this.xPos + 175, this.yPos + 35, 100, Color.WHITE_HEX));
+        this.overviewScreen.addVerticalLine(new VerticalLine(this.xPos + 175, this.yPos + 35, 1, 100, Color.WHITE_HEX));
     }
 
     private void renderOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
@@ -297,12 +297,12 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
     private void updateOverviewScreen(){
         if(!this.server.isOn()){
-            this.onButton.active = true;
-            this.offButton.active = false;
+            this.onButton.setEnabled(true);
+            this.offButton.setEnabled(false);
         }
         else{
-            this.onButton.active = false;
-            this.offButton.active = true;
+            this.onButton.setEnabled(false);
+            this.offButton.setEnabled(true);
         }
 
     }
@@ -331,7 +331,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         this.setUpScreen.addDropDown(this.typeDropDown = new DropDown(options, this.width / 2 - 45, this.yPos + 70, 90, 18, "Preset"));
 
         this.setUpScreen.addButton(this.saveButton = new Button(this.width / 2 - 30, this.yPos + 100, 60, 14,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onPress) ->{
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save").getString(), () ->{
 
             Server server = new Server(
                     Server.DBType.valueOf(this.typeDropDown.getSelectedText()),
@@ -357,7 +357,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
     private void updateSetUpScreen(){
         if(this.saveButton != null)
-            this.saveButton.active = !this.ipField.getText().isEmpty() && !this.typeDropDown.getSelectedText().equals(this.typeDropDown.getPlaceholder());
+            this.saveButton.setEnabled(!this.ipField.getText().isEmpty() && !this.typeDropDown.getSelectedText().equals(this.typeDropDown.getPlaceholder()));
     }
     //endregion
 
@@ -367,11 +367,11 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
 
     private void initSettingsScreen(){
         this.settingsScreen.addButton(new Button(this.xPos + 10, this.yPos + this.TEXTURE_HEIGHT - 22 - 10 - 16, 60, 16,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (click) -> {
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save").getString(), () -> {
 
             if(this.changeIpField.getText().isEmpty()){
                 this.settingsScreen.addAlertPopUp(new AlertPopUp(
-                        this,
+                        150, 50, 175, 100,
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.no_ip").getString(),
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.no_ip").getString(),
                         AlertPopUp.ColorType.ERROR
@@ -388,7 +388,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         }));
 
         this.settingsScreen.addButton(new Button(this.xPos + TEXTURE_WIDTH - 10 - 60, this.yPos + this.TEXTURE_HEIGHT - 22 - 10 - 16, 60, 16,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.back"), (click) -> {
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.back").getString(), () -> {
             this.screenState = ServerScreenState.OVERVIEW;
         }));
 
@@ -408,11 +408,11 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         ImageButton resetServerButton;
         this.settingsScreen.addImageButton(resetServerButton = new ImageButton(this.xPos + (TEXTURE_WIDTH / 2) + 15, this.yPos + 95, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (click)-> {
             this.settingsScreen.addConfirmPopUp(this.confirmPopUp = new ConfirmPopUp(
-                    this,
+                    0, 0, 175, 100,
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.server_reset").getString(),
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.server_reset").getString(),
                     ConfirmPopUp.ColorType.ERROR,
-                    (yesAction)->{
+                    ()->{
                         this.server = new Server(new CompoundNBT());
                         this.server.setPos(this.container.getTileEntity().getPos());
                         Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, false));
@@ -428,7 +428,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             //check if drive is plugged in
             if(this.container.getTileEntity().getIntData().get(0) == 0){
                 this.settingsScreen.addAlertPopUp(new AlertPopUp(
-                        this,
+                        175, 90, 175, 100,
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.no_drive_found").getString(),
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.no_drive_found").getString(),
                         AlertPopUp.ColorType.NOTICE));
@@ -438,16 +438,16 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             //check if drive has tag
             if(this.container.getTileEntity().getIntData().get(1) == 1){
                 this.settingsScreen.addConfirmPopUp(this.confirmPopUp = new ConfirmPopUp(
-                        this,
+                        0, 0, 175, 100,
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drive_has_data").getString(),
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drive_has_data").getString(),
                         ConfirmPopUp.ColorType.NOTICE,
-                        (yesAction)->{
+                        ()->{
                             Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, true));
 
                             this.confirmPopUp.hide();
                             this.overviewScreen.addAlertPopUp(new AlertPopUp(
-                                    this,
+                                    175, 90, 175, 100,
                                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_created").getString(),
                                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_created").getString(),
                                     AlertPopUp.ColorType.DEFAULT));
@@ -457,7 +457,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
                 Network.INSTANCE.sendToServer(new CSPacketSendServerData(this.server, true));
 
                 this.settingsScreen.addAlertPopUp(new AlertPopUp(
-                        this,
+                        175, 90, 175, 100,
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_created").getString(),
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_created").getString(),
                         AlertPopUp.ColorType.DEFAULT));
@@ -472,7 +472,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             //check if drive is plugged in
             if(this.container.getTileEntity().getIntData().get(0) == 0){
                 this.settingsScreen.addAlertPopUp(new AlertPopUp(
-                        this,
+                        175, 90,175,100,
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.no_drive_found").getString(),
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.no_drive_found").getString(),
                         AlertPopUp.ColorType.NOTICE));
@@ -482,7 +482,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             //check if drive has backup
             if(this.container.getTileEntity().getIntData().get(1) == 0){
                 this.settingsScreen.addAlertPopUp(new AlertPopUp(
-                        this,
+                        175, 90,175,100,
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drive_no_data").getString(),
                         new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drive_no_data").getString(),
                         AlertPopUp.ColorType.ERROR));
@@ -490,16 +490,16 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             }
 
             this.settingsScreen.addConfirmPopUp(this.confirmPopUp = new ConfirmPopUp(
-                    this,
+                    0, 0, 175, 100,
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_overwrite").getString(),
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_overwrite").getString(),
                     ConfirmPopUp.ColorType.NOTICE,
-                    (yesAction)->{
+                    ()->{
                         Network.INSTANCE.sendToServer(new CSPacketLoadBackup(this.server.getPos()));
 
                         this.confirmPopUp.hide();
                         this.settingsScreen.addAlertPopUp(new AlertPopUp(
-                                this,
+                                175, 90,175,100,
                                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.backup_loaded").getString(),
                                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.backup_loaded").getString(),
                                 AlertPopUp.ColorType.DEFAULT));
@@ -581,9 +581,9 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
     private TextFieldWidget adminUsernameField, adminPasswordField;
     private void initAdminScreen(){
         this.adminScreen.addButton(new Button(this.xPos + 10, this.yPos + this.TEXTURE_HEIGHT - 22 - 10 - 16, 60, 16,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (click) -> {
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save").getString(), () -> {
 
-            this.adminScreen.addProgressPopUp(new ProgressPopUp(this, "Saving...", 1, true, (finished) ->{
+            this.adminScreen.addProgressPopUp(new ProgressPopUp(0, 0, 175, 100, "Saving...", 1, true, (finished) ->{
                 this.screenState = ServerScreenState.OVERVIEW;
             }));
 
@@ -600,7 +600,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
         }));
 
         this.adminScreen.addButton(new Button(this.xPos + TEXTURE_WIDTH - 10 - 60, this.yPos + this.TEXTURE_HEIGHT - 22 - 10 - 16, 60, 16,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.back"), (click) -> {
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.back").getString(), () -> {
             this.screenState = ServerScreenState.OVERVIEW;
         }));
 

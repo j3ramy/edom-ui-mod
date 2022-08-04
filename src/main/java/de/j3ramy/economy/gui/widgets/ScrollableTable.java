@@ -257,7 +257,7 @@ public class ScrollableTable extends Widget {
                 //content
                 GlStateManager.pushMatrix();
                 GlStateManager.scalef(.5f, .5f, .5f);
-                Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.getFormattedLabel(this.maxWordLength, this.content.get(i)).getText(), (this.x + 3 + this.columnWidth * i) * 2,
+                Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.getFormattedLabel(this.maxWordLength, this.content.get(i)), (this.x + 3 + this.columnWidth * i) * 2,
                         (this.y + this.height / 2f - TEXT_Y_OFFSET) * 2,  this.isHovered() && this.isClickable ? Color.DARK_GRAY_HEX : TEXT_COLOR);
                 GlStateManager.popMatrix();
 

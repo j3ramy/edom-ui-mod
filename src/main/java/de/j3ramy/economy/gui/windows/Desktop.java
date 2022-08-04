@@ -1,34 +1,27 @@
 package de.j3ramy.economy.gui.windows;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import de.j3ramy.economy.gui.widgets.Widget;
+import de.j3ramy.economy.utils.Color;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 
-public class Desktop {
+public class Desktop extends Widget {
 
-    private final int w;
-    private final int h;
-    private final int borderThickness;
-    private final int desktopColor;
-    private final int borderColor;
+    public Desktop(int width, int height) {
+        super(0, 0, width, height);
 
-    public Desktop(int width, int height, int borderThickness, int desktopColor, int borderColor) {
-        this.w = width;
-        this.h = height;
-        this.borderThickness = borderThickness;
-        this.desktopColor = desktopColor;
-        this.borderColor = borderColor;
+        this.leftPos = this.screenWidth / 2 - this.width / 2;
+        this.topPos = this.screenHeight / 2 - this.height / 2;
+
+        this.setBorderColor(Color.BLACK_HEX);
     }
 
-    public void render(ContainerScreen<?> screen, MatrixStack matrixStack) {
-        int x = screen.width / 2 - this.w / 2;
-        int y = screen.height / 2 - this.h / 2;
-
+    public void render(MatrixStack matrixStack) {
         //border
-        AbstractGui.fill(matrixStack, x - this.borderThickness, y - borderThickness,
-                x + this.w + borderThickness, y + this.h + borderThickness, this.borderColor);
+        AbstractGui.fill(matrixStack, this.leftPos - this.borderThickness, this.topPos - this.borderThickness,
+                this.leftPos + this.width + this.borderThickness, this.topPos + this.height + this.borderThickness, this.borderColor);
 
         //background
-        AbstractGui.fill(matrixStack, x, y, x + this.w, y + this.h, this.desktopColor);
+        AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.backgroundColor);
     }
 }

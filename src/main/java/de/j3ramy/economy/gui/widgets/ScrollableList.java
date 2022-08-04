@@ -58,7 +58,7 @@ public class ScrollableList extends Widget {
     }
 
     public void addToList(String content, boolean isClickable, Button.IPressable onClick){
-        this.contents.add(new ListOption(this.x, this.y, this.width, this.elementHeight, GuiUtils.getFormattedLabel(this.maxWordLength, content), isClickable, backgroundColor, onClick));
+        //this.contents.add(new ListOption(this.x, this.y, this.width, this.elementHeight, GuiUtils.getFormattedLabel(this.maxWordLength, content), isClickable, backgroundColor, onClick));
 
         this.initList(0);
     }

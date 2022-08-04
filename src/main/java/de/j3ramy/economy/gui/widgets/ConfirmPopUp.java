@@ -8,19 +8,9 @@ import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-import java.awt.*;
-
-public class ConfirmPopUp extends Screen {
-
-    public final int WIDTH = 150;
-    public final int HEIGHT = 90;
-    public final int BUTTON_WIDTH = 40;
-    public final int BUTTON_HEIGHT = 14;
+public class ConfirmPopUp extends Widget {
 
     public enum ColorType{
         DEFAULT,
@@ -28,104 +18,78 @@ public class ConfirmPopUp extends Screen {
         ERROR
     }
 
-    private final Point mousePosition;
-    private final int leftPos;
-    private final int topPos;
-    private final ContainerScreen<?> screen;
-    private final Button noButton;
-    private final Button yesButton;
-
+    private final Button noButton, yesButton;
     private final ColorType colorType;
-    private final String title;
-    private final String content;
-    private boolean isHidden;
+    private final String title, content;
 
-    public ConfirmPopUp(ContainerScreen<?> screen, String title, String content, ConfirmPopUp.ColorType type, net.minecraft.client.gui.widget.button.Button.IPressable confirmAction){
-        super(new StringTextComponent(""));
 
-        this.screen = screen;
-        this.mousePosition = new Point();
+    public ConfirmPopUp(int x, int y, int width, int height, String title, String content, ConfirmPopUp.ColorType type, Button.IClickable confirmAction){
+        super(x, y, width, height);
 
         this.title = title;
         this.content = content;
         this.colorType = type;
 
-        this.leftPos = screen.width / 2 - WIDTH / 2;
-        this.topPos = screen.height / 2 - HEIGHT / 2;
+        int BUTTON_HEIGHT = 14;
+        int BUTTON_WIDTH = 40;
+        this.yesButton = new Button(this.leftPos + 20, this.topPos + this.height - BUTTON_HEIGHT - 20, BUTTON_WIDTH, BUTTON_HEIGHT,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.yes").getString(), confirmAction);
 
-
-        this.yesButton = new Button(this.leftPos + 20, topPos + 55, BUTTON_WIDTH, BUTTON_HEIGHT,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.yes"), confirmAction);
-
-        this.noButton = new Button(this.leftPos + WIDTH - BUTTON_WIDTH - 20, topPos + 55, BUTTON_WIDTH, BUTTON_HEIGHT,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.no"), (click) -> this.hide());
+        this.noButton = new Button(this.leftPos + this.width - BUTTON_WIDTH - 20, this.topPos + this.height - BUTTON_HEIGHT - 20, BUTTON_WIDTH, BUTTON_HEIGHT,
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.no").getString(), this::hide);
     }
 
-    public boolean isHidden() {
-        return this.isHidden;
-    }
-
-    public void updateMousePosition(int x, int y){
-
-        this.mousePosition.x = x;
-        this.mousePosition.y = y;
-
-        this.yesButton.updateMousePosition(x, y);
-        this.noButton.updateMousePosition(x, y);
-    }
-
-    @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
+    public void render(MatrixStack matrixStack){
         if(this.isHidden)
             return;
 
-        screen.renderBackground(matrixStack);
+        this.renderBackground(matrixStack);
 
         //border
         int DEFAULT_COLOR = Color.DARK_GRAY_HEX;
         int NOTICE_COLOR = Color.ORANGE_HEX;
         int ERROR_COLOR = Color.RED_HEX;
         switch (this.colorType){
-            case DEFAULT: AbstractGui.fill(matrixStack, leftPos, topPos, leftPos + WIDTH, topPos + HEIGHT, DEFAULT_COLOR); break;
-            case NOTICE: AbstractGui.fill(matrixStack, leftPos, topPos, leftPos + WIDTH, topPos + HEIGHT, NOTICE_COLOR); break;
-            case ERROR: AbstractGui.fill(matrixStack, leftPos, topPos, leftPos + WIDTH, topPos + HEIGHT, ERROR_COLOR);
+            case DEFAULT: AbstractGui.fill(matrixStack, leftPos, topPos, leftPos + this.width, topPos + this.height, DEFAULT_COLOR); break;
+            case NOTICE: AbstractGui.fill(matrixStack, leftPos, topPos, leftPos + this.width, topPos + this.height, NOTICE_COLOR); break;
+            case ERROR: AbstractGui.fill(matrixStack, leftPos, topPos, leftPos + this.width, topPos + this.height, ERROR_COLOR);
         }
 
         //background
         int CONTENT_MARGIN = 5;
-        int BACKGROUND_COLOR = Color.LIGHT_GRAY_HEX;
         AbstractGui.fill(matrixStack, leftPos + CONTENT_MARGIN, topPos + CONTENT_MARGIN + 10,
-                leftPos + WIDTH - CONTENT_MARGIN, topPos + CONTENT_MARGIN + HEIGHT - 10,
-                BACKGROUND_COLOR);
+                leftPos + this.width - CONTENT_MARGIN, topPos + CONTENT_MARGIN + this.height - 10,
+                this.backgroundColor);
 
         //title text
-        AbstractGui.drawCenteredString(matrixStack, screen.getMinecraft().fontRenderer, this.title, screen.width / 2, topPos + 4, Color.WHITE);
+        AbstractGui.drawCenteredString(matrixStack, this.font, this.title, this.leftPos + this.width / 2, topPos + 4, this.textColor);
 
         //content text
         GlStateManager.pushMatrix();
         GlStateManager.scalef(.5f, .5f, .5f);
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.content,
-                (screen.width / 2f) * 2 - GuiUtils.getCenteredTextOffset(this.content.length()),
+                (this.leftPos + this.width / 2f) * 2 - GuiUtils.getCenteredTextOffset(this.content.length()),
                 (topPos + 30) * 2,
-                Color.WHITE);
+                this.textColor);
         GlStateManager.popMatrix();
 
 
         //button
-        yesButton.render(matrixStack, mouseX, mouseY, partialTicks);
-        noButton.render(matrixStack, mouseX, mouseY, partialTicks);
+        yesButton.render(matrixStack);
+        noButton.render(matrixStack);
+    }
+
+    @Override
+    public void update(int x, int y) {
+        super.update(x, y);
+
+        this.yesButton.update(x, y);
+        this.noButton.update(x, y);
     }
 
     public void onClick(){
         this.yesButton.onClick();
         this.noButton.onClick();
-
     }
-
-    public void hide(){
-        this.isHidden = true;
-    }
-
-
 }
 

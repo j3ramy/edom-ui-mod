@@ -101,8 +101,8 @@ public class ModScreen extends Screen {
 
         for(Button button : this.buttons){
             if(button != null){
-                button.updateMousePosition(mouseX, mouseY);
-                button.render(matrixStack, mouseX, mouseY, partialTicks);
+                button.update(mouseX, mouseY);
+                button.render(matrixStack);
             }
         }
 
@@ -114,9 +114,8 @@ public class ModScreen extends Screen {
 
         for(DropDown dropDown : this.dropDowns){
             if(dropDown != null){
-                dropDown.updateMousePosition(mouseX, mouseY);
-                dropDown.render(matrixStack, mouseX, mouseY, partialTicks);
-                dropDown.update();
+                dropDown.update(mouseX, mouseY);
+                dropDown.render(matrixStack);
             }
 
         }
@@ -148,21 +147,21 @@ public class ModScreen extends Screen {
 
         for(HorizontalLine horizontalLine : this.horizontalLines){
             if(horizontalLine != null){
-                horizontalLine.render(matrixStack, mouseX, mouseY, partialTicks);
+                horizontalLine.render(matrixStack);
             }
 
         }
 
         for(CenteredHorizontalLine centeredHorizontalLine : this.centeredHorizontalLines){
             if(centeredHorizontalLine != null){
-                centeredHorizontalLine.render(matrixStack, mouseX, mouseY, partialTicks);
+                centeredHorizontalLine.render(matrixStack);
             }
 
         }
 
         for(VerticalLine verticalLine : this.verticalLines){
             if(verticalLine != null){
-                verticalLine.render(matrixStack, mouseX, mouseY, partialTicks);
+                verticalLine.render(matrixStack);
             }
 
         }
@@ -173,21 +172,22 @@ public class ModScreen extends Screen {
 
         for(AlertPopUp alertPopUp : this.alertPopUps){
             if(alertPopUp != null){
-                alertPopUp.updateMousePosition(mouseX, mouseY);
-                alertPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
+                alertPopUp.update(mouseX, mouseY);
+                alertPopUp.render(matrixStack);
             }
         }
 
         for(ConfirmPopUp confirmPopUp : this.confirmPopUps){
             if(confirmPopUp != null){
-                confirmPopUp.updateMousePosition(mouseX, mouseY);
-                confirmPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
+                confirmPopUp.update(mouseX, mouseY);
+                confirmPopUp.render(matrixStack);
             }
         }
 
         for(ProgressPopUp progressPopUp : this.progressPopUps){
             if(progressPopUp != null){
-                progressPopUp.render(matrixStack, mouseX, mouseY, partialTicks);
+                progressPopUp.update(mouseX, mouseY);
+                progressPopUp.render(matrixStack);
             }
         }
 

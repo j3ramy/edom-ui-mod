@@ -44,9 +44,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     private ImageButton updateEntryButton;
     //X und Y werden jeweils in der init Methode festgelegt
     private Button saveButton;
-    private Button cancelButton = new Button(0, 0, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.cancel"), (onClick)->{
-        this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
-    });
+    private Button cancelButton;
     private TextFieldWidget searchField;
     private ScrollableList tableList;
     private ScrollableTable table;
@@ -126,7 +124,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         content2.add("Viel Geld");
         this.server.getDatabase().getTable("Table2").insert(new Entry(content2));
 
-        this.taskbar = new Taskbar(this.xLeft, this.yBottom - 14, TEXTURE_WIDTH, 15, Color.DARK_GRAY_HEX, true, true);
+        this.taskbar = new Taskbar(this.xLeft, this.yBottom - 14, TEXTURE_WIDTH, 15, true, true);
         this.taskbar.addToOsLogoList(new TranslationTextComponent("screen.economy.button.settings").getString(), onClick->{
             this.taskbar.hideOsLogoList();
         });
@@ -135,31 +133,32 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         });
 
         //Cancel and Save Buttons for CreateTable, CreateEntry, UpdateEntry
-        this.saveButton = new Button(xRight - 50 - 5, yBottom - 18 - 2 - 15, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save"), (onClick)->{
+        this.saveButton = new Button(xRight - 50 - 5, yBottom - 18 - 2 - 15, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save").getString(), ()->{
             switch(this.screenState){
                 case CREATE_TABLE_SCREEN:
                     System.out.println("CREATE_TABLE_SCREEN");
-                    this.createTableScreen.addProgressPopUp(new ProgressPopUp(this, new TranslationTextComponent("screen.economy.popup.title.creating_table").getString(), 2, true, done->{
+                    this.createTableScreen.addProgressPopUp(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.creating_table").getString(), 2, true, done->{
                         this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
                     }));
                     break;
                 case CREATE_ENTRY_SCREEN:
                     System.out.println("CREATE_ENTRY_SCREEN");
-                    this.createEntryScreen.addProgressPopUp(new ProgressPopUp(this, new TranslationTextComponent("screen.economy.popup.title.creating_entry").getString(), 2, true, done->{
+                    this.createEntryScreen.addProgressPopUp(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.creating_entry").getString(), 2, true, done->{
                         this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
                     }));
                     break;
                 case UPDATE_ENTRY_SCREEN:
                     System.out.println("UPDATE_ENTRY_SCREEN");
-                    this.updateEntryScreen.addProgressPopUp(new ProgressPopUp(this, new TranslationTextComponent("screen.economy.popup.title.updating_entry").getString(), 2, true, done->{
+                    this.updateEntryScreen.addProgressPopUp(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.updating_entry").getString(), 2, true, done->{
                         this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
                     }));
                     break;
             }
         });
 
-        this.cancelButton.x = xRight - 50 - 5 - 50 - 5;
-        this.cancelButton.y = yBottom - 18 - 2 - 15;
+        this.cancelButton = new Button(xRight - 50 - 5 - 50 - 5, yBottom - 18 - 2 - 15, 50, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.cancel").getString(), ()->{
+            this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
+        });
 
         initTableOverviewScreen();
         initCreateTableScreen();
@@ -188,7 +187,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.renderBackground(matrixStack);
         this.playerInventoryTitleX = 1000;
 
-        new Desktop(TEXTURE_WIDTH, TEXTURE_HEIGHT, 3, Color.BACKGROUND_GRAY_HEX, Color.BORDER_OLIVE_HEX).render(this, matrixStack);
+        new Desktop(TEXTURE_WIDTH, TEXTURE_HEIGHT).render(matrixStack);
         AbstractGui.fill(matrixStack, xLeft, yTop, xRight, yTop + 8, Color.DARK_GRAY_HEX);
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -230,12 +229,13 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         }));
 
         this.tableOverviewScreen.addImageButton(this.dropTableButton = new ImageButton(this.xLeft + 27, this.yTop + 11, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) -> {
-            this.tableOverviewScreen.addConfirmPopUp(this.confirmDropTable = new ConfirmPopUp(this,
+            this.tableOverviewScreen.addConfirmPopUp(this.confirmDropTable = new ConfirmPopUp(
+                    0, 0, 175, 100,
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drop_table").getString(),
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drop_table").getString(),
                     ConfirmPopUp.ColorType.DEFAULT,
-                    (onYesClick)-> {
-                        this.tableOverviewScreen.addProgressPopUp(new ProgressPopUp(this, new TranslationTextComponent("screen.economy.popup.title.dropping_table").getString(), 2, true, done->{
+                    ()-> {
+                        this.tableOverviewScreen.addProgressPopUp(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.dropping_table").getString(), 2, true, done->{
                             this.confirmDropTable.hide();
                         }));
                     }));
@@ -249,12 +249,12 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
 
         this.tableOverviewScreen.addImageButton(this.deleteEntryButton = new ImageButton(this.xRight - 2 - 25 - 20, this.yTop + 11, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) ->{
             this.tableOverviewScreen.addConfirmPopUp(this.confirmDeleteEntry = new ConfirmPopUp(
-                    this,
+                    0, 0, 175, 100,
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.delete_entry").getString(),
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.delete_entry").getString(),
                     ConfirmPopUp.ColorType.DEFAULT,
-                    (onYesClick)->{
-                        this.tableOverviewScreen.addProgressPopUp(new ProgressPopUp(this, new TranslationTextComponent("screen.economy.popup.title.deleting_entry").getString(), 2, true, done->{
+                    ()->{
+                        this.tableOverviewScreen.addProgressPopUp(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.deleting_entry").getString(), 2, true, done->{
                             this.confirmDeleteEntry.hide();
                         }));
                     }));

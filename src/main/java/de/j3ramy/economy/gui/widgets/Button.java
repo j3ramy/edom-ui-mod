@@ -1,81 +1,131 @@
 package de.j3ramy.economy.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.j3ramy.economy.utils.GuiUtils;
 import de.j3ramy.economy.utils.Color;
+import de.j3ramy.economy.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.util.text.ITextComponent;
 
-import java.awt.*;
+public class Button extends Widget {
+    protected static final int TEXT_Y_OFFSET = 4;
 
-public class Button extends net.minecraft.client.gui.widget.button.Button {
-    public static final int DEFAULT_COLOR = Color.DARK_GRAY_HEX;
-    public static final int HOVER_COLOR = Color.LIGHT_GRAY_HEX;
-    public static final int TEXT_COLOR = Color.WHITE;
-    public static final int BORDER_COLOR_DEFAULT = Color.BLACK_HEX;
-    public static final int BORDER_COLOR_HOVER = DEFAULT_COLOR;
-    public static final int BORDER_THICKNESS = 1;
-    public static final int TEXT_Y_OFFSET = 4;
-    private final Point mousePosition;
+    protected int hoverBackgroundColor = Color.DARK_GRAY_HEX;
+    protected int hoverTextColor = this.textColor;
+    protected int hoverBorderColor = Color.WHITE_HEX;
 
-    public Button(int x, int y, int width, int height, ITextComponent title, Button.IPressable onPress){
-        super(x, y, width, height, title, onPress);
+    protected int disabledBackgroundColor = Color.DARK_GRAY_HEX;
+    protected int disabledTextColor = Color.LIGHT_GRAY_HEX;
+    protected int disabledBorderColor = Color.LIGHT_GRAY_HEX;
 
-        this.mousePosition = new Point();
+    protected String title;
+    protected boolean enabled = true, isDropDownButton;
+    protected final IClickable clickAction;
+
+
+    public Button(int x, int y, int width, int height, String title, IClickable clickAction){
+        super(x, y, width, height);
+
+        this.title = title;
+        this.clickAction = clickAction;
     }
 
-    public String getText(){
-        return this.getMessage().getString();
+
+    public void setHoverBackgroundColor(int hoverBackgroundColor) {
+        this.hoverBackgroundColor = hoverBackgroundColor;
     }
 
-    public void updateMousePosition(int mouseX, int mouseY){
-        this.mousePosition.x = mouseX;
-        this.mousePosition.y = mouseY;
+    public void setHoverBorderColor(int hoverBorderColor) {
+        this.hoverBorderColor = hoverBorderColor;
+    }
+
+    public void setHoverTextColor(int hoverTextColor) {
+        this.hoverTextColor = hoverTextColor;
+    }
+
+    public void setDisabledBackgroundColor(int disabledBackgroundColor) {
+        this.disabledBackgroundColor = disabledBackgroundColor;
+    }
+
+    public void setDisabledBorderColor(int disabledBorderColor) {
+        this.disabledBorderColor = disabledBorderColor;
+    }
+
+    public void setDisabledTextColor(int disabledTextColor) {
+        this.disabledTextColor = disabledTextColor;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    protected void setIsDropdownButton(boolean isDropdownButton){
+        this.isDropDownButton = isDropdownButton;
     }
 
     @Override
-    public void renderWidget(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        if(this.mousePosition == null)
-            return;
+    public void render(MatrixStack matrixStack) {
+        super.render(matrixStack);
 
-        //render background and border
-        if(isMouseOver(mousePosition.x, mousePosition.y) && this.active)
-            this.onHover(matrixStack);
-        else{
-            AbstractGui.fill(matrixStack, this.x - BORDER_THICKNESS, this.y - BORDER_THICKNESS,
-                    this.x + this.width + BORDER_THICKNESS, this.y + this.height + BORDER_THICKNESS,
-                    BORDER_COLOR_DEFAULT);
+        if(this.enabled){
+            if(this.isMouseOver()){
+                AbstractGui.fill(matrixStack, this.leftPos - this.borderThickness, this.topPos - this.borderThickness,
+                        this.leftPos + this.width + this.borderThickness, this.topPos + this.height + this.borderThickness,
+                        this.hoverBorderColor);
 
-            AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, DEFAULT_COLOR);
+                AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.hoverBackgroundColor);
+
+                Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
+                        this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width / 2f - GuiUtils.getCenteredTextOffset(this.title.length()),
+                        this.topPos + this.height / 2f - TEXT_Y_OFFSET,
+                        this.hoverTextColor);
+            }
+            else{
+                AbstractGui.fill(matrixStack, this.leftPos - this.borderThickness, this.topPos - this.borderThickness,
+                        this.leftPos + this.width + this.borderThickness, this.topPos + this.height + this.borderThickness,
+                        this.borderColor);
+
+                AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.backgroundColor);
+
+                Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
+                        this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width / 2f - GuiUtils.getCenteredTextOffset(this.title.length()),
+                        this.topPos + this.height / 2f - TEXT_Y_OFFSET,
+                        this.textColor);
+            }
         }
-
-        //render text
-        if(this.active){
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.getMessage().getString(),
-                    this.x + this.width / 2f - GuiUtils.getCenteredTextOffset(this.getMessage().getString().length()),
-                    this.y + this.height / 2f - TEXT_Y_OFFSET,
-                    TEXT_COLOR);
-        }
         else{
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.getMessage().getString(),
-                    this.x + this.width / 2f - GuiUtils.getCenteredTextOffset(this.getMessage().getString().length()),
-                    this.y + this.height / 2f - TEXT_Y_OFFSET,
-                    HOVER_COLOR);
+
+            AbstractGui.fill(matrixStack, this.leftPos - this.borderThickness, this.topPos - this.borderThickness,
+                    this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width + this.borderThickness, this.topPos + this.height + this.borderThickness,
+                    this.disabledBorderColor);
+
+            AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.disabledBackgroundColor);
+
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
+                    this.leftPos + this.width / 2f - GuiUtils.getCenteredTextOffset(this.title.length()),
+                    this.topPos + this.height / 2f - TEXT_Y_OFFSET,
+                    this.disabledTextColor);
         }
     }
 
     public void onClick(){
-        if(this.isMouseOver(this.mousePosition.x, this.mousePosition.y) && this.active)
-            this.onPress();
+        if(this.isMouseOver() && this.enabled)
+            this.onInteract();
     }
 
+    protected boolean isMouseOver(){
+        return this.mousePosition.x > this.leftPos && this.mousePosition.x < this.leftPos + this.width &&
+                this.mousePosition.y > this.topPos && this.mousePosition.y < this.topPos + this.height;
+    }
 
-    private void onHover(MatrixStack matrixStack){
-        AbstractGui.fill(matrixStack, this.x - BORDER_THICKNESS, this.y - BORDER_THICKNESS,
-                this.x + this.width + BORDER_THICKNESS, this.y + this.height + BORDER_THICKNESS,
-                BORDER_COLOR_HOVER);
+    public void onInteract() {
+        this.clickAction.onInteract();
+    }
 
-        AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, HOVER_COLOR);
+    public interface IClickable{
+        void onInteract();
     }
 }

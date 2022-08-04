@@ -62,14 +62,14 @@ public class SwitchScreen extends ContainerScreen<SwitchContainer> {
         this.playerInventoryTitleX = 1000;
 
         this.screen.addButton(this.onButton = new Button(this.xPos + 7, this.yPos + 80, 35, 16,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.on"), (click)->{
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.on").getString(), ()->{
             this.data.setOn(true);
 
             Network.INSTANCE.sendToServer(new CSPacketSendSwitchData(this.data, this.container.getTileEntity().getPos()));
         }));
 
         this.screen.addButton(this.offButton = new Button(this.xPos + 7, this.yPos + 80 + 18 + 3, 35, 16,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.off"), (click)->{
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.off").getString(), ()->{
             this.data.setOn(false);
 
             Network.INSTANCE.sendToServer(new CSPacketSendSwitchData(this.data, this.container.getTileEntity().getPos()));
@@ -181,12 +181,12 @@ public class SwitchScreen extends ContainerScreen<SwitchContainer> {
 
 
         if(!this.data.isOn()){
-            this.onButton.active = true;
-            this.offButton.active = false;
+            this.onButton.setEnabled(true);
+            this.offButton.setEnabled(false);
         }
         else{
-            this.onButton.active = false;
-            this.offButton.active = true;
+            this.onButton.setEnabled(false);
+            this.offButton.setEnabled(true);
         }
     }
 }
