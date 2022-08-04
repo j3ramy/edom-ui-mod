@@ -2,6 +2,7 @@ package de.j3ramy.economy.utils;
 
 import de.j3ramy.economy.EconomyMod;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.apache.logging.log4j.util.ReadOnlyStringMap;
 
 public class Texture {
@@ -19,5 +20,6 @@ public class Texture {
     public static final ResourceLocation LOAD_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/load_button_gui.png");
     public static final ResourceLocation PRINT_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/print_button_gui.png");
     public static final ResourceLocation OS_LOGO = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/os_logo.png");
-    public static final ResourceLocation WIFI_BUTTON = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/wifi_button_gui.png");
+    public static final ResourceLocation WIFI_BUTTON_CONNECTED = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/wifi_button_connected_gui.png");
+    public static final ResourceLocation WIFI_BUTTON_DISCONNECTED = new ResourceLocation(EconomyMod.MOD_ID, "textures/gui/widgets/wifi_button_disconnected_gui.png");
 }

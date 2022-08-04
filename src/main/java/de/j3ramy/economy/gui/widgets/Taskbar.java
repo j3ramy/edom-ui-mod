@@ -38,7 +38,7 @@ public class Taskbar extends Widget {
         this.modScreen = new ModScreen();
 
         this.yCenter = (float) (this.height) / 2;
-        this.wifiButton = new ImageButton(0, this.y + (int)(this.yCenter - 4.5), 9, 9, 0, 0, 10, Texture.WIFI_BUTTON, (onClickWifi)->{});
+        this.wifiButton = new ImageButton(0, this.y + (int)(this.yCenter - 4.5), 9, 9, 0, 0, 10, Texture.WIFI_BUTTON_DISCONNECTED, (onClickWifi)->{});
         this.wifiList = new ScrollableList(0, this.y - this.height - 27, 85, 39, 13, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.PURPLE_HEX);
 
         if(showOsButton) {
