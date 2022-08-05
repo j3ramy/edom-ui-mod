@@ -17,6 +17,9 @@ public class VerticalLine extends Widget {
     }
 
     public void render(MatrixStack matrixStack) {
+        if(this.isHidden())
+            return;
+
         AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.thickness, this.topPos + this.height, this.color);
     }
 }

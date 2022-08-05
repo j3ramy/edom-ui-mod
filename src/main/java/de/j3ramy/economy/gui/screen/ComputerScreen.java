@@ -125,10 +125,10 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.server.getDatabase().getTable("Table2").insert(new Entry(content2));
 
         this.taskbar = new Taskbar(this.xLeft, this.yBottom - 14, TEXTURE_WIDTH, 15, true, true);
-        this.taskbar.addToOsLogoList(new TranslationTextComponent("screen.economy.button.settings").getString(), onClick->{
+        this.taskbar.addToOsLogoList(new TranslationTextComponent("screen.economy.button.settings").getString(), ()->{
             this.taskbar.hideOsLogoList();
         });
-        this.taskbar.addToOsLogoList(new TranslationTextComponent("screen.economy.button.logout").getString(), onClick->{
+        this.taskbar.addToOsLogoList(new TranslationTextComponent("screen.economy.button.logout").getString(), ()->{
             this.taskbar.hideOsLogoList();
         });
 
@@ -137,19 +137,19 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
             switch(this.screenState){
                 case CREATE_TABLE_SCREEN:
                     System.out.println("CREATE_TABLE_SCREEN");
-                    this.createTableScreen.addProgressPopUp(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.creating_table").getString(), 2, true, done->{
+                    this.createTableScreen.addWidget(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.creating_table").getString(), 2, true, ()->{
                         this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
                     }));
                     break;
                 case CREATE_ENTRY_SCREEN:
                     System.out.println("CREATE_ENTRY_SCREEN");
-                    this.createEntryScreen.addProgressPopUp(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.creating_entry").getString(), 2, true, done->{
+                    this.createEntryScreen.addWidget(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.creating_entry").getString(), 2, true, ()->{
                         this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
                     }));
                     break;
                 case UPDATE_ENTRY_SCREEN:
                     System.out.println("UPDATE_ENTRY_SCREEN");
-                    this.updateEntryScreen.addProgressPopUp(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.updating_entry").getString(), 2, true, done->{
+                    this.updateEntryScreen.addWidget(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.updating_entry").getString(), 2, true, ()->{
                         this.screenState = ComputerScreenState.TABLE_OVERVIEW_SCREEN;
                     }));
                     break;
@@ -166,18 +166,18 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         initUpdateEntryScreen();
 
         for (Table table : this.server.getDatabase().getTables()){
-            this.tableList.addToList(table.getName(), true, (onClick)->{
+            this.tableList.addElement(table.getName(), true, Color.DARK_GRAY_HEX, Color.LIGHT_GRAY_HEX, ()->{
                 this.table.clear();
                 this.deleteEntryButton.active = false;
                 this.updateEntryButton.active = false;
-                this.table.setAttributeColumns((ArrayList<String>) table.getColumnNames());
-                this.dropTableButton.active = true;
+                this.table.setAttributeRow((ArrayList<String>) table.getColumnNames(), Color.ORANGE_HEX, Color.ORANGE_HEX);
                 for (Entry entry : table.getAllEntries()){
-                    this.table.addRow((ArrayList<String>) entry.getColumnsContent(), true, this.table.getFGColor(), (onClick2)->{
+                    this.table.addRow(entry.getColumnsContent(), true, Color.DARK_GRAY_HEX, Color.LIGHT_GRAY_HEX, ()->{
                         this.deleteEntryButton.active = true;
                         this.updateEntryButton.active = true;
                     });
                 }
+                this.dropTableButton.active = true;
             });
         }
     }
@@ -224,72 +224,73 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     //region TABLE_OVERVIEW_SCREEN
     public void initTableOverviewScreen() {
         //<Buttons>
-        this.tableOverviewScreen.addImageButton(this.createTableButton = new ImageButton(this.xLeft + 2, this.yTop + 11, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) -> {
+        this.tableOverviewScreen.addMcWidget(this.createTableButton = new ImageButton(this.xLeft + 2, this.yTop + 11, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) -> {
             this.screenState = ComputerScreenState.CREATE_TABLE_SCREEN;
         }));
 
-        this.tableOverviewScreen.addImageButton(this.dropTableButton = new ImageButton(this.xLeft + 27, this.yTop + 11, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) -> {
-            this.tableOverviewScreen.addConfirmPopUp(this.confirmDropTable = new ConfirmPopUp(
+        this.tableOverviewScreen.addMcWidget(this.dropTableButton = new ImageButton(this.xLeft + 27, this.yTop + 11, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) -> {
+            this.tableOverviewScreen.addWidget(this.confirmDropTable = new ConfirmPopUp(
                     0, 0, 175, 100,
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.drop_table").getString(),
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.drop_table").getString(),
                     ConfirmPopUp.ColorType.DEFAULT,
                     ()-> {
-                        this.tableOverviewScreen.addProgressPopUp(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.dropping_table").getString(), 2, true, done->{
-                            this.confirmDropTable.hide();
+                        this.tableOverviewScreen.addWidget(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.dropping_table").getString(), 2, true, ()->{
+                            this.confirmDropTable.setHidden(true);
                         }));
                     }));
         }));
         dropTableButton.active = false;
 
-        this.tableOverviewScreen.addImageButton(this.createEntryButton = new ImageButton(this.xRight - 2 - 25 - 25 -20, this.yTop + 11, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) ->{
+        this.tableOverviewScreen.addMcWidget(this.createEntryButton = new ImageButton(this.xRight - 2 - 25 - 25 -20, this.yTop + 11, 20, 18, 0, 0, 19, Texture.PLUS_BUTTON, (button) ->{
             this.screenState = ComputerScreenState.CREATE_ENTRY_SCREEN;
             this.hideTableOverviewScreen();
         }));
 
-        this.tableOverviewScreen.addImageButton(this.deleteEntryButton = new ImageButton(this.xRight - 2 - 25 - 20, this.yTop + 11, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) ->{
-            this.tableOverviewScreen.addConfirmPopUp(this.confirmDeleteEntry = new ConfirmPopUp(
+        this.tableOverviewScreen.addMcWidget(this.deleteEntryButton = new ImageButton(this.xRight - 2 - 25 - 20, this.yTop + 11, 20, 18, 0, 0, 19, Texture.DELETE_BUTTON, (button) ->{
+            this.tableOverviewScreen.addWidget(this.confirmDeleteEntry = new ConfirmPopUp(
                     0, 0, 175, 100,
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.delete_entry").getString(),
                     new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.delete_entry").getString(),
                     ConfirmPopUp.ColorType.DEFAULT,
                     ()->{
-                        this.tableOverviewScreen.addProgressPopUp(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.deleting_entry").getString(), 2, true, done->{
-                            this.confirmDeleteEntry.hide();
+                        this.tableOverviewScreen.addWidget(new ProgressPopUp(0, 0, 175, 100, new TranslationTextComponent("screen.economy.popup.title.deleting_entry").getString(), 2, true, ()->{
+                            this.confirmDeleteEntry.setHidden(true);
                         }));
                     }));
         }));
         this.deleteEntryButton.active = false;
 
-        this.tableOverviewScreen.addImageButton(this.updateEntryButton = new ImageButton(this.xRight - 2 - 20, this.yTop + 11, 20, 18, 0, 0, 19, Texture.PEN_BUTTON, (button) ->{
+        this.tableOverviewScreen.addMcWidget(this.updateEntryButton = new ImageButton(this.xRight - 2 - 20, this.yTop + 11, 20, 18, 0, 0, 19, Texture.PEN_BUTTON, (button) ->{
             this.screenState = ComputerScreenState.UPDATE_ENTRY_SCREEN;
             this.hideTableOverviewScreen();
         }));
         this.updateEntryButton.active = false;
         //</Buttons>
 
-        //<Tooltips>
-        this.tableOverviewScreen.addTooltip(createTableButtonTooltip = new Tooltip(GuiUtils.getTranslationText("create_table"), this.createTableButton));
-        this.tableOverviewScreen.addTooltip(dropTableButtonTooltip = new Tooltip(GuiUtils.getTranslationText("drop_table"), this.dropTableButton));
-        this.tableOverviewScreen.addTooltip(createEntryButtonTooltip = new Tooltip(GuiUtils.getTranslationText("create_entry"), this.createEntryButton));
-        this.tableOverviewScreen.addTooltip(deleteEntryButtonTooltip = new Tooltip(GuiUtils.getTranslationText("delete_entry"), this.deleteEntryButton));
-        this.tableOverviewScreen.addTooltip(updateEntryButtonTooltip = new Tooltip(GuiUtils.getTranslationText("update_entry"), this.updateEntryButton));
-        //</Tooltips>
-
         //Search field
-        tableOverviewScreen.addTextField(this.searchField = new TextFieldWidget(this.font, (this.xLeft + 82), (this.yTop + 14), 80, 12, new StringTextComponent("")));
+        tableOverviewScreen.addMcWidget(this.searchField = new TextFieldWidget(this.font, (this.xLeft + 82), (this.yTop + 14), 80, 12, new StringTextComponent("")));
         this.searchField.setText(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".placeholder.search").getString());
         this.searchField.setCanLoseFocus(true);
         this.searchField.setTextColor(Color.WHITE);
 
         //List of tables
-        this.tableOverviewScreen.addList(this.tableList = new ScrollableList(this.xLeft + 2, this.yTop + 34, 75, 115, 13, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.GREEN_HEX));
+        this.tableOverviewScreen.addWidget(this.tableList = new ScrollableList(this.xLeft + 2, this.yTop + 34, 75, 115, 13));
 
         //List of Entries in Table
-        this.tableOverviewScreen.addTable(table = new ScrollableTable(this.xLeft + 82, this.yTop + 34, this.xRight - 2 - (this.xLeft + 82), 115, 10, true, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.BORDER_OLIVE_HEX, Color.ORANGE_HEX));
+        this.tableOverviewScreen.addWidget(table = new ScrollableTable(this.xLeft + 82, this.yTop + 34, this.xRight - 2 - (this.xLeft + 82), 100, 10, true));
 
         //Taskbar
-        this.tableOverviewScreen.setTaskbar(this.taskbar);
+        this.tableOverviewScreen.addWidget(this.taskbar);
+
+        //<s>
+        this.tableOverviewScreen.addWidget(createTableButtonTooltip = new Tooltip(GuiUtils.getTranslationText("create_table"), this.createTableButton));
+        this.tableOverviewScreen.addWidget(dropTableButtonTooltip = new Tooltip(GuiUtils.getTranslationText("drop_table"), this.dropTableButton));
+        this.tableOverviewScreen.addWidget(createEntryButtonTooltip = new Tooltip(GuiUtils.getTranslationText("create_entry"), this.createEntryButton));
+        this.tableOverviewScreen.addWidget(deleteEntryButtonTooltip = new Tooltip(GuiUtils.getTranslationText("delete_entry"), this.deleteEntryButton));
+        this.tableOverviewScreen.addWidget(updateEntryButtonTooltip = new Tooltip(GuiUtils.getTranslationText("update_entry"), this.updateEntryButton));
+        //</Tooltips>
+
     }
 
     private void renderTableOverviewScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -319,9 +320,9 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
 
     //region CREATE_TABLE_SCREEN
     private void initCreateTableScreen() {
-        this.createTableScreen.addButton(cancelButton);
-        this.createTableScreen.addButton(saveButton);
-        this.createTableScreen.setTaskbar(this.taskbar);
+        this.createTableScreen.addWidget(cancelButton);
+        this.createTableScreen.addWidget(saveButton);
+        this.createTableScreen.addWidget(this.taskbar);
     }
 
     private void renderCreateTableScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -347,9 +348,9 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
 
     //region CREATE_ENTRY_SCREEN
     private void initCreateEntryScreen() {
-        this.createEntryScreen.addButton(cancelButton);
-        this.createEntryScreen.addButton(saveButton);
-        this.createEntryScreen.setTaskbar(this.taskbar);
+        this.createEntryScreen.addWidget(cancelButton);
+        this.createEntryScreen.addWidget(saveButton);
+        this.createEntryScreen.addWidget(this.taskbar);
     }
     private void renderCreateEntryScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.createEntryScreen.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -375,9 +376,9 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
     //region UPDATE_ENTRY_SCREEN
 
     private void initUpdateEntryScreen() {
-        this.updateEntryScreen.addButton(cancelButton);
-        this.updateEntryScreen.addButton(saveButton);
-        this.updateEntryScreen.setTaskbar(this.taskbar);
+        this.updateEntryScreen.addWidget(cancelButton);
+        this.updateEntryScreen.addWidget(saveButton);
+        this.updateEntryScreen.addWidget(this.taskbar);
     }
 
     private void renderUpdateEntryScreen(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {

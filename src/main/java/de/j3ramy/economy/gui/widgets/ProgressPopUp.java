@@ -15,7 +15,7 @@ public class ProgressPopUp extends Widget {
     private final boolean shouldProgressStop;
 
     public interface IFinished {
-        void onFinished(ProgressPopUp progressPopUp);
+        void onFinished();
     }
 
 
@@ -39,10 +39,12 @@ public class ProgressPopUp extends Widget {
             drawStopEnd = new Random().nextFloat();
     }
 
+    @Override
     public void render(MatrixStack matrixStack){
         if(this.isHidden)
             return;
 
+        super.render(matrixStack);
         this.renderBackground(matrixStack);
 
         AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, Color.LIGHT_GRAY_HEX);
@@ -63,12 +65,15 @@ public class ProgressPopUp extends Widget {
         this.progressBar.render(matrixStack);
 
         if(this.progressBar.isFull()){
-            this.finishedAction.onFinished(this);
-            this.hide();
+            this.finishedAction.onFinished();
+            this.setHidden(true);
         }
     }
 
     public void update(int x, int y){
+        if(this.isHidden())
+            return;
+
         super.update(x, y);
 
         this.progressBar.setProgress(this.duration);

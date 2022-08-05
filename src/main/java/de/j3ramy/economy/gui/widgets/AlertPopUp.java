@@ -35,7 +35,7 @@ public class AlertPopUp extends Widget {
         int BUTTON_HEIGHT = 14;
         int BUTTON_WIDTH = 60;
         this.closeButton = new Button((this.leftPos + this.width / 2) - BUTTON_WIDTH / 2, this.topPos + this.height - BUTTON_HEIGHT - 20, BUTTON_WIDTH, BUTTON_HEIGHT,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.close").getString(), this::hide);
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.close").getString(), ()->setHidden(true));
     }
 
 
@@ -44,6 +44,7 @@ public class AlertPopUp extends Widget {
         if(this.isHidden)
             return;
 
+        super.render(matrixStack);
         this.renderBackground(matrixStack);
 
         //border
@@ -81,13 +82,15 @@ public class AlertPopUp extends Widget {
 
     @Override
     public void update(int x, int y) {
+        if(this.isHidden())
+            return;
+
         super.update(x, y);
 
         this.closeButton.update(x, y);
     }
 
     public void onClick(){
-
         this.closeButton.onClick();
     }
 

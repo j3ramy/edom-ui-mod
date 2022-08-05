@@ -64,13 +64,13 @@ public class CreditCartPrinterScreen extends ContainerScreen<CreditCardPrinterCo
     }
 
     private void initWidgets(){
-        this.screen.addTextField(this.ownerField = new TextFieldWidget(this.font, this.guiLeft + 65, this.yOffset + 11, 100, 14, new StringTextComponent("")));
+        this.screen.addMcWidget(this.ownerField = new TextFieldWidget(this.font, this.guiLeft + 65, this.yOffset + 11, 100, 14, new StringTextComponent("")));
         this.ownerField.setText(new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".placeholder.owner").getString());
         this.ownerField.setCanLoseFocus(true);
         this.ownerField.setTextColor(Color.WHITE);
         this.ownerField.setMaxStringLength(35);
 
-        this.screen.addImageButton(this.printButton = new ImageButton(this.guiLeft + 145, this.yOffset + 56, 20, 18, 0, 0, 19, Texture.PRINT_BUTTON, (button) -> {
+        this.screen.addMcWidget(this.printButton = new ImageButton(this.guiLeft + 145, this.yOffset + 56, 20, 18, 0, 0, 19, Texture.PRINT_BUTTON, (button) -> {
             this.printCard();
         }));
 

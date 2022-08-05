@@ -66,12 +66,8 @@ public class Widget implements IWidget {
         this.borderThickness = borderThickness;
     }
 
-    public void hide(){
-        this.isHidden = true;
-    }
-
-    protected void show(){
-        this.isHidden = false;
+    public void setHidden(boolean hidden) {
+        this.isHidden = hidden;
     }
 
     public boolean isHidden() {

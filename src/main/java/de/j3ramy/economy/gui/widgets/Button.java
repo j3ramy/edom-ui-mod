@@ -7,8 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 
 public class Button extends Widget {
-    protected static final int TEXT_Y_OFFSET = 4;
-
+    protected final int yOffset;
     protected int hoverBackgroundColor = Color.DARK_GRAY_HEX;
     protected int hoverTextColor = this.textColor;
     protected int hoverBorderColor = Color.WHITE_HEX;
@@ -27,6 +26,7 @@ public class Button extends Widget {
 
         this.title = title;
         this.clickAction = clickAction;
+        this.yOffset = GuiUtils.LETTER_HEIGHT / 2;
     }
 
 
@@ -68,6 +68,9 @@ public class Button extends Widget {
 
     @Override
     public void render(MatrixStack matrixStack) {
+        if(this.isHidden())
+            return;
+
         super.render(matrixStack);
 
         if(this.enabled){
@@ -80,7 +83,7 @@ public class Button extends Widget {
 
                 Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
                         this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width / 2f - GuiUtils.getCenteredTextOffset(this.title.length()),
-                        this.topPos + this.height / 2f - TEXT_Y_OFFSET,
+                        this.topPos + this.height / 2f - yOffset,
                         this.hoverTextColor);
             }
             else{
@@ -92,7 +95,7 @@ public class Button extends Widget {
 
                 Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
                         this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width / 2f - GuiUtils.getCenteredTextOffset(this.title.length()),
-                        this.topPos + this.height / 2f - TEXT_Y_OFFSET,
+                        this.topPos + this.height / 2f - yOffset,
                         this.textColor);
             }
         }
@@ -106,12 +109,15 @@ public class Button extends Widget {
 
             Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
                     this.leftPos + this.width / 2f - GuiUtils.getCenteredTextOffset(this.title.length()),
-                    this.topPos + this.height / 2f - TEXT_Y_OFFSET,
+                    this.topPos + this.height / 2f - yOffset,
                     this.disabledTextColor);
         }
     }
 
     public void onClick(){
+        if(this.isHidden())
+            return;
+
         if(this.isMouseOver() && this.enabled)
             this.onInteract();
     }

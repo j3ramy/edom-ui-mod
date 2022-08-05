@@ -6,6 +6,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class GuiUtils {
     public static final int LETTER_SIZE = 5;
+    public static final int LETTER_HEIGHT = 8;
     public static final int LETTER_SPACE = 1;
     public enum FontSize{
         DEFAULT,

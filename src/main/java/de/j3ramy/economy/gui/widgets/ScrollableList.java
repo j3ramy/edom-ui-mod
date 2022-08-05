@@ -2,63 +2,51 @@
 package de.j3ramy.economy.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.j3ramy.economy.utils.Color;
+import com.mojang.blaze3d.platform.GlStateManager;
 import de.j3ramy.economy.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ScrollableList extends Widget {
-    public static final int TEXT_COLOR = Color.WHITE;
-    public static final int TEXT_Y_OFFSET = 4;
-    private static final int BORDER_WIDTH = 1;
-
-    private final Point mousePosition;
+    private final int maxVisibleListElements;
+    private final int elementHeight;
     private final List<ListOption> contents = new ArrayList<>();
     private final List<ListOption> contentFields = new ArrayList<>();
-    private final int maxVisibleListElements;
-    private final int maxWordLength;
-    private final int elementHeight;
     private int selectedIndex = -1;
-    private boolean isHidden;
-    private final int backgroundColor;
-    private final int borderColor;
-    private final int elementColor;
 
 
-    public ScrollableList(int x, int y, int width, int height, int elementHeight, int backgroundColor, int borderColor, int elementColor){
-        super(x, y, width, height, new StringTextComponent(""));
+    public ScrollableList(int x, int y, int width, int height, int elementHeight){
+        super(x, y, width, height);
 
-        this.mousePosition = new Point();
         this.maxVisibleListElements = this.height / elementHeight;
-        this.maxWordLength = (width - 20) / 6; //6 = width of letter;
         this.elementHeight = elementHeight;
-        this.backgroundColor = backgroundColor;
-        this.borderColor = borderColor;
-        this.elementColor = elementColor;
     }
 
-    public boolean isHidden() {
-        return isHidden;
+    @Nullable
+    public ListOption getSelectedElement(){
+        if(this.selectedIndex == -1 || this.selectedIndex == 0)
+            return null;
+
+        return this.contents.get(selectedIndex);
     }
 
-    public int getSelectedIndex() {
-        return this.selectedIndex;
+    @Nullable
+    public ListOption getHoveredElement(){
+        for(ListOption row : this.contentFields){
+            if(row.isMouseOver())
+                return row;
+        }
+
+        return null;
     }
 
-    public ListOption getEntry(int index){
-        return this.contents.get(index);
-    }
-
-    public void addToList(String content, boolean isClickable, Button.IPressable onClick){
-        //this.contents.add(new ListOption(this.x, this.y, this.width, this.elementHeight, GuiUtils.getFormattedLabel(this.maxWordLength, content), isClickable, backgroundColor, onClick));
+    public void addElement(String content, boolean isClickable, int backgroundColor, int hoverColor, Button.IClickable onClick){
+        this.contents.add(new ListOption(this.leftPos, this.topPos, this.width, this.elementHeight, content, isClickable, backgroundColor, hoverColor,  onClick));
 
         this.initList(0);
     }
@@ -84,76 +72,85 @@ public class ScrollableList extends Widget {
         }
     }
 
+    public void clearSelectedIndex(){
+        this.selectedIndex = -1;
+    }
+
     public void clear(){
         this.contents.clear();
         this.contentFields.clear();
         this.clearSelectedIndex();
     }
 
-    public void hide(){
-        this.isHidden = true;
-    }
-
-    public void show(){
-        this.isHidden = false;
-    }
-
-    public void clearSelectedIndex(){
-        this.selectedIndex = -1;
+    public boolean isHovered(){
+        Rectangle list = new Rectangle(this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height);
+        return list.contains(new Point(this.mousePosition.x, this.mousePosition.y));
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        if(this.mousePosition == null || this.isHidden)
+    public void render(MatrixStack matrixStack) {
+        if(this.isHidden())
             return;
 
-        AbstractGui.fill(matrixStack, this.x - BORDER_WIDTH, this.y - BORDER_WIDTH,
-                this.x + this.width + BORDER_WIDTH, this.y + this.height + BORDER_WIDTH, this.borderColor);
-        AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, this.backgroundColor);
-        this.drawContent(matrixStack);
+        super.render(matrixStack);
+        AbstractGui.fill(matrixStack, this.leftPos - this.borderThickness, this.topPos - this.borderThickness,
+                this.leftPos + this.width + this.borderThickness, this.topPos + this.height + this.borderThickness, this.borderColor);
+
+        AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.backgroundColor);
+
+        this.renderContent(matrixStack);
+        this.renderToolTip(matrixStack);
     }
 
-    private void drawContent(MatrixStack matrixStack){
-        for (int i = 0; i < this.contentFields.size(); i++) {
-            if (this.contentFields.get(i) != null){
-                this.contentFields.get(i).draw(matrixStack);
-                this.contentFields.get(i).setBackgroundColor(i == this.selectedIndex ? Color.LIGHT_GRAY_HEX : this.elementColor);
+    private void renderToolTip(MatrixStack matrixStack){
+        if(this.isHovered()){
+            if(this.getHoveredElement() != null){
+                Tooltip tooltip = new Tooltip(this.getHoveredElement().getContent(), null);
+                tooltip.update(this.mousePosition.x, this.mousePosition.y);
+                tooltip.render(matrixStack);
             }
         }
     }
 
-    public void update(){
-        for (ListOption contentField : this.contentFields) {
-            if(contentField != null)
-                contentField.updateMousePosition(this.mousePosition.x, this.mousePosition.y);
+    private void renderContent(MatrixStack matrixStack){
+        for (int i = 0; i < this.contentFields.size(); i++) {
+            if (this.contentFields.get(i) != null){
+                this.contentFields.get(i).render(matrixStack);
+                this.contentFields.get(i).setBackgroundColor(i == this.selectedIndex ? this.contentFields.get(i).hoverBackgroundColor : this.contentFields.get(i).oldBackground);
+            }
         }
     }
 
-    public void updateMousePosition(int mouseX, int mouseY){
-        this.mousePosition.x = mouseX;
-        this.mousePosition.y = mouseY;
+    @Override
+    public void update(int mouseX, int mouseY){
+        if(this.isHidden())
+            return;
+
+        super.update(mouseX, mouseY);
+        for (ListOption contentField : this.contentFields) {
+            if(contentField != null)
+                contentField.update(mouseX, mouseY);
+        }
     }
 
     public void onClick(){
-        if(this.isHidden)
+        if(this.isHidden())
             return;
 
         for(int i = 0; i < this.contentFields.size(); i++){
-            if(this.contentFields.get(i) != null && this.contentFields.get(i).isMouseOver(this.mousePosition.x, this.mousePosition.y)){
+            if(contentFields.get(i) != null && contentFields.get(i).isMouseOver()){
                 this.selectedIndex = i;
-                this.contentFields.get(i).onClick();
+                contentFields.get(i).onClick();
             }
         }
-    }
-
-    private boolean isMouseOverList(){
-        Rectangle list = new Rectangle(this.x, this.y, this.x + this.width, this.y + this.height);
-        return list.contains(new Point(this.mousePosition.x, this.mousePosition.y));
     }
 
     private float currentScrollIndex = 0;
     public void onScroll(int scrollDelta){
-        if(!this.isMouseOverList() || this.isHidden)
+        if(this.isHidden())
+            return;
+
+        if(!this.isHovered())
             return;
 
         if(!this.needsScrolling())
@@ -176,65 +173,60 @@ public class ScrollableList extends Widget {
 
 
     //----------------------------------------------------------------------------------------------------------------------------------------------
-    private static class ListOption extends Button {
-        private static final int DIVIDE_BORDER_THICKNESS = 1;
-        private static final int DIVIDE_BORDER_COLOR = Color.LIGHT_GRAY_HEX;
-
-        private int backgroundColor;
-        private final Point mousePosition;
+    public static class ListOption extends Button {
         private final boolean isClickable;
         private final int initialYPos;
+        private final String content;
+        private final int maxWordLength;
+        private final int oldBackground;
 
-        public void setIndex(int index){
+        public ListOption(int x, int y, int width, int height, String content, boolean isClickable, int backgroundColor, int hoverColor, IClickable onclick){
+            super(x, y, width, height , "", onclick);
 
-            this.y = this.initialYPos + this.height * index;
+            this.initialYPos = y;
+            this.mousePosition = new Point();
+            this.isClickable = isClickable;
+            this.content = content;
+            this.maxWordLength = (this.width * 2 - 12) / GuiUtils.LETTER_SIZE; //GuiUtils.LETTER_SIZE = width of letter;
+
+            this.setBackgroundColor(backgroundColor);
+            this.setHoverBackgroundColor(hoverColor);
+            this.setHoverBorderColor(this.borderColor);
+
+            this.oldBackground = this.backgroundColor;
         }
 
         public void setBackgroundColor(int backgroundColor) {
             this.backgroundColor = backgroundColor;
         }
 
-
-        public ListOption(int x, int y, int width, int height, ITextComponent content, boolean isClickable, int backgroundColor,  Button.IPressable onclick){
-            super(x, y, width, height, content , onclick);
-
-            this.initialYPos = y;
-            this.mousePosition = new Point();
-            this.isClickable = isClickable;
-            this.backgroundColor = backgroundColor;
+        public void setIndex(int index){
+            this.topPos = this.initialYPos + this.height * index;
         }
 
-        public void draw(MatrixStack matrixStack){
-            AbstractGui.fill(matrixStack,
-                    this.x,
-                    this.y,
-                    this.x + this.width,
-                    this.y + this.height,
-                    this.isClickable && this.isMouseOver(this.mousePosition.x, this.mousePosition.y) ? Color.LIGHT_GRAY_HEX : this.backgroundColor);
-
-
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.getMessage().getString(), this.x + 6,
-                    this.y + this.height / 2f - TEXT_Y_OFFSET, TEXT_COLOR);
-
-
-            AbstractGui.fill(matrixStack, this.x, this.y + this.height - DIVIDE_BORDER_THICKNESS, this.x + this.width, this.y + this.height, DIVIDE_BORDER_COLOR);
+        public String getContent() {
+            return this.content;
         }
 
+        public void render(MatrixStack matrixStack){
+            super.render(matrixStack);
+            this.drawRow(matrixStack);
+        }
 
-        public void updateMousePosition(int mouseX, int mouseY){
-            this.mousePosition.x = mouseX;
-            this.mousePosition.y = mouseY;
+        private void drawRow(MatrixStack matrixStack){
+            //content
+            GlStateManager.pushMatrix();
+            GlStateManager.scalef(.5f, .5f, .5f);
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.getFormattedLabel(this.maxWordLength, this.content), (this.leftPos + 3) * 2,
+                    (this.topPos + this.height / 2f - this.yOffset / 2f) * 2,  this.isMouseOver() && this.isClickable ? this.textColor : this.hoverTextColor);
+            GlStateManager.popMatrix();
         }
 
         public void onClick(){
-            if(!this.isClickable)
+            if(!this.isClickable || !this.isMouseOver())
                 return;
 
-            this.onPress();
+            super.onClick();
         }
-
-
     }
-
-
 }

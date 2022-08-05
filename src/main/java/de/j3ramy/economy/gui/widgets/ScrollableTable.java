@@ -3,13 +3,9 @@ package de.j3ramy.economy.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -17,40 +13,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScrollableTable extends Widget {
-    public static final int TEXT_COLOR = Color.WHITE;
-    public static final int TEXT_Y_OFFSET = 2;
-    private static final int BORDER_WIDTH = 1;
-
-    private final Point mousePosition;
-    private final List<TableRow> contents = new ArrayList<>();
-    private final List<TableRow> contentFields = new ArrayList<>();
     private final int maxVisibleListElements;
     private final int elementHeight;
     private final boolean isFixedAttributeRow;
+    private final List<TableRow> contents = new ArrayList<>();
+    private final List<TableRow> contentFields = new ArrayList<>();
     private int selectedIndex = -1;
-    private final int backgroundColor;
-    private final int borderColor;
-    private final int elementColor;
-    private final int headRowColor;
 
-    public ScrollableTable(int x, int y, int width, int height, int elementHeight, boolean fixedAttributeRow, int backgroundColor, int borderColor, int elementColor, int headRowColor){
-        super(x, y, width, height, new StringTextComponent(""));
 
-        this.mousePosition = new Point();
+    public ScrollableTable(int x, int y, int width, int height, int elementHeight, boolean fixedAttributeRow){
+        super(x, y, width, height);
+
         this.maxVisibleListElements = this.height / elementHeight;
         this.elementHeight = elementHeight;
         this.isFixedAttributeRow = fixedAttributeRow;
-        this.backgroundColor = backgroundColor;
-        this.borderColor = borderColor;
-        this.elementColor = elementColor;
-        this.headRowColor = headRowColor;
     }
 
-    public void setAttributeColumns(ArrayList<String> columnNames){
+    public void setAttributeRow(ArrayList<String> columnNames, int backgroundColor, int hoverColor){
         if(!this.contents.isEmpty())
-            this.contents.set(0, new TableRow(this.x, this.y, this.width, this.elementHeight, columnNames, false, this.headRowColor, (click)->{}));
+            this.contents.set(0, new TableRow(this.leftPos, this.topPos, this.width, this.elementHeight, columnNames, false, backgroundColor, hoverColor, ()->{}));
         else
-            this.addRow(columnNames, false, this.headRowColor, (click)->{});
+            this.addRow(columnNames, false, backgroundColor, hoverColor, ()->{});
     }
 
     @Nullable
@@ -64,15 +47,15 @@ public class ScrollableTable extends Widget {
     @Nullable
     public TableRow getHoveredRow(){
         for(TableRow row : this.contentFields){
-            if(row.isHovered())
+            if(row.isMouseOver())
                 return row;
         }
 
         return null;
     }
 
-    public void addRow(ArrayList<String> rowContent, boolean isClickable, int backgroundColor, Button.IPressable onClick){
-        this.contents.add(new TableRow(this.x, this.y, this.width, this.elementHeight, rowContent, isClickable, backgroundColor, onClick));
+    public void addRow(ArrayList<String> rowContent, boolean isClickable, int backgroundColor, int hoverColor, Button.IClickable onClick){
+        this.contents.add(new TableRow(this.leftPos, this.topPos, this.width, this.elementHeight, rowContent, isClickable, backgroundColor, hoverColor,  onClick));
 
         this.initList(0);
     }
@@ -104,59 +87,6 @@ public class ScrollableTable extends Widget {
         this.selectedIndex = -1;
     }
 
-    @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        if(this.mousePosition == null)
-            return;
-
-        AbstractGui.fill(matrixStack, this.x - BORDER_WIDTH, this.y - BORDER_WIDTH,
-                this.x + this.width + BORDER_WIDTH, this.y + this.height + BORDER_WIDTH, this.borderColor);
-        AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, this.backgroundColor);
-        this.drawContent(matrixStack);
-        this.drawToolTip(matrixStack);
-    }
-
-    private void drawToolTip(MatrixStack matrixStack){
-        if(this.isHovered()){
-            if(this.getHoveredRow() != null){
-                Tooltip tooltip = new Tooltip(this.getHoveredRow().getHoveredColumnText(), null);
-                tooltip.render(matrixStack, this.mousePosition.x, this.mousePosition.y);
-            }
-        }
-    }
-
-    private void drawContent(MatrixStack matrixStack){
-        for (int i = 0; i < this.contentFields.size(); i++) {
-            if (this.contentFields.get(i) != null){
-                this.contentFields.get(i) .draw(matrixStack);
-
-                if(i != 0)
-                    this.contentFields.get(i).setBackgroundColor(i == this.selectedIndex ? Color.LIGHT_GRAY_HEX : this.elementColor);
-            }
-        }
-    }
-
-    public void update(){
-        for (TableRow contentField : this.contentFields) {
-            if(contentField != null)
-                contentField.updateMousePosition(this.mousePosition.x, this.mousePosition.y);
-        }
-    }
-
-    public void updateMousePosition(int mouseX, int mouseY){
-        this.mousePosition.x = mouseX;
-        this.mousePosition.y = mouseY;
-    }
-
-    public void onClick(){
-        for(int i = 1; i < this.contentFields.size(); i++){
-            if(contentFields.get(i) != null && contentFields.get(i).isHovered()){
-                this.selectedIndex = i;
-                contentFields.get(i).onClick();
-            }
-        }
-    }
-
     public void clear(){
         this.contents.clear();
         this.contentFields.clear();
@@ -164,8 +94,67 @@ public class ScrollableTable extends Widget {
     }
 
     public boolean isHovered(){
-        Rectangle table = new Rectangle(this.x, this.y, this.x + this.width, this.y + this.height);
+        Rectangle table = new Rectangle(this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height);
         return table.contains(new Point(this.mousePosition.x, this.mousePosition.y));
+    }
+
+    @Override
+    public void render(MatrixStack matrixStack) {
+        if(this.isHidden())
+            return;
+
+        super.render(matrixStack);
+        AbstractGui.fill(matrixStack, this.leftPos - this.borderThickness, this.topPos - this.borderThickness,
+                this.leftPos + this.width + this.borderThickness, this.topPos + this.height + this.borderThickness, this.borderColor);
+
+        AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.backgroundColor);
+
+        this.renderContent(matrixStack);
+        this.renderToolTip(matrixStack);
+    }
+
+    private void renderToolTip(MatrixStack matrixStack){
+        if(this.isHovered()){
+            if(this.getHoveredRow() != null){
+                Tooltip tooltip = new Tooltip(this.getHoveredRow().getHoveredColumnText(), null);
+                tooltip.update(this.mousePosition.x, this.mousePosition.y);
+                tooltip.render(matrixStack);
+            }
+        }
+    }
+
+    private void renderContent(MatrixStack matrixStack){
+        for (int i = 0; i < this.contentFields.size(); i++) {
+            if (this.contentFields.get(i) != null){
+                this.contentFields.get(i).render(matrixStack);
+                if(i != 0)
+                    this.contentFields.get(i).setBackgroundColor(i == this.selectedIndex ? this.contentFields.get(i).hoverBackgroundColor : this.contentFields.get(i).oldBackground);
+            }
+        }
+    }
+
+    @Override
+    public void update(int mouseX, int mouseY){
+        if(this.isHidden())
+            return;
+
+        super.update(mouseX, mouseY);
+        for (TableRow contentField : this.contentFields) {
+            if(contentField != null)
+                contentField.update(mouseX, mouseY);
+        }
+    }
+
+    public void onClick(){
+        if(this.isHidden())
+            return;
+
+        for(int i = 1; i < this.contentFields.size(); i++){
+            if(contentFields.get(i) != null && contentFields.get(i).isMouseOver()){
+                this.selectedIndex = i;
+                contentFields.get(i).onClick();
+            }
+        }
     }
 
     private float currentScrollIndex = 0;
@@ -195,21 +184,36 @@ public class ScrollableTable extends Widget {
     //----------------------------------------------------------------------------------------------------------------------------------------------
     public static class TableRow extends Button {
         private static final int DIVIDE_BORDER_THICKNESS = 1;
-
-        private int backgroundColor;
-        private final Point mousePosition;
         private final boolean isClickable;
         private final int initialYPos;
         private final ArrayList<String> content;
         private final int columnWidth;
         private final int maxWordLength;
+        private final int oldBackground;
+
+        public TableRow(int x, int y, int width, int height, ArrayList<String> content, boolean isClickable, int backgroundColor, int hoverColor, IClickable onclick){
+            super(x, y, width, height , "", onclick);
+
+            this.initialYPos = y;
+            this.mousePosition = new Point();
+            this.isClickable = isClickable;
+            this.columnWidth = this.width / content.size();
+            this.content = content;
+            this.maxWordLength = (this.columnWidth * 2 - 12) / GuiUtils.LETTER_SIZE; //GuiUtils.LETTER_SIZE = width of letter;
+
+            this.setBackgroundColor(backgroundColor);
+            this.setHoverBackgroundColor(hoverColor);
+            this.setHoverBorderColor(this.borderColor);
+
+            this.oldBackground = this.backgroundColor;
+        }
 
         public void setBackgroundColor(int backgroundColor) {
             this.backgroundColor = backgroundColor;
         }
 
         public void setIndex(int index){
-            this.y = this.initialYPos + this.height * index;
+            this.topPos = this.initialYPos + this.height * index;
         }
 
         public ArrayList<String> getContent() {
@@ -220,31 +224,9 @@ public class ScrollableTable extends Widget {
             return this.content.get(this.getHoveredColumn());
         }
 
-        public TableRow(int x, int y, int width, int height, ArrayList<String> content, boolean isClickable, int backgroundColor, IPressable onclick){
-            super(x, y, width, height, new StringTextComponent("") , onclick);
-
-            this.initialYPos = y;
-            this.mousePosition = new Point();
-            this.isClickable = isClickable;
-            this.columnWidth = this.width / content.size();
-            this.content = content;
-            this.maxWordLength = (this.columnWidth * 2 - 12) / GuiUtils.LETTER_SIZE; //GuiUtils.LETTER_SIZE = width of letter;
-            this.backgroundColor = backgroundColor;
-        }
-
-        public void draw(MatrixStack matrixStack){
-            AbstractGui.fill(matrixStack, this.x, this.y, this.x + this.width, this.y + this.height, this.isHovered() && this.isClickable ? Color.LIGHT_GRAY_HEX : this.backgroundColor);
-
-            this.drawRow(matrixStack);
-
-            AbstractGui.fill(matrixStack, this.x, this.y + this.height - DIVIDE_BORDER_THICKNESS, this.x + this.width, this.y + this.height,
-                    Color.LIGHT_GRAY_HEX);
-        }
-
-
         private int getHoveredColumn(){
             for(int i = this.content.size() - 1; i >= 0; i--){
-                Rectangle column = new Rectangle(this.x + i * this.columnWidth, this.y, this.x + i * this.columnWidth + this.columnWidth, this.y + this.height);
+                Rectangle column = new Rectangle(this.leftPos + i * this.columnWidth, this.topPos, this.leftPos + i * this.columnWidth + this.columnWidth, this.topPos + this.height);
                 if(column.contains(this.mousePosition))
                     return i;
             }
@@ -252,40 +234,32 @@ public class ScrollableTable extends Widget {
             return 0;
         }
 
+        public void render(MatrixStack matrixStack){
+            super.render(matrixStack);
+            this.drawRow(matrixStack);
+        }
+
         private void drawRow(MatrixStack matrixStack){
             for(int i = 0; i < this.content.size(); i++){
                 //content
                 GlStateManager.pushMatrix();
                 GlStateManager.scalef(.5f, .5f, .5f);
-                Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.getFormattedLabel(this.maxWordLength, this.content.get(i)), (this.x + 3 + this.columnWidth * i) * 2,
-                        (this.y + this.height / 2f - TEXT_Y_OFFSET) * 2,  this.isHovered() && this.isClickable ? Color.DARK_GRAY_HEX : TEXT_COLOR);
+                Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.getFormattedLabel(this.maxWordLength, this.content.get(i)), (this.leftPos + 3 + this.columnWidth * i) * 2,
+                        (this.topPos + this.height / 2f - this.yOffset / 2f) * 2,  this.isMouseOver() && this.isClickable ? this.textColor : this.hoverTextColor);
                 GlStateManager.popMatrix();
 
                 //Right border
                 if(i != 0)
-                    AbstractGui.fill(matrixStack, this.x + this.columnWidth * i, this.y, this.x + this.columnWidth * i + DIVIDE_BORDER_THICKNESS, this.y + this.height,
-                            Color.LIGHT_GRAY_HEX);
+                    AbstractGui.fill(matrixStack, this.leftPos + this.columnWidth * i, this.topPos, this.leftPos + this.columnWidth * i + DIVIDE_BORDER_THICKNESS, this.topPos + this.height,
+                            this.borderColor);
             }
         }
 
-        public void updateMousePosition(int mouseX, int mouseY){
-            this.mousePosition.x = mouseX;
-            this.mousePosition.y = mouseY;
-        }
-
-        public boolean isHovered(){
-            return this.isMouseOver(this.mousePosition.x, this.mousePosition.y);
-        }
-
         public void onClick(){
-            if(!this.isClickable)
+            if(!this.isClickable || !this.isMouseOver())
                 return;
 
-            this.onPress();
+            super.onClick();
         }
-
-
     }
-
-
 }

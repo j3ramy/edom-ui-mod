@@ -36,7 +36,7 @@ public class ConfirmPopUp extends Widget {
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.yes").getString(), confirmAction);
 
         this.noButton = new Button(this.leftPos + this.width - BUTTON_WIDTH - 20, this.topPos + this.height - BUTTON_HEIGHT - 20, BUTTON_WIDTH, BUTTON_HEIGHT,
-                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.no").getString(), this::hide);
+                new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.no").getString(), ()->this.setHidden(true));
     }
 
     public void render(MatrixStack matrixStack){
@@ -81,6 +81,9 @@ public class ConfirmPopUp extends Widget {
 
     @Override
     public void update(int x, int y) {
+        if(this.isHidden())
+            return;
+
         super.update(x, y);
 
         this.yesButton.update(x, y);
@@ -88,6 +91,9 @@ public class ConfirmPopUp extends Widget {
     }
 
     public void onClick(){
+        if(this.isHidden())
+            return;
+
         this.yesButton.onClick();
         this.noButton.onClick();
     }

@@ -50,13 +50,13 @@ public class RouterScreen extends ContainerScreen<RouterContainer> {
 
         this.screen.clearScreen();
 
-        screen.addTextField(this.nameField = new TextFieldWidget(this.font, this.xPos - 50, this.yPos - 50, 100, 20, new StringTextComponent("")));
+        screen.addMcWidget(this.nameField = new TextFieldWidget(this.font, this.xPos - 50, this.yPos - 50, 100, 20, new StringTextComponent("")));
         this.nameField.setCanLoseFocus(true);
         this.nameField.setTextColor(Color.WHITE);
         this.nameField.setMaxStringLength(20);
 
 
-        this.screen.addButton(new Button(this.xPos - 30, this.yPos - 20, 60, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save").getString(), () -> {
+        this.screen.addWidget(new Button(this.xPos - 30, this.yPos - 20, 60, 18, new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".button.save").getString(), () -> {
             this.saveName();
         }));
     }
@@ -64,7 +64,7 @@ public class RouterScreen extends ContainerScreen<RouterContainer> {
     private void saveName() {
         this.data.setName(this.nameField.getText().replace(' ', '_'));
         Network.INSTANCE.sendToServer(new CSPacketSendNetworkComponentData(this.data, this.container.getTileEntity().getPos()));
-        this.screen.addAlertPopUp(new AlertPopUp(150, 50, 175, 100,  new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.changes_saved").getString(),
+        this.screen.addWidget(new AlertPopUp(150, 50, 175, 100,  new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.title.changes_saved").getString(),
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".popup.content.changes_saved").getString(), AlertPopUp.ColorType.DEFAULT));
     }
 

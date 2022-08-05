@@ -24,6 +24,7 @@
   "block.economy.network_socket": "Network Socket",
 
   "screen.economy.placeholder.owner": "Account Owner",
+  "screen.economy.placeholder.type": "Server Type",
   "screen.economy.placeholder.ip": "IP Address",
   "screen.economy.placeholder.search": "Search query",
   "screen.economy.placeholder.name": "Name",

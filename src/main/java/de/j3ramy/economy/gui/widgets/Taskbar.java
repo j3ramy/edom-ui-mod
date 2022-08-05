@@ -8,7 +8,6 @@ import de.j3ramy.economy.utils.Texture;
 import de.j3ramy.economy.utils.data.NetworkComponentData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -31,33 +30,37 @@ public class Taskbar extends Widget {
         this.modScreen = new ModScreen();
 
         this.yCenter = (float) (this.height) / 2;
-        this.wifiButton = new ImageButton(0, this.topPos + (int)(this.yCenter - 4.5), 9, 9, 0, 0, 10, Texture.WIFI_BUTTON, (onClickWifi)->{});
-        this.wifiList = new ScrollableList(0, this.topPos - this.height - 27, 85, 39, 13, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.PURPLE_HEX);
+        this.wifiButton = new ImageButton(0, this.topPos + (int)(this.yCenter - 4.5), 9, 9, 0, 0, 10, Texture.WIFI_BUTTON_CONNECTED, (onClickWifi)->{});
+        this.wifiList = new ScrollableList(0, this.topPos - this.height - 27, 85, 39, 13);
 
         if(showOsButton) {
-            this.modScreen.addImageButton(this.osLogo = new ImageButton(this.leftPos + 5, this.topPos + (int) (this.yCenter - 4.5), 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClick) -> {
+            this.modScreen.addMcWidget(this.osLogo = new ImageButton(this.leftPos + 5, this.topPos + (int) (this.yCenter - 4.5), 9, 9, 0, 0, 10, Texture.OS_LOGO, (onClick) -> {
             }));
-            this.modScreen.addList(this.osLogoList = new ScrollableList(this.leftPos + 2, this.topPos - 85 - 2, 65, 85, 13, Color.DARK_GRAY_HEX, Color.WHITE_HEX, Color.PURPLE_HEX));
-            osLogoList.hide();
+
+            this.modScreen.addWidget(this.osLogoList = new ScrollableList(this.leftPos + 2, this.topPos - 85 - 2, 65, 85, 13));
+            osLogoList.setHidden(true);
         }
 
         if(showTime){
             this.wifiButton.x = this.leftPos + this.width - 9 - 27 - 2;
-            this.modScreen.addImageButton(this.wifiButton);
-            this.wifiList.x = this.leftPos + this.width - 2 - 27 - 85;
-            this.modScreen.addList(this.wifiList);
+            this.modScreen.addMcWidget(this.wifiButton);
+            this.wifiList.leftPos = this.leftPos + this.width - 2 - 27 - 85;
+            this.modScreen.addWidget(this.wifiList);
         }
         else{
             this.wifiButton.x = this.leftPos + this.width - 9 - 2;
-            this.modScreen.addImageButton(this.wifiButton);
-            this.wifiList.x = this.leftPos + this.width - 2 - 85;
-            this.modScreen.addList(this.wifiList);
+            this.modScreen.addMcWidget(this.wifiButton);
+            this.wifiList.leftPos = this.leftPos + this.width - 2 - 85;
+            this.modScreen.addWidget(this.wifiList);
         }
 
-        this.wifiList.hide();
+        this.wifiList.setHidden(true);
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        if(this.isHidden())
+            return;
+
         super.render(matrixStack);
 
         AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.backgroundColor);
@@ -73,7 +76,7 @@ public class Taskbar extends Widget {
 
     private void wifiClick() {
         if (this.wifiList.isHidden()){
-            this.wifiList.show();
+            this.wifiList.setHidden(true);
 
             this.wifiList.clear();
 
@@ -83,24 +86,22 @@ public class Taskbar extends Widget {
             wifis.add(d1);
             wifis.add(d1);
             for (NetworkComponentData data : wifis){
-                this.wifiList.addToList(data.getName(), true, onClick-> System.out.println(data.getName()));
+                this.wifiList.addElement(data.getName(), true,  Color.DARK_GRAY_HEX, Color.LIGHT_GRAY_HEX, () -> System.out.println(data.getName()));
             }
         }
         else {
-            this.wifiList.hide();
+            this.wifiList.setHidden(true);
         }
     }
 
     private void osLogoClick() {
-        if (this.osLogoList.isHidden()){
-            this.osLogoList.show();
-        }
-        else {
-            this.osLogoList.hide();
-        }
+        this.osLogoList.setHidden(!this.osLogoList.isHidden());
     }
 
     public void onClick() {
+        if(this.isHidden())
+            return;
+
         if (this.wifiButton.isHovered()){
             this.wifiClick();
         }
@@ -110,12 +111,12 @@ public class Taskbar extends Widget {
         }
     }
 
-    public void addToOsLogoList(String content, Button.IPressable onClick) {
-        this.osLogoList.addToList(content, true, onClick);
+    public void addToOsLogoList(String content, Button.IClickable onClick) {
+        this.osLogoList.addElement(content, true, Color.DARK_GRAY_HEX, Color.LIGHT_GRAY_HEX, onClick);
     }
 
     public void hideOsLogoList() {
-        this.osLogoList.hide();
+        this.osLogoList.setHidden(true);
         this.osLogoList.clearSelectedIndex();
     }
 }

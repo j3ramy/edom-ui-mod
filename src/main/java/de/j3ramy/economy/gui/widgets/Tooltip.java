@@ -10,13 +10,13 @@ import net.minecraft.client.gui.widget.button.ImageButton;
 
 import javax.annotation.Nullable;
 
-public class Tooltip {
+public class Tooltip extends Widget{
 
     private final String content;
     private final ImageButton imageButton;
-    public boolean isVisible = false;
 
     public Tooltip(String content, ImageButton button){
+        super(0, 0, 0, 0);
         this.content = content;
         this.imageButton = button;
     }
@@ -26,28 +26,36 @@ public class Tooltip {
         return this.imageButton;
     }
 
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY){
-        if(this.isVisible && this.content != null && !this.content.isEmpty()){
+    public void render(MatrixStack matrixStack){
+        if(!this.isHidden() && this.content != null && !this.content.isEmpty()){
             //border
             AbstractGui.fill(matrixStack,
-                    mouseX - 3 + 5,
-                    mouseY - 3 - 7,
-                    mouseX + GuiUtils.getCenteredTextOffset(this.content.length()) + 3 + 5,
-                    mouseY + GuiUtils.LETTER_SIZE + 4 - 8,
-                    Color.BLACK_HEX);
+                    this.mousePosition.x - 3 + 5,
+                    this.mousePosition.y - 3 - 7,
+                    this.mousePosition.x + GuiUtils.getCenteredTextOffset(this.content.length()) + 3 + 5,
+                    this.mousePosition.y + GuiUtils.LETTER_SIZE + 4 - 8,
+                    this.borderColor);
 
             //background
             AbstractGui.fill(matrixStack,
-                    mouseX - 2 + 5,
-                    mouseY - 2 - 7,
-                    mouseX + GuiUtils.getCenteredTextOffset(this.content.length()) + 2 + 5,
-                    mouseY + GuiUtils.LETTER_SIZE + 3 - 8,
-                    Color.LIGHT_GRAY_HEX);
+                    this.mousePosition.x - 2 + 5,
+                    this.mousePosition.y - 2 - 7,
+                    this.mousePosition.x + GuiUtils.getCenteredTextOffset(this.content.length()) + 2 + 5,
+                    this.mousePosition.y + GuiUtils.LETTER_SIZE + 3 - 8,
+                    this.backgroundColor);
 
             GlStateManager.pushMatrix();
             GlStateManager.scalef(.5f, .5f, .5f);
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.content, (mouseX + 1 + 5) * 2, (mouseY - 6) * 2, Color.WHITE);
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.content, (this.mousePosition.x + 1 + 5) * 2, (this.mousePosition.y - 6) * 2, this.textColor);
             GlStateManager.popMatrix();
         }
+    }
+
+    @Override
+    public void update(int x, int y) {
+        if(this.isHidden())
+            return;
+
+        super.update(x, y);
     }
 }
