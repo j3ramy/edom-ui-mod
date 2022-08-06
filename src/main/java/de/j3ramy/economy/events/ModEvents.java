@@ -20,6 +20,8 @@ public class ModEvents {
     @SubscribeEvent
     public static void onMouseClickEvent(GuiScreenEvent.MouseClickedEvent event){
         for(ModScreen screen : ModEvents.screens){
+            screen.onClick(event.getButton());
+            /*
             if(Minecraft.getInstance().currentScreen instanceof ServerScreen){
                 screen.onClick(event.getButton());
             }
@@ -35,12 +37,16 @@ public class ModEvents {
             else if (Minecraft.getInstance().currentScreen instanceof CreditCartPrinterScreen) {
                 screen.onClick(event.getButton());
             }
+
+             */
         }
     }
 
     @SubscribeEvent
     public static void onKeyPressedEvent(GuiScreenEvent.KeyboardKeyPressedEvent event){
         for(ModScreen screen : ModEvents.screens){
+            screen.onKeyPressed(event.getKeyCode());
+            /*
             if(Minecraft.getInstance().currentScreen instanceof ServerScreen){
                 screen.onKeyPressed(event.getKeyCode());
             }
@@ -56,12 +62,16 @@ public class ModEvents {
             else if (Minecraft.getInstance().currentScreen instanceof CreditCartPrinterScreen) {
                 screen.onKeyPressed(event.getKeyCode());
             }
+
+             */
         }
     }
 
     @SubscribeEvent
     public static void onCharTypedEvent(GuiScreenEvent.KeyboardCharTypedEvent.Post event){
-        for(ModScreen s : ModEvents.screens){
+        for(ModScreen screen : ModEvents.screens){
+            screen.onCharTyped(event.getCodePoint());
+            /*
             if(event.getGui() instanceof ServerScreen){
                 s.onCharTyped(event.getCodePoint());
             }
@@ -77,6 +87,8 @@ public class ModEvents {
             else if (event.getGui() instanceof CreditCartPrinterScreen) {
                 s.onCharTyped(event.getCodePoint());
             }
+
+             */
         }
     }
 

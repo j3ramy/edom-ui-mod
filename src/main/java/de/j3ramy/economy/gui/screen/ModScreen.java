@@ -5,6 +5,8 @@ import de.j3ramy.economy.events.ModEvents;
 import de.j3ramy.economy.gui.widgets.*;
 import de.j3ramy.economy.gui.widgets.Button;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.util.text.StringTextComponent;
 
 import java.awt.*;
@@ -49,8 +51,8 @@ public class ModScreen extends Screen {
 
         for(Widget widget : this.widgets){
             if(widget != null){
-                widget.update(mouseX, mouseY);
                 widget.render(matrixStack);
+                widget.update(mouseX, mouseY);
             }
         }
     }
@@ -62,18 +64,8 @@ public class ModScreen extends Screen {
         this.mousePosition.x = mouseX;
         this.mousePosition.y = mouseY;
 
-        if(this.isPopUpVisible())
-            return;
-
         for(Widget widget : this.widgets){
             widget.update(mouseX, mouseY);
-
-            if(widget instanceof Tooltip){
-                Tooltip tooltip = (Tooltip) widget;
-
-                if(tooltip.getButton() != null)
-                    tooltip.setHidden(!tooltip.getButton().isMouseOver(mouseX, mouseY));
-            }
         }
     }
 
@@ -86,42 +78,53 @@ public class ModScreen extends Screen {
 
         try {
             for (Widget widget : this.widgets) {
-                if (widget != null && mouseButton == 0) {
-                    if (this.isPopUpVisible() && widget instanceof AlertPopUp) {
-                        ((AlertPopUp) widget).onClick();
-                        return;
-                    }
+                if (mouseButton == 0) {
+                    if (this.isPopUpVisible() || this.isDropDownUnfolded()) {
+                        if (widget instanceof AlertPopUp) {
+                            ((AlertPopUp) widget).onClick();
+                        }
 
-                    if (this.isPopUpVisible() && widget instanceof ConfirmPopUp) {
-                        ((ConfirmPopUp) widget).onClick();
-                        return;
-                    }
+                        if (widget instanceof ConfirmPopUp) {
+                            ((ConfirmPopUp) widget).onClick();
+                        }
 
-                    if (widget instanceof ScrollableList) {
-                        ((ScrollableList) widget).onClick();
+                        if (widget instanceof DropDown) {
+                            ((DropDown) widget).onClick();
+                        }
                     }
+                    else{
+                        if (widget instanceof ScrollableList) {
+                            ((ScrollableList) widget).onClick();
+                        }
 
-                    if (widget instanceof ScrollableTable) {
-                        ((ScrollableTable) widget).onClick();
+                        if (widget instanceof ScrollableTable) {
+                            ((ScrollableTable) widget).onClick();
+                        }
+
+                        if (widget instanceof Button) {
+                            ((Button) widget).onClick();
+                        }
+
+                        for (net.minecraft.client.gui.widget.Widget w : this.mcWidgets) {
+                            if (w instanceof ImageButton) {
+                                if(w.isMouseOver(this.mousePosition.x, this.mousePosition.y))
+                                    w.onClick(this.mousePosition.x, this.mousePosition.y);
+                            }
+
+                            if (w instanceof TextFieldWidget) {
+                                ((TextFieldWidget) w).setFocused2(false);
+
+                                if(w.isMouseOver(this.mousePosition.x, this.mousePosition.y)){
+                                    w.mouseClicked(this.mousePosition.x, this.mousePosition.y, mouseButton);
+                                }
+                            }
+                        }
                     }
-
-                    if (widget instanceof Button) {
-                        ((Button) widget).onClick();
-                    }
-                }
-            }
-
-            for (net.minecraft.client.gui.widget.Widget w : this.mcWidgets) {
-                if (w != null) {
-                    w.onClick(this.mousePosition.x, this.mousePosition.y);
                 }
             }
         }
         catch (ConcurrentModificationException e){
-            System.out.println(e + ": Ensure that your pop up windows are not added inside a lambda expression");
-        }
-        finally {
-
+            System.out.println(e.getMessage() + ": Ensure that your pop up windows are not added inside a lambda expression");
         }
     }
 
@@ -155,15 +158,15 @@ public class ModScreen extends Screen {
 
     public void onKeyPressed(int keyCode){
         for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
-            if(widget != null)
+            if(widget instanceof TextFieldWidget)
                 widget.keyPressed(keyCode, -1, -1);
         }
     }
 
     public void onCharTyped(char c){
         for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
-            if(widget != null)
-                widget.keyPressed(c, -1, -1);
+            if(widget instanceof TextFieldWidget)
+                widget.charTyped(c, -1);
         }
     }
 
@@ -180,7 +183,7 @@ public class ModScreen extends Screen {
         this.disableScreen = true;
     }
 
-    public boolean isPopUpVisible(){
+    private boolean isPopUpVisible(){
         for(Widget widget : this.widgets) {
             if (widget instanceof AlertPopUp && !widget.isHidden()) {
                 return true;
@@ -194,6 +197,17 @@ public class ModScreen extends Screen {
                 return true;
             }
         }
+
+        return false;
+    }
+
+    private boolean isDropDownUnfolded(){
+        for(Widget widget : this.widgets) {
+            if (widget instanceof DropDown && !widget.isHidden()) {
+                return ((DropDown) widget).isUnfolded();
+            }
+        }
+
         return false;
     }
 }

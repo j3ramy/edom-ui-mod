@@ -274,11 +274,11 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.searchField.setCanLoseFocus(true);
         this.searchField.setTextColor(Color.WHITE);
 
+        //List of Entries in Table
+        this.tableOverviewScreen.addWidget(table = new ScrollableTable(this.xLeft + 82, this.yTop + 34, this.xRight - 2 - (this.xLeft + 82), 115, 10, true));
+
         //List of tables
         this.tableOverviewScreen.addWidget(this.tableList = new ScrollableList(this.xLeft + 2, this.yTop + 34, 75, 115, 13));
-
-        //List of Entries in Table
-        this.tableOverviewScreen.addWidget(table = new ScrollableTable(this.xLeft + 82, this.yTop + 34, this.xRight - 2 - (this.xLeft + 82), 100, 10, true));
 
         //Taskbar
         this.tableOverviewScreen.addWidget(this.taskbar);

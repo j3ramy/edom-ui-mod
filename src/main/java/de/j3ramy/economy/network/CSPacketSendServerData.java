@@ -2,11 +2,13 @@ package de.j3ramy.economy.network;
 
 import de.j3ramy.economy.tileentity.ServerTile;
 import de.j3ramy.economy.utils.server.Server;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,6 +36,7 @@ public class CSPacketSendServerData {
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(() ->{
             World world = Objects.requireNonNull(ctx.get().getSender()).world;
+            ServerPlayerEntity player = ctx.get().getSender();
 
             ServerTile tile = (ServerTile) world.getTileEntity(server.getPos());
             if(tile == null)
@@ -54,6 +57,8 @@ public class CSPacketSendServerData {
             else{
                 tile.setServer(this.server);
                 tile.getData().setName(tile.getServer().getIp());
+
+                Network.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new SCPacketSendServerData(tile.getServer()));
             }
 
         });

@@ -53,9 +53,10 @@ public class Tooltip extends Widget{
 
     @Override
     public void update(int x, int y) {
-        if(this.isHidden())
-            return;
-
         super.update(x, y);
+
+        if(this.getButton() != null){
+            this.setHidden(!this.getButton().isMouseOver(this.mousePosition.x, this.mousePosition.y));
+        }
     }
 }
