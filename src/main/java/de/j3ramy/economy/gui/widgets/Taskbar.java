@@ -57,7 +57,8 @@ public class Taskbar extends Widget {
         this.wifiList.setHidden(true);
     }
 
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    @Override
+    public void render(MatrixStack matrixStack) {
         if(this.isHidden())
             return;
 
@@ -71,12 +72,12 @@ public class Taskbar extends Widget {
                     this.leftPos + this.width - 27, this.topPos + (int)(this.yCenter - 3.5), this.textColor);
         }
 
-        this.modScreen.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.modScreen.render(matrixStack, this.mousePosition.x, this.mousePosition.y, 0);
     }
 
     private void wifiClick() {
         if (this.wifiList.isHidden()){
-            this.wifiList.setHidden(true);
+            this.wifiList.setHidden(false);
 
             this.wifiList.clear();
 

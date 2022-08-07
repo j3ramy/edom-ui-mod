@@ -343,7 +343,7 @@ public class ServerScreen extends ContainerScreen<ServerContainer> {
             this.screenState = ServerScreenState.OVERVIEW;
         }));
 
-        this.setUpScreen.addWidget(this.typeDropDown = new DropDown(options, this.width / 2 - 50, this.height / 2, 100, 18,
+        this.setUpScreen.addWidget(this.typeDropDown = new DropDown(options, this.width / 2 - 45, this.height / 2 - 5, 90, 18,
                 new TranslationTextComponent("screen." + EconomyMod.MOD_ID + ".placeholder.type").getString()));
     }
 

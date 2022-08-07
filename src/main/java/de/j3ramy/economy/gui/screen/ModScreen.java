@@ -105,6 +105,10 @@ public class ModScreen extends Screen {
                             ((Button) widget).onClick();
                         }
 
+                        if (widget instanceof Taskbar) {
+                            ((Taskbar) widget).onClick();
+                        }
+
                         for (net.minecraft.client.gui.widget.Widget w : this.mcWidgets) {
                             if (w instanceof ImageButton) {
                                 if(w.isMouseOver(this.mousePosition.x, this.mousePosition.y))

@@ -17,7 +17,7 @@ public class GuiUtils {
         if(s == null || s.length() == 0)
             return "";
 
-        if(s.length() > maxWordLength){
+        if(s.length() > maxWordLength + 1){
             String s1 = s.substring(0, s.length() - (s.length() - maxWordLength));
             s1 += "...";
             return s1;
