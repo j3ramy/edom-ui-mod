@@ -1,8 +1,0 @@
-{
-  "parent": "block/orientable",
-  "textures":{
-    "top": "minecraft:block/gray_concrete",
-    "front": "minecraft:block/oak_planks",
-    "side": "minecraft:block/gray_concrete"
-  }
-}
