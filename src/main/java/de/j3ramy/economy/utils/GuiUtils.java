@@ -6,15 +6,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class GuiUtils {
     public static final int LETTER_SIZE = 5;
-    public static final int LETTER_HEIGHT = 8;
-    public static final int LETTER_SPACE = 1;
+    public static final int LETTER_HEIGHT = 7;
+
     public enum FontSize{
         DEFAULT,
         SMALL
-    }
-
-    public static int getCenteredTextOffset(int length){
-        return (length / 2 * LETTER_SIZE);
     }
 
     public static String getFormattedLabel(int maxWordLength, String s){

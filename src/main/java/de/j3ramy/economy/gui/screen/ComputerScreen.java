@@ -278,7 +278,7 @@ public class ComputerScreen extends ContainerScreen<ComputerContainer> {
         this.tableOverviewScreen.addWidget(table = new ScrollableTable(this.xLeft + 82, this.yTop + 34, this.xRight - 2 - (this.xLeft + 82), 115, 10, true));
 
         //List of tables
-        this.tableOverviewScreen.addWidget(this.tableList = new ScrollableList(this.xLeft + 2, this.yTop + 34, 75, 115, 13));
+        this.tableOverviewScreen.addWidget(this.tableList = new ScrollableList(this.xLeft + 2, this.yTop + 34, 75, 115, 10));
 
         //Taskbar
         this.tableOverviewScreen.addWidget(this.taskbar);

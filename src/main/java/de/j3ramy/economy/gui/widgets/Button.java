@@ -26,7 +26,7 @@ public class Button extends Widget {
 
         this.title = title;
         this.clickAction = clickAction;
-        this.yOffset = GuiUtils.LETTER_HEIGHT / 2;
+        this.yOffset = GuiUtils.LETTER_HEIGHT / 2 + 1;
     }
 
 
@@ -82,7 +82,7 @@ public class Button extends Widget {
                 AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.hoverBackgroundColor);
 
                 Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
-                        this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width / 2f - GuiUtils.getCenteredTextOffset(this.title.length()),
+                        this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width / 2f - font.getStringWidth(this.title) / 2f,
                         this.topPos + this.height / 2f - yOffset,
                         this.hoverTextColor);
             }
@@ -94,7 +94,7 @@ public class Button extends Widget {
                 AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.backgroundColor);
 
                 Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
-                        this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width / 2f - GuiUtils.getCenteredTextOffset(this.title.length()),
+                        this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width / 2f - font.getStringWidth(this.title) / 2f,
                         this.topPos + this.height / 2f - yOffset,
                         this.textColor);
             }
@@ -108,7 +108,7 @@ public class Button extends Widget {
             AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.disabledBackgroundColor);
 
             Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
-                    this.leftPos + this.width / 2f - GuiUtils.getCenteredTextOffset(this.title.length()),
+                    this.leftPos + this.width / 2f - font.getStringWidth(this.title) / 2f,
                     this.topPos + this.height / 2f - yOffset,
                     this.disabledTextColor);
         }

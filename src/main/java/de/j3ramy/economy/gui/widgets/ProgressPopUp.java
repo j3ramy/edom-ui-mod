@@ -25,7 +25,7 @@ public class ProgressPopUp extends Widget {
         this.title = title;
         this.duration = duration;
         this.finishedAction = finishedAction;
-        this.progressBar = new ProgressBar(this.leftPos + this.width / 2 - 50, this.topPos + 40, 100, 12);
+        this.progressBar = new ProgressBar(this.leftPos + this.width / 2 - 50, this.topPos + 50, 100, 12);
         this.shouldProgressStop = shouldProgressStop;
 
         if(this.shouldProgressStop)

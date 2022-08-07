@@ -70,7 +70,7 @@ public class ModScreen extends Screen {
     }
 
     /*
-    @throws ConcurrentModificationException if popup gets added inside a lambda expression
+    * @throws ConcurrentModificationException if popup gets added inside a lambda expression
      */
     public void onClick(int mouseButton) {
         if (this.disableScreen)

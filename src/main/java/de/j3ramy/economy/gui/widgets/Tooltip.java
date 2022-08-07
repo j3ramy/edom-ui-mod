@@ -2,7 +2,6 @@ package de.j3ramy.economy.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-import de.j3ramy.economy.utils.Color;
 import de.j3ramy.economy.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -29,25 +28,33 @@ public class Tooltip extends Widget{
     public void render(MatrixStack matrixStack){
         if(!this.isHidden() && this.content != null && !this.content.isEmpty()){
             //border
+            int textMargin = 2;
+            int xOffset = 2 + textMargin;
+            int yOffset = -8 - textMargin;
+
+
+            int height = GuiUtils.LETTER_HEIGHT + textMargin * 2;
+
             AbstractGui.fill(matrixStack,
-                    this.mousePosition.x - 3 + 5,
-                    this.mousePosition.y - 3 - 7,
-                    this.mousePosition.x + GuiUtils.getCenteredTextOffset(this.content.length()) + 3 + 5,
-                    this.mousePosition.y + GuiUtils.LETTER_SIZE + 4 - 8,
+                    this.mousePosition.x + xOffset - this.borderThickness - textMargin,
+                    this.mousePosition.y + yOffset - this.borderThickness - textMargin,
+                    this.mousePosition.x + xOffset + font.getStringWidth(this.content) + this.borderThickness + textMargin + 1,
+                    this.mousePosition.y + yOffset + height + this.borderThickness,
                     this.borderColor);
 
             //background
             AbstractGui.fill(matrixStack,
-                    this.mousePosition.x - 2 + 5,
-                    this.mousePosition.y - 2 - 7,
-                    this.mousePosition.x + GuiUtils.getCenteredTextOffset(this.content.length()) + 2 + 5,
-                    this.mousePosition.y + GuiUtils.LETTER_SIZE + 3 - 8,
+                    this.mousePosition.x + xOffset - textMargin,
+                    this.mousePosition.y + yOffset - textMargin,
+                    this.mousePosition.x + xOffset + font.getStringWidth(this.content) + textMargin + 1,
+                    this.mousePosition.y + yOffset + height,
                     this.backgroundColor);
 
-            GlStateManager.pushMatrix();
-            GlStateManager.scalef(.5f, .5f, .5f);
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.content, (this.mousePosition.x + 1 + 5) * 2, (this.mousePosition.y - 6) * 2, this.textColor);
-            GlStateManager.popMatrix();
+            Minecraft.getInstance().fontRenderer.drawString(
+                    matrixStack, this.content,
+                    this.mousePosition.x + xOffset + textMargin / 2f,
+                    this.mousePosition.y + yOffset + textMargin / 2f,
+                    this.textColor);
         }
     }
 
