@@ -22,7 +22,7 @@ public class AlertPopUp extends Widget {
     private final String title, content;
 
 
-    public AlertPopUp(int x, int y, int width, int height, String title, String content, AlertPopUp.ColorType type){
+    public AlertPopUp(int x, int y, int width, int height, String title, String content, String closeButtonContent, AlertPopUp.ColorType type){
         super(x, y, width, height);
 
         this.mousePosition = new Point();
@@ -34,7 +34,7 @@ public class AlertPopUp extends Widget {
         int BUTTON_HEIGHT = 14;
         int BUTTON_WIDTH = 60;
         this.closeButton = new Button((this.leftPos + this.width / 2) - BUTTON_WIDTH / 2, this.topPos + this.height - BUTTON_HEIGHT - 20, BUTTON_WIDTH, BUTTON_HEIGHT,
-                new TranslationTextComponent("screen." + EdomUiMod.MOD_ID + ".button.close").getString(), ()->setHidden(true));
+                closeButtonContent, ()->setHidden(true));
     }
 
 

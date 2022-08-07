@@ -22,7 +22,7 @@ public class ConfirmPopUp extends Widget {
     private final String title, content;
 
 
-    public ConfirmPopUp(int x, int y, int width, int height, String title, String content, ConfirmPopUp.ColorType type, Button.IClickable confirmAction){
+    public ConfirmPopUp(int x, int y, int width, int height, String title, String content, String yesButtonContent, String noButtonContent, ConfirmPopUp.ColorType type, Button.IClickable confirmAction){
         super(x, y, width, height);
 
         this.title = title;
@@ -32,10 +32,10 @@ public class ConfirmPopUp extends Widget {
         int BUTTON_HEIGHT = 14;
         int BUTTON_WIDTH = 40;
         this.yesButton = new Button(this.leftPos + 20, this.topPos + this.height - BUTTON_HEIGHT - 20, BUTTON_WIDTH, BUTTON_HEIGHT,
-                new TranslationTextComponent("screen." + EdomUiMod.MOD_ID + ".button.yes").getString(), confirmAction);
+                yesButtonContent, confirmAction);
 
         this.noButton = new Button(this.leftPos + this.width - BUTTON_WIDTH - 20, this.topPos + this.height - BUTTON_HEIGHT - 20, BUTTON_WIDTH, BUTTON_HEIGHT,
-                new TranslationTextComponent("screen." + EdomUiMod.MOD_ID + ".button.no").getString(), ()->this.setHidden(true));
+                noButtonContent, ()->this.setHidden(true));
     }
 
     public void render(MatrixStack matrixStack){
