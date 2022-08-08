@@ -66,7 +66,7 @@ public class ConfirmPopUp extends Widget {
         //content text
         GlStateManager.pushMatrix();
         GlStateManager.scalef(.5f, .5f, .5f);
-        AbstractGui.drawCenteredString(matrixStack, this.font, "TEST", this.width / 2 * 2, this.height / 2 * 2 - 20, this.textColor);
+        AbstractGui.drawCenteredString(matrixStack, this.font, this.content, this.width / 2 * 2, this.height / 2 * 2 - 20, this.textColor);
         GlStateManager.popMatrix();
 
 
