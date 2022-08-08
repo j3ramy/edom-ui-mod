@@ -47,9 +47,9 @@ public class AlertPopUp extends Widget {
         this.renderBackground(matrixStack);
 
         //border
-        int DEFAULT_COLOR = Color.DARK_GRAY_HEX;
-        int NOTICE_COLOR = Color.ORANGE_HEX;
-        int ERROR_COLOR = Color.RED_HEX;
+        int DEFAULT_COLOR = Color.DARK_GRAY;
+        int NOTICE_COLOR = Color.ORANGE;
+        int ERROR_COLOR = Color.RED;
         switch (this.colorType){
             case DEFAULT: AbstractGui.fill(matrixStack, leftPos, topPos, leftPos + this.width, topPos + this.height, DEFAULT_COLOR); break;
             case NOTICE: AbstractGui.fill(matrixStack, leftPos, topPos, leftPos + this.width, topPos + height, NOTICE_COLOR); break;
@@ -69,7 +69,7 @@ public class AlertPopUp extends Widget {
         GlStateManager.pushMatrix();
         GlStateManager.scalef(.5f, .5f, .5f);
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.content,
-                (this.leftPos + this.width / 2f) * 2 - font.getStringWidth(this.title) / 2,
+                (this.leftPos + this.width / 2f - (font.getStringWidth(this.title) / 2f) / 2f),
                 (topPos + 30) * 2,
                 this.textColor);
         GlStateManager.popMatrix();

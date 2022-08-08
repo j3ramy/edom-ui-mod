@@ -8,13 +8,13 @@ import net.minecraft.client.gui.AbstractGui;
 
 public class Button extends Widget {
     protected final int yOffset;
-    protected int hoverBackgroundColor = Color.DARK_GRAY_HEX;
+    protected int hoverBackgroundColor = Color.DARK_GRAY;
     protected int hoverTextColor = this.textColor;
-    protected int hoverBorderColor = Color.WHITE_HEX;
+    protected int hoverBorderColor = Color.WHITE;
 
-    protected int disabledBackgroundColor = Color.DARK_GRAY_HEX;
-    protected int disabledTextColor = Color.LIGHT_GRAY_HEX;
-    protected int disabledBorderColor = Color.LIGHT_GRAY_HEX;
+    protected int disabledBackgroundColor = Color.DARK_GRAY;
+    protected int disabledTextColor = Color.GRAY;
+    protected int disabledBorderColor = Color.GRAY;
 
     protected String title;
     protected boolean enabled = true, isDropDownButton;

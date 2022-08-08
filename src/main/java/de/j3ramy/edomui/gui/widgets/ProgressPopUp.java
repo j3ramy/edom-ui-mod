@@ -47,7 +47,7 @@ public class ProgressPopUp extends Widget {
         super.render(matrixStack);
         this.renderBackground(matrixStack);
 
-        AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, Color.LIGHT_GRAY_HEX);
+        AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, Color.GRAY);
 
         //background
         int CONTENT_MARGIN = 5;
@@ -83,8 +83,8 @@ public class ProgressPopUp extends Widget {
     private static class ProgressBar{
 
         private final int xPos, yPos, width, height;
-        private int barBackgroundColor = Color.LIGHT_GRAY_HEX;
-        private int barColor = Color.WHITE_HEX;
+        private int barBackgroundColor = Color.GRAY;
+        private int barColor = Color.WHITE;
         private float progress;
         private final float maxProgress = 1f;
         private boolean isBarStopped;

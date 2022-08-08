@@ -1,32 +1,29 @@
 package de.j3ramy.edomui.utils;
 
 public class Color {
-    //https://www.rapidtables.com/convert/number/hex-to-decimal.html
+    public static final int DARK_RED = 0xffAA0000;
+    public static final int RED = 0xffFF5555;
+    public static final int ORANGE = 0xffFFAA00;
+    public static final int YELLOW = 0xffFFFF55;
+    public static final int DARK_GREEN = 0xff00AA00;
+    public static final int GREEN = 0xff55FF55;
+    public static final int AQUA = 0xff55FFFF;
+    public static final int DARK_AQUA = 0xff00AAAA;
+    public static final int DARK_BLUE = 0xff0000AA;
+    public static final int BLUE = 0xff5555FF;
+    public static final int PURPLE = 0xffFF55FF;
+    public static final int DARK_PURPLE = 0xffAA00AA;
+    public static final int WHITE = 0xffFFFFFF;
+    public static final int BLACK = 0xff0e0e0e;
+    public static final int GRAY = 0xffAAAAAA;
+    public static final int DARK_GRAY = 0xff555555;
+    public static final int PINK = 0xfffd8cee;
+    public static final int BROWN = 0xff73532e;
 
-    //Color for text
-    public static final int GREEN = 1826359;
-    public static final int YELLOW = 16184069;
-    public static final int ORANGE = 16375628;
-    public static final int RED = 16123141;
-    public static final int WHITE = 16777215;
-    public static final int BLACK = 789516;
-    public static final int DARK_GRAY = 4342338;
-    public static final int LIGHT_GRAY = 8421504;
-    public static final int BACKGROUND_GRAY = 2434592;
-    public static final int BORDER_OLIVE = 5789784;
-    public static final int PURPLE = 4076194;
-
-    //Hex for rect
-    public static final int GREEN_HEX = 0xff1bde37;
-    public static final int YELLOW_HEX = 0xfff6f305;
-    public static final int ORANGE_HEX = 0xfff9df4c;
-    public static final int RED_HEX = 0xfff60505;
-    public static final int WHITE_HEX = 0xffffffff;
-    public static final int BLACK_HEX = 0xff0c0c0c;
-    public static final int DARK_GRAY_HEX = 0xff424242;
-    public static final int LIGHT_GRAY_HEX = 0xff808080;
-    public static final int BACKGROUND_GRAY_HEX = 0xff585858;
-    public static final int BORDER_OLIVE_HEX = 0xff252620;
-    public static final int PURPLE_HEX = 0xff3E32A2;
+    //Use for custom colors
+    //Pass hex without #
+    public static int customColor(String hex){
+        return Integer.parseInt(hex, 16);
+    }
 
 }

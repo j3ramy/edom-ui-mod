@@ -17,7 +17,7 @@ public class DropDown extends Button {
     private final String placeholder;
     private final int maxWordLength;
 
-    private int selectedIndex = -1, arrowColor = Color.WHITE_HEX;
+    private int selectedIndex = -1, arrowColor = Color.WHITE;
     private boolean isUnfolded;
 
 
@@ -112,17 +112,17 @@ public class DropDown extends Button {
     }
 
     private void renderArrow(MatrixStack matrixStack, int x, int y){
-        AbstractGui.fill(matrixStack, x, y, x + 8, y + 1, !this.enabled ? Color.LIGHT_GRAY_HEX :  this.arrowColor);
-        AbstractGui.fill(matrixStack, x + 1, y + 1, x + 7, y + 2, !this.enabled ? Color.LIGHT_GRAY_HEX : this.arrowColor);
-        AbstractGui.fill(matrixStack, x + 2, y + 2, x + 6, y + 3, !this.enabled ? Color.LIGHT_GRAY_HEX : this.arrowColor);
-        AbstractGui.fill(matrixStack, x + 3, y + 3, x + 5, y + 4, !this.enabled ? Color.LIGHT_GRAY_HEX : this.arrowColor);
+        AbstractGui.fill(matrixStack, x, y, x + 8, y + 1, !this.enabled ? Color.GRAY :  this.arrowColor);
+        AbstractGui.fill(matrixStack, x + 1, y + 1, x + 7, y + 2, !this.enabled ? Color.GRAY : this.arrowColor);
+        AbstractGui.fill(matrixStack, x + 2, y + 2, x + 6, y + 3, !this.enabled ? Color.GRAY : this.arrowColor);
+        AbstractGui.fill(matrixStack, x + 3, y + 3, x + 5, y + 4, !this.enabled ? Color.GRAY : this.arrowColor);
     }
 
     private void renderArrowInverted(MatrixStack matrixStack, int x, int y){
-        AbstractGui.fill(matrixStack, x + 3, y, x + 5, y + 1, !this.enabled ? Color.LIGHT_GRAY_HEX :  this.arrowColor);
-        AbstractGui.fill(matrixStack, x + 2, y + 1, x + 6, y + 2, !this.enabled ? Color.LIGHT_GRAY_HEX : this.arrowColor);
-        AbstractGui.fill(matrixStack, x + 1, y + 2, x + 7, y + 3, !this.enabled ? Color.LIGHT_GRAY_HEX : this.arrowColor);
-        AbstractGui.fill(matrixStack, x, y + 3, x + 8, y + 4, !this.enabled ? Color.LIGHT_GRAY_HEX : this.arrowColor);
+        AbstractGui.fill(matrixStack, x + 3, y, x + 5, y + 1, !this.enabled ? Color.GRAY :  this.arrowColor);
+        AbstractGui.fill(matrixStack, x + 2, y + 1, x + 6, y + 2, !this.enabled ? Color.GRAY : this.arrowColor);
+        AbstractGui.fill(matrixStack, x + 1, y + 2, x + 7, y + 3, !this.enabled ? Color.GRAY : this.arrowColor);
+        AbstractGui.fill(matrixStack, x, y + 3, x + 8, y + 4, !this.enabled ? Color.GRAY : this.arrowColor);
     }
 
     private  void renderContextMenu(MatrixStack matrixStack){
@@ -241,7 +241,7 @@ public class DropDown extends Button {
 
             this.setBorderThickness(0);
             this.setIsDropdownButton(true);
-            this.setHoverBackgroundColor(Color.LIGHT_GRAY_HEX);
+            this.setHoverBackgroundColor(Color.GRAY);
         }
 
         @Override
