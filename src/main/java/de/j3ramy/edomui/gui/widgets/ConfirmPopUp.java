@@ -66,10 +66,7 @@ public class ConfirmPopUp extends Widget {
         //content text
         GlStateManager.pushMatrix();
         GlStateManager.scalef(.5f, .5f, .5f);
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.content,
-                (this.leftPos + this.width / 2f - (font.getStringWidth(this.title) / 2f) / 2f) * 2 ,
-                (topPos + 30) * 2,
-                this.textColor);
+        AbstractGui.drawCenteredString(matrixStack, this.font, "TEST", this.width / 2 * 2, this.height / 2 * 2 - 20, this.textColor);
         GlStateManager.popMatrix();
 
 

@@ -43,6 +43,7 @@ This library adds simple gui elements, like:
 - Three types of Pop Ups (Alert, Confirm and Progress)
 - Tooltips
 - Horizontal and vertical lines
+- You can add Minecraft widgets like TextFieldWidget's or ImageButton's as well
 
 
 This mod is experimental and may contain bugs and/or unexpected behavior!
