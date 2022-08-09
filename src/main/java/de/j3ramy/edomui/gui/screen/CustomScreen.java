@@ -13,16 +13,15 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
-public class ModScreen extends Screen {
-    private final List<Widget> widgets = new ArrayList<>();
-    private final List<net.minecraft.client.gui.widget.Widget> mcWidgets = new ArrayList<>();
-    private final Point mousePosition = new Point();
-    private boolean disableScreen;
+public class CustomScreen extends Screen {
+    protected final List<Widget> widgets = new ArrayList<>();
+    protected final List<net.minecraft.client.gui.widget.Widget> mcWidgets = new ArrayList<>();
+    protected final Point mousePosition = new Point();
+    protected boolean disableScreen;
 
 
-    public ModScreen() {
+    public CustomScreen() {
         super(new StringTextComponent(""));
-
         //ModEvents.screens.add(this);
     }
 
@@ -104,6 +103,10 @@ public class ModScreen extends Screen {
                             ((Button) widget).onClick();
                         }
 
+                        if (widget instanceof Taskbar) {
+                            ((Taskbar) widget).onClick();
+                        }
+
                         for (net.minecraft.client.gui.widget.Widget w : this.mcWidgets) {
                             if (w instanceof ImageButton) {
                                 if(w.isMouseOver(this.mousePosition.x, this.mousePosition.y))
@@ -145,7 +148,6 @@ public class ModScreen extends Screen {
                     ((ScrollableTable) widget).onScroll(scrollDelta);
                     return;
                 }
-
 
                 if (widget instanceof DropDown){
                     ((DropDown) widget).onScroll(scrollDelta);
