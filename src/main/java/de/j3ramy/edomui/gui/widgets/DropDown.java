@@ -17,7 +17,7 @@ public class DropDown extends Button {
     private final String placeholder;
     private final int maxWordLength;
 
-    private int selectedIndex = -1, arrowColor = Color.WHITE;
+    private int selectedIndex = -1, arrowColor = Color.DARK_GRAY;
     private boolean isUnfolded;
 
 

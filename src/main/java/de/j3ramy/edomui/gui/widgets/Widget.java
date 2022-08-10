@@ -21,9 +21,9 @@ public class Widget implements IWidget {
     public int leftPos;
     public int topPos;
 
-    protected int backgroundColor = Color.DARK_GRAY;
+    protected int backgroundColor = Color.WHITE;
     protected int borderColor = Color.GRAY;
-    protected int textColor = Color.WHITE;
+    protected int textColor = Color.DARK_GRAY;
     protected int borderThickness = 1;
 
     protected Point mousePosition = new Point();

@@ -45,8 +45,9 @@ public class ScrollableList extends Widget {
         return null;
     }
 
-    public void addElement(String content, boolean isClickable, int backgroundColor, int hoverColor, Button.IClickable onClick){
-        this.contents.add(new ListOption(this.leftPos, this.topPos, this.width, this.elementHeight, content, isClickable, backgroundColor, hoverColor,  onClick));
+    public void addElement(Button button){
+        this.contents.add(new ListOption(this.leftPos, this.topPos, this.width, this.elementHeight, button.getTitle(),
+                button.enabled, button.backgroundColor, button.hoverBackgroundColor,  button.clickAction));
 
         this.initList(0);
     }
