@@ -34,7 +34,6 @@ public class Widget implements IWidget {
     public Widget(int x, int y, int width, int height) {
         super();
 
-        assert Minecraft.getInstance().currentScreen != null;
         this.screenWidth = Minecraft.getInstance().currentScreen.width;
         this.screenHeight = Minecraft.getInstance().currentScreen.height;
         this.font = Minecraft.getInstance().fontRenderer;
