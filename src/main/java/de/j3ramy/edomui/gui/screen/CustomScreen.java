@@ -17,7 +17,7 @@ public class CustomScreen extends Screen {
     protected final List<Widget> widgets = new ArrayList<>();
     protected final List<net.minecraft.client.gui.widget.Widget> mcWidgets = new ArrayList<>();
     protected final Point mousePosition = new Point();
-    protected boolean disableScreen;
+    protected boolean isDisabled, isInteractable = true;
 
 
     public CustomScreen() {
@@ -33,9 +33,17 @@ public class CustomScreen extends Screen {
         this.mcWidgets.add(widget);
     }
 
+    public List<Widget> getWidgets() {
+        return this.widgets;
+    }
+
+    public List<net.minecraft.client.gui.widget.Widget> getMcWidgets() {
+        return this.mcWidgets;
+    }
+
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        if(this.disableScreen)
+        if(this.isDisabled)
             return;
 
         this.update(mouseX, mouseY);
@@ -56,7 +64,7 @@ public class CustomScreen extends Screen {
     }
 
     private void update(int mouseX, int mouseY){
-        if(this.disableScreen)
+        if(this.isDisabled || !this.isInteractable)
             return;
 
         this.mousePosition.x = mouseX;
@@ -65,13 +73,40 @@ public class CustomScreen extends Screen {
         for(Widget widget : this.widgets){
             widget.update(mouseX, mouseY);
         }
+
+        if(!this.isInteractable){
+            for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
+                if(widget != null){
+                    widget.active = false;
+                }
+            }
+
+            for(Widget widget : this.widgets){
+                if(widget instanceof Button){
+                    ((Button) widget).setEnabled(false);
+                }
+            }
+        }
+        else{
+            for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
+                if(widget != null){
+                    widget.active = true;
+                }
+            }
+
+            for(Widget widget : this.widgets){
+                if(widget instanceof Button){
+                    ((Button) widget).setEnabled(true);
+                }
+            }
+        }
     }
 
     /*
     * @throws ConcurrentModificationException if popup gets added inside a lambda expression
      */
     public void onClick(int mouseButton) {
-        if (this.disableScreen)
+        if(this.isDisabled || !this.isInteractable)
             return;
 
         try {
@@ -102,25 +137,23 @@ public class CustomScreen extends Screen {
                         if (widget instanceof Button) {
                             ((Button) widget).onClick();
                         }
+                    }
+                }
+            }
 
-                        if (widget instanceof Taskbar) {
-                            ((Taskbar) widget).onClick();
-                        }
+            for (net.minecraft.client.gui.widget.Widget w : this.mcWidgets) {
+                if (w instanceof ImageButton) {
+                    if(w.isMouseOver(this.mousePosition.x, this.mousePosition.y)){
+                        w.onClick(this.mousePosition.x, this.mousePosition.y);
+                    }
 
-                        for (net.minecraft.client.gui.widget.Widget w : this.mcWidgets) {
-                            if (w instanceof ImageButton) {
-                                if(w.isMouseOver(this.mousePosition.x, this.mousePosition.y))
-                                    w.onClick(this.mousePosition.x, this.mousePosition.y);
-                            }
+                }
 
-                            if (w instanceof TextFieldWidget) {
-                                ((TextFieldWidget) w).setFocused2(false);
+                if (w instanceof TextFieldWidget) {
+                    ((TextFieldWidget) w).setFocused2(false);
 
-                                if(w.isMouseOver(this.mousePosition.x, this.mousePosition.y)){
-                                    w.mouseClicked(this.mousePosition.x, this.mousePosition.y, mouseButton);
-                                }
-                            }
-                        }
+                    if(w.isMouseOver(this.mousePosition.x, this.mousePosition.y)){
+                        w.mouseClicked(this.mousePosition.x, this.mousePosition.y, mouseButton);
                     }
                 }
             }
@@ -131,7 +164,7 @@ public class CustomScreen extends Screen {
     }
 
     public void onScroll(int scrollDelta){
-        if(this.disableScreen)
+        if(this.isDisabled || !this.isInteractable)
             return;
 
         if(this.isPopUpVisible())
@@ -158,6 +191,9 @@ public class CustomScreen extends Screen {
     }
 
     public void onKeyPressed(int keyCode){
+        if(this.isDisabled || !this.isInteractable)
+            return;
+
         for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
             if(widget instanceof TextFieldWidget)
                 widget.keyPressed(keyCode, -1, -1);
@@ -165,6 +201,9 @@ public class CustomScreen extends Screen {
     }
 
     public void onCharTyped(char c){
+        if(this.isDisabled || !this.isInteractable)
+            return;
+
         for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
             if(widget instanceof TextFieldWidget)
                 widget.charTyped(c, -1);
@@ -176,12 +215,12 @@ public class CustomScreen extends Screen {
         this.mcWidgets.clear();
     }
 
-    public void enable(){
-        this.disableScreen = false;
+    public void setDisabled(boolean disabled) {
+        this.isDisabled = disabled;
     }
 
-    public void disable(){
-        this.disableScreen = true;
+    public void setInteractable(boolean interactable) {
+        this.isInteractable = interactable;
     }
 
     private boolean isPopUpVisible(){
