@@ -12,12 +12,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScrollableTable extends Widget {
-    private final int maxVisibleListElements;
-    private final int elementHeight;
+public final class ScrollableTable extends Widget {
+    private final int maxVisibleListElements, elementHeight;
     private final boolean isFixedAttributeRow;
-    private final List<TableRow> contents = new ArrayList<>();
-    private final List<TableRow> contentFields = new ArrayList<>();
+    private final List<TableRow> contents = new ArrayList<>(), contentFields = new ArrayList<>();
     private int selectedIndex = -1;
 
 
@@ -54,14 +52,19 @@ public class ScrollableTable extends Widget {
         return null;
     }
 
-    public void addRow(ArrayList<String> rowContent, boolean isClickable, int backgroundColor, int hoverColor, Button.IClickable onClick){
-        this.contents.add(new TableRow(this.leftPos, this.topPos, this.width, this.elementHeight, rowContent, isClickable, backgroundColor, hoverColor,  onClick));
-
-        this.initList(0);
+    public boolean isHovered(){
+        Rectangle table = new Rectangle(this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height);
+        return table.contains(new Point(this.mousePosition.x, this.mousePosition.y));
     }
 
     private boolean needsScrolling(){
         return this.contents.size() > this.maxVisibleListElements;
+    }
+
+    public void addRow(ArrayList<String> rowContent, boolean isClickable, int backgroundColor, int hoverColor, Button.IClickable onClick){
+        this.contents.add(new TableRow(this.leftPos, this.topPos, this.width, this.elementHeight, rowContent, isClickable, backgroundColor, hoverColor,  onClick));
+
+        this.initList(0);
     }
 
     private void initList(int startIndex){
@@ -91,11 +94,6 @@ public class ScrollableTable extends Widget {
         this.contents.clear();
         this.contentFields.clear();
         this.clearSelectedIndex();
-    }
-
-    public boolean isHovered(){
-        Rectangle table = new Rectangle(this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height);
-        return table.contains(new Point(this.mousePosition.x, this.mousePosition.y));
     }
 
     @Override
@@ -180,7 +178,6 @@ public class ScrollableTable extends Widget {
     }
 
 
-
     //----------------------------------------------------------------------------------------------------------------------------------------------
     public static class TableRow extends Button {
         private static final int DIVIDE_BORDER_THICKNESS = 1;
@@ -246,6 +243,7 @@ public class ScrollableTable extends Widget {
                 GlStateManager.scalef(.5f, .5f, .5f);
                 Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.getFormattedLabel(this.maxWordLength, this.content.get(i)), (this.leftPos + 3 + this.columnWidth * i) * 2,
                         (this.topPos + this.height / 2f - this.yOffset / 2f) * 2,  this.isMouseOver() && this.isClickable ? this.textColor : this.hoverTextColor);
+
                 GlStateManager.popMatrix();
 
                 //Right border

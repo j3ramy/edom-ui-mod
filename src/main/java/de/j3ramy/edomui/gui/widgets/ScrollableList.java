@@ -12,11 +12,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScrollableList extends Widget {
-    private final int maxVisibleListElements;
-    private final int elementHeight;
-    private final List<ListOption> contents = new ArrayList<>();
-    private final List<ListOption> contentFields = new ArrayList<>();
+public final class ScrollableList extends Widget {
+    private final int maxVisibleListElements, elementHeight;
+    private final List<ListOption> contents = new ArrayList<>(), contentFields = new ArrayList<>();
     private int selectedIndex = -1;
 
 
@@ -25,6 +23,15 @@ public class ScrollableList extends Widget {
 
         this.maxVisibleListElements = this.height / elementHeight;
         this.elementHeight = elementHeight;
+    }
+
+    private boolean needsScrolling(){
+        return this.contents.size() > this.maxVisibleListElements;
+    }
+
+    public boolean isHovered(){
+        Rectangle list = new Rectangle(this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height);
+        return list.contains(new Point(this.mousePosition.x, this.mousePosition.y));
     }
 
     @Nullable
@@ -52,10 +59,6 @@ public class ScrollableList extends Widget {
         this.initList(0);
     }
 
-    private boolean needsScrolling(){
-        return this.contents.size() > this.maxVisibleListElements;
-    }
-
     private void initList(int startIndex){
         this.contentFields.clear();
 
@@ -81,11 +84,6 @@ public class ScrollableList extends Widget {
         this.contents.clear();
         this.contentFields.clear();
         this.clearSelectedIndex();
-    }
-
-    public boolean isHovered(){
-        Rectangle list = new Rectangle(this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height);
-        return list.contains(new Point(this.mousePosition.x, this.mousePosition.y));
     }
 
     @Override
@@ -220,6 +218,7 @@ public class ScrollableList extends Widget {
             GlStateManager.scalef(.5f, .5f, .5f);
             Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.getFormattedLabel(this.maxWordLength, this.content), (this.leftPos + 3) * 2,
                     (this.topPos + this.height / 2f - this.yOffset / 2f) * 2,  this.isMouseOver() && this.isClickable ? this.textColor : this.hoverTextColor);
+
             GlStateManager.popMatrix();
         }
 

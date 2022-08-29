@@ -8,7 +8,7 @@ import net.minecraft.client.gui.widget.button.ImageButton;
 
 import javax.annotation.Nullable;
 
-public class Tooltip extends Widget{
+public final class Tooltip extends Widget{
 
     private final String content;
     private final ImageButton imageButton;
@@ -25,15 +25,17 @@ public class Tooltip extends Widget{
     }
 
     public void render(MatrixStack matrixStack){
-        if(!this.isHidden() && this.content != null && !this.content.isEmpty()){
+        if(!this.isHidden() && !this.content.isEmpty()){
+            super.render(matrixStack);
+
             //border
             int textMargin = 2;
             int xOffset = 2 + textMargin;
             int yOffset = -8 - textMargin;
 
-
             int height = GuiUtils.LETTER_HEIGHT + textMargin * 2;
 
+            //border
             AbstractGui.fill(matrixStack,
                     this.mousePosition.x + xOffset - this.borderThickness - textMargin,
                     this.mousePosition.y + yOffset - this.borderThickness - textMargin,
@@ -49,6 +51,7 @@ public class Tooltip extends Widget{
                     this.mousePosition.y + yOffset + height,
                     this.backgroundColor);
 
+            //text
             Minecraft.getInstance().fontRenderer.drawString(
                     matrixStack, this.content,
                     this.mousePosition.x + xOffset + textMargin / 2f,
@@ -61,7 +64,7 @@ public class Tooltip extends Widget{
     public void update(int x, int y) {
         super.update(x, y);
 
-        if(this.getButton() != null){
+        if(this.imageButton != null){
             this.setHidden(!this.getButton().isMouseOver(this.mousePosition.x, this.mousePosition.y));
         }
     }

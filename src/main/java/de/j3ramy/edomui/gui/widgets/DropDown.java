@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 import java.awt.*;
 
-public class DropDown extends Button {
+public final class DropDown extends Button {
     private static final int MAX_VISIBLE_LIST_ELEMENTS = 3;
 
     private final String[] options;
@@ -17,7 +17,7 @@ public class DropDown extends Button {
     private final String placeholder;
     private final int maxWordLength;
 
-    private int selectedIndex = -1, arrowColor = Color.DARK_GRAY;
+    private int selectedIndex = -1, arrowColor = Color.WHITE;
     private boolean isUnfolded;
 
 
@@ -42,20 +42,12 @@ public class DropDown extends Button {
         return this.options;
     }
 
-        public String getOption(int index){
+    public String getOption(int index){
         return this.options[index];
     }
 
     public int getSelectedIndex(){
         return this.selectedIndex;
-    }
-
-    public boolean isOptionSelected(){
-        return this.selectedIndex != -1;
-    }
-
-    public boolean isUnfolded() {
-        return this.isUnfolded;
     }
 
     public String getPlaceholder() {
@@ -71,6 +63,19 @@ public class DropDown extends Button {
 
     private boolean needsExpandedContextMenu(){
         return this.options.length > MAX_VISIBLE_LIST_ELEMENTS;
+    }
+
+    public boolean isOptionSelected(){
+        return this.selectedIndex != -1;
+    }
+
+    public boolean isUnfolded() {
+        return this.isUnfolded;
+    }
+
+    private boolean isMouseOverContextMenu(){
+        Rectangle menu = new Rectangle(this.leftPos, topPos, this.leftPos + this.width, topPos + this.height + (this.height * MAX_VISIBLE_LIST_ELEMENTS));
+        return menu.contains(new Point(this.mousePosition.x, this.mousePosition.y));
     }
 
     private void initContextMenu(int startIndex){
@@ -94,11 +99,11 @@ public class DropDown extends Button {
         super.render(matrixStack);
 
         if(this.isUnfolded){
-            renderArrowInverted(matrixStack, this.leftPos + this.width - 15, topPos + (this.height / 2) - 2);
+            this.renderArrow(matrixStack, this.leftPos + this.width - 15, topPos + (this.height / 2) - 2, true);
             this.renderContextMenu(matrixStack);
         }
         else
-            renderArrow(matrixStack, this.leftPos + this.width - 15, topPos + (this.height / 2) - 2);
+            this.renderArrow(matrixStack, this.leftPos + this.width - 15, topPos + (this.height / 2) - 2, false);
 
 
     }
@@ -111,18 +116,20 @@ public class DropDown extends Button {
             if(option != null) option.update(x, y);
     }
 
-    private void renderArrow(MatrixStack matrixStack, int x, int y){
-        AbstractGui.fill(matrixStack, x, y, x + 8, y + 1, !this.enabled ? Color.GRAY :  this.arrowColor);
-        AbstractGui.fill(matrixStack, x + 1, y + 1, x + 7, y + 2, !this.enabled ? Color.GRAY : this.arrowColor);
-        AbstractGui.fill(matrixStack, x + 2, y + 2, x + 6, y + 3, !this.enabled ? Color.GRAY : this.arrowColor);
-        AbstractGui.fill(matrixStack, x + 3, y + 3, x + 5, y + 4, !this.enabled ? Color.GRAY : this.arrowColor);
-    }
+    private void renderArrow(MatrixStack matrixStack, int x, int y, boolean inverted){
+        if(inverted){
+            AbstractGui.fill(matrixStack, x + 3, y, x + 5, y + 1, !this.enabled ? Color.GRAY :  this.arrowColor);
+            AbstractGui.fill(matrixStack, x + 2, y + 1, x + 6, y + 2, !this.enabled ? Color.GRAY : this.arrowColor);
+            AbstractGui.fill(matrixStack, x + 1, y + 2, x + 7, y + 3, !this.enabled ? Color.GRAY : this.arrowColor);
+            AbstractGui.fill(matrixStack, x, y + 3, x + 8, y + 4, !this.enabled ? Color.GRAY : this.arrowColor);
+        }
+        else{
+            AbstractGui.fill(matrixStack, x, y, x + 8, y + 1, !this.enabled ? Color.GRAY :  this.arrowColor);
+            AbstractGui.fill(matrixStack, x + 1, y + 1, x + 7, y + 2, !this.enabled ? Color.GRAY : this.arrowColor);
+            AbstractGui.fill(matrixStack, x + 2, y + 2, x + 6, y + 3, !this.enabled ? Color.GRAY : this.arrowColor);
+            AbstractGui.fill(matrixStack, x + 3, y + 3, x + 5, y + 4, !this.enabled ? Color.GRAY : this.arrowColor);
+        }
 
-    private void renderArrowInverted(MatrixStack matrixStack, int x, int y){
-        AbstractGui.fill(matrixStack, x + 3, y, x + 5, y + 1, !this.enabled ? Color.GRAY :  this.arrowColor);
-        AbstractGui.fill(matrixStack, x + 2, y + 1, x + 6, y + 2, !this.enabled ? Color.GRAY : this.arrowColor);
-        AbstractGui.fill(matrixStack, x + 1, y + 2, x + 7, y + 3, !this.enabled ? Color.GRAY : this.arrowColor);
-        AbstractGui.fill(matrixStack, x, y + 3, x + 8, y + 4, !this.enabled ? Color.GRAY : this.arrowColor);
     }
 
     private  void renderContextMenu(MatrixStack matrixStack){
@@ -191,11 +198,6 @@ public class DropDown extends Button {
         }
     }
 
-    private boolean isMouseOverContextMenu(){
-        Rectangle menu = new Rectangle(this.leftPos, topPos, this.leftPos + this.width, topPos + this.height + (this.height * MAX_VISIBLE_LIST_ELEMENTS));
-        return menu.contains(new Point(this.mousePosition.x, this.mousePosition.y));
-    }
-
     private float currentScrollIndex = 0;
     public void onScroll(int scrollDelta){
         if(!this.isMouseOverContextMenu())
@@ -241,12 +243,6 @@ public class DropDown extends Button {
 
             this.setBorderThickness(0);
             this.setIsDropdownButton(true);
-            this.setHoverBackgroundColor(Color.GRAY);
-        }
-
-        @Override
-        public void render(MatrixStack matrixStack){
-            super.render(matrixStack);
         }
     }
 

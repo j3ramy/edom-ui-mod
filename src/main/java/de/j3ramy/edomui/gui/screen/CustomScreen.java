@@ -14,31 +14,49 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 
 public class CustomScreen extends Screen {
-    protected final List<Widget> widgets = new ArrayList<>();
-    protected final List<net.minecraft.client.gui.widget.Widget> mcWidgets = new ArrayList<>();
+    public final List<Widget> widgets = new ArrayList<>();
+    public final List<net.minecraft.client.gui.widget.Widget> mcWidgets = new ArrayList<>();
     protected final Point mousePosition = new Point();
-    protected boolean isDisabled, isInteractable = true;
-
+    protected boolean isDisabled, canInteract = true;
 
     public CustomScreen() {
         super(new StringTextComponent(""));
-        //ModEvents.screens.add(this);
     }
 
-
-    public void addWidget(Widget widget){
-        this.widgets.add(widget);
-    }
-    public void addMcWidget(net.minecraft.client.gui.widget.Widget widget){
-        this.mcWidgets.add(widget);
+    public void setDisabled(boolean disabled) {
+        this.isDisabled = disabled;
     }
 
-    public List<Widget> getWidgets() {
-        return this.widgets;
+    public void canInteract(boolean canInteract) {
+        this.canInteract = canInteract;
     }
 
-    public List<net.minecraft.client.gui.widget.Widget> getMcWidgets() {
-        return this.mcWidgets;
+    private boolean isPopUpVisible(){
+        for(Widget widget : this.widgets) {
+            if (widget instanceof AlertPopUp && !widget.isHidden()) {
+                return true;
+            }
+
+            if (widget instanceof ConfirmPopUp && !widget.isHidden()) {
+                return true;
+            }
+
+            if (widget instanceof ProgressPopUp && !widget.isHidden()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isDropDownUnfolded(){
+        for(Widget widget : this.widgets) {
+            if (widget instanceof DropDown && !widget.isHidden()) {
+                return ((DropDown) widget).isUnfolded();
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -46,7 +64,6 @@ public class CustomScreen extends Screen {
         if(this.isDisabled)
             return;
 
-        this.update(mouseX, mouseY);
         super.render(matrixStack, this.mousePosition.x, this.mousePosition.y, partialTicks);
 
         for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
@@ -58,13 +75,12 @@ public class CustomScreen extends Screen {
         for(Widget widget : this.widgets){
             if(widget != null){
                 widget.render(matrixStack);
-                widget.update(mouseX, mouseY);
             }
         }
     }
 
-    private void update(int mouseX, int mouseY){
-        if(this.isDisabled || !this.isInteractable)
+    public void update(int mouseX, int mouseY){
+        if(this.isDisabled || !this.canInteract)
             return;
 
         this.mousePosition.x = mouseX;
@@ -74,7 +90,7 @@ public class CustomScreen extends Screen {
             widget.update(mouseX, mouseY);
         }
 
-        if(!this.isInteractable){
+        if(!this.canInteract){
             for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
                 if(widget != null){
                     widget.active = false;
@@ -106,7 +122,7 @@ public class CustomScreen extends Screen {
     * @throws ConcurrentModificationException if popup gets added inside a lambda expression
      */
     public void onClick(int mouseButton) {
-        if(this.isDisabled || !this.isInteractable)
+        if(this.isDisabled || !this.canInteract)
             return;
 
         try {
@@ -114,28 +130,28 @@ public class CustomScreen extends Screen {
                 if (mouseButton == 0) {
                     if (this.isPopUpVisible() || this.isDropDownUnfolded()) {
                         if (widget instanceof AlertPopUp) {
-                            ((AlertPopUp) widget).onClick();
+                            widget.onClick();
                         }
 
                         if (widget instanceof ConfirmPopUp) {
-                            ((ConfirmPopUp) widget).onClick();
+                            widget.onClick();
                         }
 
                         if (widget instanceof DropDown) {
-                            ((DropDown) widget).onClick();
+                            widget.onClick();
                         }
                     }
                     else{
                         if (widget instanceof ScrollableList) {
-                            ((ScrollableList) widget).onClick();
+                            widget.onClick();
                         }
 
                         if (widget instanceof ScrollableTable) {
-                            ((ScrollableTable) widget).onClick();
+                            widget.onClick();
                         }
 
                         if (widget instanceof Button) {
-                            ((Button) widget).onClick();
+                            widget.onClick();
                         }
                     }
                 }
@@ -164,7 +180,7 @@ public class CustomScreen extends Screen {
     }
 
     public void onScroll(int scrollDelta){
-        if(this.isDisabled || !this.isInteractable)
+        if(this.isDisabled || !this.canInteract)
             return;
 
         if(this.isPopUpVisible())
@@ -191,7 +207,7 @@ public class CustomScreen extends Screen {
     }
 
     public void onKeyPressed(int keyCode){
-        if(this.isDisabled || !this.isInteractable)
+        if(this.isDisabled || !this.canInteract)
             return;
 
         for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
@@ -201,53 +217,28 @@ public class CustomScreen extends Screen {
     }
 
     public void onCharTyped(char c){
-        if(this.isDisabled || !this.isInteractable)
+        if(this.isDisabled || !this.canInteract)
             return;
 
         for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
-            if(widget instanceof TextFieldWidget)
-                widget.charTyped(c, -1);
+            if(widget instanceof TextFieldWidget){
+                if(widget.isFocused()){
+                    widget.charTyped(c, -1);
+                }
+            }
         }
+    }
+
+    public void addWidget(Widget widget){
+        this.widgets.add(widget);
+    }
+
+    public void addMcWidget(net.minecraft.client.gui.widget.Widget widget){
+        this.mcWidgets.add(widget);
     }
 
     public void clearScreen(){
         this.widgets.clear();
         this.mcWidgets.clear();
-    }
-
-    public void setDisabled(boolean disabled) {
-        this.isDisabled = disabled;
-    }
-
-    public void setInteractable(boolean interactable) {
-        this.isInteractable = interactable;
-    }
-
-    private boolean isPopUpVisible(){
-        for(Widget widget : this.widgets) {
-            if (widget instanceof AlertPopUp && !widget.isHidden()) {
-                return true;
-            }
-
-            if (widget instanceof ConfirmPopUp && !widget.isHidden()) {
-                return true;
-            }
-
-            if (widget instanceof ProgressPopUp && !widget.isHidden()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean isDropDownUnfolded(){
-        for(Widget widget : this.widgets) {
-            if (widget instanceof DropDown && !widget.isHidden()) {
-                return ((DropDown) widget).isUnfolded();
-            }
-        }
-
-        return false;
     }
 }

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.j3ramy.edomui.interfaces.IWidget;
 import de.j3ramy.edomui.utils.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -14,16 +15,12 @@ import net.minecraft.util.math.vector.Matrix4f;
 import java.awt.*;
 
 public class Widget implements IWidget {
-    protected final int screenWidth;
-    protected final int screenHeight;
-    protected int width;
-    protected int height;
-    public int leftPos;
-    public int topPos;
+    protected final int screenWidth, screenHeight;
+    public int width, height, leftPos, topPos;
 
-    protected int backgroundColor = Color.WHITE;
-    protected int borderColor = Color.GRAY;
-    protected int textColor = Color.DARK_GRAY;
+    protected int backgroundColor = Color.DARK_GRAY;
+    protected int borderColor = Color.BLACK;
+    protected int textColor = Color.WHITE;
     protected int borderThickness = 1;
 
     protected Point mousePosition = new Point();
@@ -81,6 +78,10 @@ public class Widget implements IWidget {
 
     @Override
     public void render(MatrixStack matrixStack) {
+    }
+
+    @Override
+    public void onClick() {
 
     }
 

@@ -9,7 +9,7 @@ import net.minecraft.client.gui.AbstractGui;
 public class Button extends Widget {
     protected final int yOffset;
     protected int hoverBackgroundColor = Color.GRAY;
-    protected int hoverTextColor = this.textColor;
+    protected int hoverTextColor = Color.WHITE;
     protected int hoverBorderColor = Color.DARK_GRAY;
 
     protected int disabledBackgroundColor = Color.DARK_GRAY;
@@ -58,12 +58,16 @@ public class Button extends Widget {
         this.enabled = enabled;
     }
 
-    public String getTitle() {
-        return this.title;
-    }
-
     protected void setIsDropdownButton(boolean isDropdownButton){
         this.isDropDownButton = isDropdownButton;
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    public String getTitle() {
+        return this.title;
     }
 
     @Override
@@ -100,7 +104,6 @@ public class Button extends Widget {
             }
         }
         else{
-
             AbstractGui.fill(matrixStack, this.leftPos - this.borderThickness, this.topPos - this.borderThickness,
                     this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width + this.borderThickness, this.topPos + this.height + this.borderThickness,
                     this.disabledBorderColor);

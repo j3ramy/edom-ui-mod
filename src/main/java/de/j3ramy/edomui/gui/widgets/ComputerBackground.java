@@ -16,6 +16,9 @@ public class ComputerBackground extends Widget {
     }
 
     public void render(MatrixStack matrixStack) {
+        if(this.isHidden)
+            return;
+
         super.render(matrixStack);
 
         this.renderFrame(matrixStack);

@@ -5,8 +5,7 @@ import net.minecraft.client.gui.AbstractGui;
 
 public class CenteredHorizontalLine extends Widget {
 
-    private final int thickness;
-    private final int color;
+    private final int thickness, color;
 
     public CenteredHorizontalLine(int y, int width, int thickness, int color) {
         super(0, y, width, thickness);

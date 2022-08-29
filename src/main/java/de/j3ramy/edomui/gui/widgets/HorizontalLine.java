@@ -3,10 +3,9 @@ package de.j3ramy.edomui.gui.widgets;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.AbstractGui;
 
-public class HorizontalLine extends Widget {
+public final class HorizontalLine extends Widget {
 
-    private final int thickness;
-    private final int color;
+    private final int thickness, color;
 
     public HorizontalLine(int x, int y, int width, int thickness, int color) {
         super(x, y, width, thickness);
