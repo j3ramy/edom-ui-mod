@@ -31,7 +31,7 @@ public class CustomScreen extends Screen {
         this.canInteract = canInteract;
     }
 
-    private boolean isPopUpVisible(){
+    public boolean isPopUpVisible(){
         for(Widget widget : this.widgets) {
             if (widget instanceof AlertPopUp && !widget.isHidden()) {
                 return true;
@@ -49,7 +49,7 @@ public class CustomScreen extends Screen {
         return false;
     }
 
-    private boolean isDropDownUnfolded(){
+    public boolean isDropDownUnfolded(){
         for(Widget widget : this.widgets) {
             if (widget instanceof DropDown && !widget.isHidden()) {
                 return ((DropDown) widget).isUnfolded();
