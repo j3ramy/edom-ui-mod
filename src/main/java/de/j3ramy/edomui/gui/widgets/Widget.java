@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.j3ramy.edomui.interfaces.IWidget;
 import de.j3ramy.edomui.utils.Color;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -18,9 +17,9 @@ public class Widget implements IWidget {
     protected final int screenWidth, screenHeight;
     public int width, height, leftPos, topPos;
 
-    protected int backgroundColor = Color.DARK_GRAY;
-    protected int borderColor = Color.BLACK;
-    protected int textColor = Color.WHITE;
+    protected int backgroundColor = Color.WHITE;
+    protected int borderColor = Color.DARK_GRAY;
+    protected int textColor = Color.DARK_GRAY;
     protected int borderThickness = 1;
 
     protected Point mousePosition = new Point();

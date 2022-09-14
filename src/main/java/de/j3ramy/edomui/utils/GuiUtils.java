@@ -47,8 +47,4 @@ public class GuiUtils {
                     screenWidth / 2f - Minecraft.getInstance().fontRenderer.getStringWidth(text) / 2f, y, color);
         }
     }
-
-    public static String getTranslationText(String translationKey){
-        return new TranslationTextComponent(translationKey).getString();
-    }
 }

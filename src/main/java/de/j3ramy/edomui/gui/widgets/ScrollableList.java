@@ -21,7 +21,7 @@ public final class ScrollableList extends Widget {
     public ScrollableList(int x, int y, int width, int height, int elementHeight){
         super(x, y, width, height);
 
-        this.maxVisibleListElements = this.height / elementHeight;
+        this.maxVisibleListElements = elementHeight != 0 ? this.height / elementHeight : 0;
         this.elementHeight = elementHeight;
     }
 

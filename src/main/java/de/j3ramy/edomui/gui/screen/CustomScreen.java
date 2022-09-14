@@ -66,6 +66,12 @@ public class CustomScreen extends Screen {
 
         super.render(matrixStack, this.mousePosition.x, this.mousePosition.y, partialTicks);
 
+        for(Widget widget : this.widgets){
+            if(widget != null && !(widget instanceof Tooltip)){
+                widget.render(matrixStack);
+            }
+        }
+
         for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
             if(widget != null){
                 widget.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -73,7 +79,7 @@ public class CustomScreen extends Screen {
         }
 
         for(Widget widget : this.widgets){
-            if(widget != null){
+            if(widget instanceof Tooltip){
                 widget.render(matrixStack);
             }
         }

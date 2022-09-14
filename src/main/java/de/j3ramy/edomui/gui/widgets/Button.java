@@ -17,12 +17,16 @@ public class Button extends Widget {
     protected int disabledBorderColor = Color.BLACK;
 
     protected String title;
-    protected boolean enabled = true, isDropDownButton;
-    protected final IClickable clickAction;
+    protected boolean enabled = true, isCheckbox = false, isDropDownButton;
+    protected IClickable clickAction;
 
 
     public Button(int x, int y, int width, int height, String title, IClickable clickAction){
         super(x, y, width, height);
+
+        this.setBackgroundColor(Color.DARK_GRAY);
+        this.setBorderColor(Color.BLACK);
+        this.setTextColor(Color.WHITE);
 
         this.title = title;
         this.clickAction = clickAction;
@@ -66,6 +70,14 @@ public class Button extends Widget {
         return this.enabled;
     }
 
+    public boolean isCheckbox() {
+        return this.isCheckbox;
+    }
+
+    public void setIsCheckbox(boolean checkbox) {
+        this.isCheckbox = checkbox;
+    }
+
     public String getTitle() {
         return this.title;
     }
@@ -85,7 +97,8 @@ public class Button extends Widget {
 
                 AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.hoverBackgroundColor);
 
-                Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
+                if(!this.isCheckbox())
+                    Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
                         this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width / 2f - font.getStringWidth(this.title) / 2f,
                         this.topPos + this.height / 2f - yOffset,
                         this.hoverTextColor);
@@ -97,7 +110,8 @@ public class Button extends Widget {
 
                 AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.backgroundColor);
 
-                Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
+                if(!this.isCheckbox())
+                    Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
                         this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width / 2f - font.getStringWidth(this.title) / 2f,
                         this.topPos + this.height / 2f - yOffset,
                         this.textColor);
@@ -110,7 +124,8 @@ public class Button extends Widget {
 
             AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.disabledBackgroundColor);
 
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
+            if(!this.isCheckbox())
+                Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
                     this.leftPos + this.width / 2f - font.getStringWidth(this.title) / 2f,
                     this.topPos + this.height / 2f - yOffset,
                     this.disabledTextColor);

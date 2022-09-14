@@ -22,7 +22,7 @@ public final class ScrollableTable extends Widget {
     public ScrollableTable(int x, int y, int width, int height, int elementHeight, boolean fixedAttributeRow){
         super(x, y, width, height);
 
-        this.maxVisibleListElements = this.height / elementHeight;
+        this.maxVisibleListElements = elementHeight != 0 ? this.height / elementHeight : 0;
         this.elementHeight = elementHeight;
         this.isFixedAttributeRow = fixedAttributeRow;
     }
