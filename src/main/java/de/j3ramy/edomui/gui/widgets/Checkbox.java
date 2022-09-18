@@ -18,7 +18,7 @@ public final class Checkbox extends Button {
         this.clickAction = () -> this.setChecked(!this.isChecked());
         this.setIsCheckbox(true);
 
-        this.setTextColor(Color.DARK_GRAY);
+        this.textColor = Color.DARK_GRAY;
     }
 
     public void setChecked(boolean checked) {

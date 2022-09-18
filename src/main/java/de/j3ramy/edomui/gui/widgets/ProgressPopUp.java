@@ -53,7 +53,7 @@ public final class ProgressPopUp extends PopUp {
 
         if(this.progressBar.isFull()){
             this.finishedAction.onFinished();
-            this.setHidden(true);
+            this.isHidden = true;
         }
     }
 

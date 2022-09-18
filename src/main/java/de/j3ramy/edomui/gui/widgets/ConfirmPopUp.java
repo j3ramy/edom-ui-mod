@@ -16,7 +16,7 @@ public final class ConfirmPopUp extends PopUp {
                 yesButtonContent, confirmAction);
 
         this.noButton = new Button(this.leftPos + this.width - buttonWidth - 20, this.topPos + this.height - buttonHeight - 20, buttonWidth, buttonHeight,
-                noButtonContent, ()->this.setHidden(true));
+                noButtonContent, ()->this.isHidden = true);
     }
 
     public void render(MatrixStack matrixStack){
@@ -40,7 +40,7 @@ public final class ConfirmPopUp extends PopUp {
 
     @Override
     public void onClick(){
-        if(this.isHidden())
+        if(this.isHidden)
             return;
 
         this.yesButton.onClick();

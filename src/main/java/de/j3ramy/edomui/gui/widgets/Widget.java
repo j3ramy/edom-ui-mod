@@ -14,17 +14,21 @@ import net.minecraft.util.math.vector.Matrix4f;
 import java.awt.*;
 
 public class Widget implements IWidget {
+
+    public enum FixedTo{
+        NONE,
+        TOP,
+        RIGHT,
+        BOTTOM,
+        LEFT
+    }
+
+    public int width, height, leftPos, topPos, backgroundColor = Color.WHITE, borderColor = Color.DARK_GRAY, textColor = Color.DARK_GRAY, borderThickness = 1;
     protected final int screenWidth, screenHeight;
-    public int width, height, leftPos, topPos;
-
-    protected int backgroundColor = Color.WHITE;
-    protected int borderColor = Color.DARK_GRAY;
-    protected int textColor = Color.DARK_GRAY;
-    protected int borderThickness = 1;
-
-    protected Point mousePosition = new Point();
     protected FontRenderer font;
-    protected boolean isHidden;
+    protected Point mousePosition = new Point();
+    public boolean isHidden, stretchedWidth, stretchedHeight;
+    public FixedTo fixedTo = FixedTo.NONE;
 
 
     public Widget(int x, int y, int width, int height) {
@@ -38,35 +42,6 @@ public class Widget implements IWidget {
         this.height = height;
         this.leftPos = x;
         this.topPos = y;
-    }
-
-
-    public void setMousePosition(Point mousePosition) {
-        this.mousePosition = mousePosition;
-    }
-
-    public void setBackgroundColor(int backgroundColor) {
-        this.backgroundColor = backgroundColor;
-    }
-
-    public void setBorderColor(int borderColor) {
-        this.borderColor = borderColor;
-    }
-
-    public void setTextColor(int textColor) {
-        this.textColor = textColor;
-    }
-
-    public void setBorderThickness(int borderThickness) {
-        this.borderThickness = borderThickness;
-    }
-
-    public void setHidden(boolean hidden) {
-        this.isHidden = hidden;
-    }
-
-    public boolean isHidden() {
-        return this.isHidden;
     }
 
     @Override

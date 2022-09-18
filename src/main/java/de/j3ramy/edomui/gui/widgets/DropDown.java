@@ -93,7 +93,7 @@ public final class DropDown extends Button {
 
     @Override
     public void render(MatrixStack matrixStack) {
-        if(this.isHidden())
+        if(this.isHidden)
             return;
 
         super.render(matrixStack);
@@ -179,7 +179,7 @@ public final class DropDown extends Button {
      */
 
     public void onClick(){
-        if(this.isHidden())
+        if(this.isHidden)
             return;
 
         for(DropDownOption dropDownOption : this.optionFields){
@@ -241,7 +241,7 @@ public final class DropDown extends Button {
             this.topPos = yPos;
             this.height = h;
 
-            this.setBorderThickness(0);
+            this.borderThickness = 0;
             this.setIsDropdownButton(true);
         }
     }

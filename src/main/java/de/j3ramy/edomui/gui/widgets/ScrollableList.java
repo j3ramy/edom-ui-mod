@@ -88,7 +88,7 @@ public final class ScrollableList extends Widget {
 
     @Override
     public void render(MatrixStack matrixStack) {
-        if(this.isHidden())
+        if(this.isHidden)
             return;
 
         super.render(matrixStack);
@@ -122,7 +122,7 @@ public final class ScrollableList extends Widget {
 
     @Override
     public void update(int mouseX, int mouseY){
-        if(this.isHidden())
+        if(this.isHidden)
             return;
 
         super.update(mouseX, mouseY);
@@ -133,7 +133,7 @@ public final class ScrollableList extends Widget {
     }
 
     public void onClick(){
-        if(this.isHidden())
+        if(this.isHidden)
             return;
 
         for(int i = 0; i < this.contentFields.size(); i++){
@@ -146,7 +146,7 @@ public final class ScrollableList extends Widget {
 
     private float currentScrollIndex = 0;
     public void onScroll(int scrollDelta){
-        if(this.isHidden())
+        if(this.isHidden)
             return;
 
         if(!this.isHovered())

@@ -25,7 +25,7 @@ public final class Tooltip extends Widget{
     }
 
     public void render(MatrixStack matrixStack){
-        if(!this.isHidden() && !this.content.isEmpty()){
+        if(!this.isHidden && !this.content.isEmpty()){
             super.render(matrixStack);
 
             //border
@@ -65,7 +65,7 @@ public final class Tooltip extends Widget{
         super.update(x, y);
 
         if(this.imageButton != null){
-            this.setHidden(!this.getButton().isMouseOver(this.mousePosition.x, this.mousePosition.y));
+            this.isHidden = !this.getButton().isMouseOver(this.mousePosition.x, this.mousePosition.y);
         }
     }
 }

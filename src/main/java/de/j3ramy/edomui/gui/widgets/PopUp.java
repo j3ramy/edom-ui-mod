@@ -20,8 +20,8 @@ public class PopUp extends Widget {
         this.content = content;
         this.popUpColor = popUpColor;
 
-        this.setBackgroundColor(Color.WHITE);
-        this.setTextColor(Color.DARK_GRAY);
+        this.backgroundColor = Color.WHITE;
+        this.textColor = Color.DARK_GRAY;
         this.defaultColor = Color.DARK_GRAY;
         this.noticeColor = Color.ORANGE;
         this.errorColor = Color.RED;
@@ -83,7 +83,7 @@ public class PopUp extends Widget {
 
     @Override
     public void update(int x, int y) {
-        if(this.isHidden())
+        if(this.isHidden)
             return;
 
         super.update(x, y);

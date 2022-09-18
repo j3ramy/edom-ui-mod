@@ -33,15 +33,15 @@ public class CustomScreen extends Screen {
 
     public boolean isPopUpVisible(){
         for(Widget widget : this.widgets) {
-            if (widget instanceof AlertPopUp && !widget.isHidden()) {
+            if (widget instanceof AlertPopUp && !widget.isHidden) {
                 return true;
             }
 
-            if (widget instanceof ConfirmPopUp && !widget.isHidden()) {
+            if (widget instanceof ConfirmPopUp && !widget.isHidden) {
                 return true;
             }
 
-            if (widget instanceof ProgressPopUp && !widget.isHidden()) {
+            if (widget instanceof ProgressPopUp && !widget.isHidden) {
                 return true;
             }
         }
@@ -51,7 +51,7 @@ public class CustomScreen extends Screen {
 
     public boolean isDropDownUnfolded(){
         for(Widget widget : this.widgets) {
-            if (widget instanceof DropDown && !widget.isHidden()) {
+            if (widget instanceof DropDown && !widget.isHidden) {
                 return ((DropDown) widget).isUnfolded();
             }
         }

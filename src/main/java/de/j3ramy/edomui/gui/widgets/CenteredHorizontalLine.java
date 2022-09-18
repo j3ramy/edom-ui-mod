@@ -16,7 +16,7 @@ public class CenteredHorizontalLine extends Widget {
     }
 
     public void render(MatrixStack matrixStack) {
-        if(this.isHidden())
+        if(this.isHidden)
             return;
 
         AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.thickness, this.color);

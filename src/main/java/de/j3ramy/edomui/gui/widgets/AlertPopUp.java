@@ -14,7 +14,7 @@ public final class AlertPopUp extends PopUp {
         int buttonHeight = 14;
         int buttonWidth = 60;
         this.closeButton = new Button((this.leftPos + this.width / 2) - buttonWidth / 2, this.topPos + this.height - buttonHeight - 20,
-                buttonWidth, buttonHeight, closeButtonContent, ()->this.setHidden(true));
+                buttonWidth, buttonHeight, closeButtonContent, ()->this.isHidden = true);
     }
 
     @Override

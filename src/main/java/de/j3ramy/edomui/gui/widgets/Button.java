@@ -24,9 +24,9 @@ public class Button extends Widget {
     public Button(int x, int y, int width, int height, String title, IClickable clickAction){
         super(x, y, width, height);
 
-        this.setBackgroundColor(Color.DARK_GRAY);
-        this.setBorderColor(Color.BLACK);
-        this.setTextColor(Color.WHITE);
+        this.backgroundColor = Color.DARK_GRAY;
+        this.borderColor = Color.BLACK;
+        this.textColor = Color.WHITE;
 
         this.title = title;
         this.clickAction = clickAction;
@@ -84,7 +84,7 @@ public class Button extends Widget {
 
     @Override
     public void render(MatrixStack matrixStack) {
-        if(this.isHidden())
+        if(this.isHidden)
             return;
 
         super.render(matrixStack);
@@ -133,7 +133,7 @@ public class Button extends Widget {
     }
 
     public void onClick(){
-        if(this.isHidden())
+        if(this.isHidden)
             return;
 
         if(this.isMouseOver() && this.enabled)

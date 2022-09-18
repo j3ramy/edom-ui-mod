@@ -12,7 +12,7 @@ public class ComputerBackground extends Widget {
         this.leftPos = this.screenWidth / 2 - this.width / 2;
         this.topPos = this.screenHeight / 2 - this.height / 2;
 
-        this.setBorderColor(Color.BLACK);
+        this.borderColor = Color.BLACK;
     }
 
     public void render(MatrixStack matrixStack) {
