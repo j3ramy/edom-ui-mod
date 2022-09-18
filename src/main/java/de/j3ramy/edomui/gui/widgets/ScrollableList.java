@@ -16,6 +16,7 @@ public final class ScrollableList extends Widget {
     private final int maxVisibleListElements, elementHeight;
     private final List<ListOption> contents = new ArrayList<>(), contentFields = new ArrayList<>();
     private int selectedIndex = -1;
+    private boolean showTooltips = true;
 
 
     public ScrollableList(int x, int y, int width, int height, int elementHeight){
@@ -23,6 +24,14 @@ public final class ScrollableList extends Widget {
 
         this.maxVisibleListElements = elementHeight != 0 ? this.height / elementHeight : 0;
         this.elementHeight = elementHeight;
+    }
+
+    public void setShowTooltips(boolean showTooltips) {
+        this.showTooltips = showTooltips;
+    }
+
+    public List<ListOption> getContents() {
+        return this.contents;
     }
 
     private boolean needsScrolling(){
@@ -102,7 +111,7 @@ public final class ScrollableList extends Widget {
     }
 
     private void renderToolTip(MatrixStack matrixStack){
-        if(this.isHovered()){
+        if(this.isHovered() && this.showTooltips){
             if(this.getHoveredElement() != null){
                 Tooltip tooltip = new Tooltip(this.getHoveredElement().getContent(), null);
                 tooltip.update(this.mousePosition.x, this.mousePosition.y);
@@ -190,7 +199,7 @@ public final class ScrollableList extends Widget {
 
             this.setBackgroundColor(backgroundColor);
             this.setHoverBackgroundColor(hoverColor);
-            this.setHoverBorderColor(this.borderColor);
+            this.borderThickness = 0;
 
             this.oldBackground = this.backgroundColor;
         }

@@ -17,6 +17,7 @@ public final class ScrollableTable extends Widget {
     private final boolean isFixedAttributeRow;
     private final List<TableRow> contents = new ArrayList<>(), contentFields = new ArrayList<>();
     private int selectedIndex = -1;
+    private boolean showTooltips = true;
 
 
     public ScrollableTable(int x, int y, int width, int height, int elementHeight, boolean fixedAttributeRow){
@@ -25,6 +26,14 @@ public final class ScrollableTable extends Widget {
         this.maxVisibleListElements = elementHeight != 0 ? this.height / elementHeight : 0;
         this.elementHeight = elementHeight;
         this.isFixedAttributeRow = fixedAttributeRow;
+    }
+
+    public void setShowTooltips(boolean showTooltips) {
+        this.showTooltips = showTooltips;
+    }
+
+    public List<TableRow> getContents() {
+        return this.contents;
     }
 
     public void setAttributeRow(ArrayList<String> columnNames, int backgroundColor, int hoverColor){
@@ -112,7 +121,7 @@ public final class ScrollableTable extends Widget {
     }
 
     private void renderToolTip(MatrixStack matrixStack){
-        if(this.isHovered()){
+        if(this.isHovered() && this.showTooltips){
             if(this.getHoveredRow() != null){
                 Tooltip tooltip = new Tooltip(this.getHoveredRow().getHoveredColumnText(), null);
                 tooltip.update(this.mousePosition.x, this.mousePosition.y);
@@ -201,6 +210,7 @@ public final class ScrollableTable extends Widget {
             this.setBackgroundColor(backgroundColor);
             this.setHoverBackgroundColor(hoverColor);
             this.setHoverBorderColor(this.borderColor);
+            this.borderThickness = 0;
 
             this.oldBackground = this.backgroundColor;
         }
@@ -246,10 +256,13 @@ public final class ScrollableTable extends Widget {
 
                 GlStateManager.popMatrix();
 
+                /*
                 //Right border
                 if(i != 0)
                     AbstractGui.fill(matrixStack, this.leftPos + this.columnWidth * i, this.topPos, this.leftPos + this.columnWidth * i + DIVIDE_BORDER_THICKNESS, this.topPos + this.height,
                             this.borderColor);
+
+                 */
             }
         }
 

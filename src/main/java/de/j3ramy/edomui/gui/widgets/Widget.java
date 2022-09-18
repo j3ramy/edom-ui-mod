@@ -23,7 +23,9 @@ public class Widget implements IWidget {
         LEFT
     }
 
-    public int width, height, leftPos, topPos, backgroundColor = Color.WHITE, borderColor = Color.DARK_GRAY, textColor = Color.DARK_GRAY, borderThickness = 1;
+    public int width, height, leftPos, topPos,
+            backgroundColor = Color.WHITE, borderColor = Color.DARK_GRAY, textColor = Color.DARK_GRAY, borderThickness = 1,
+            fullscreenWidth, fullscreenHeight, windowedWidth, windowedHeight;
     protected final int screenWidth, screenHeight;
     protected FontRenderer font;
     protected Point mousePosition = new Point();
@@ -38,8 +40,10 @@ public class Widget implements IWidget {
         this.screenHeight = Minecraft.getInstance().currentScreen.height;
         this.font = Minecraft.getInstance().fontRenderer;
 
-        this.width = width;
-        this.height = height;
+        this.windowedWidth = width;
+        this.windowedHeight = height;
+        this.width = this.windowedWidth;
+        this.height = this.windowedHeight;
         this.leftPos = x;
         this.topPos = y;
     }
