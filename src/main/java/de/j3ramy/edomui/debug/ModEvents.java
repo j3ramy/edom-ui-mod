@@ -21,7 +21,7 @@ public class ModEvents {
     }
 
     @SubscribeEvent
-    public static void onCharTypedEvent(GuiScreenEvent.KeyboardCharTypedEvent.Post event){
+    public static void onCharTypedEvent(GuiScreenEvent.KeyboardCharTypedEvent.Pre event){
         if(CustomScreen.screen != null)
             CustomScreen.screen.onCharTyped(event.getCodePoint());
     }

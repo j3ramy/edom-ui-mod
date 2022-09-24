@@ -1,7 +1,6 @@
 package de.j3ramy.edomui.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.j3ramy.edomui.gui.widgets.Widget;
 import de.j3ramy.edomui.utils.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -22,7 +21,7 @@ public final class TextField extends Widget {
     public int disabledTextColor = Color.GRAY;
     public int disabledBorderColor = Color.DARK_GRAY;
 
-    public StringBuilder text = new StringBuilder("");
+    public StringBuilder text = new StringBuilder();
     public boolean isFocused, isEnabled = true;
 
     public TextField(int x, int y, int width, int height, String placeholderText, ResourceLocation hintIcon, ITextField textChangeAction){
@@ -70,6 +69,12 @@ public final class TextField extends Widget {
                     this.leftPos + 3 + this.caretXPosition + 1, this.topPos + this.height - 3,
                     this.textColor);
         }
+
+        if(this.hintIcon != null){
+            int imageWidth = this.height;
+            Minecraft.getInstance().getTextureManager().bindTexture(this.hintIcon);
+            AbstractGui.blit(matrixStack, this.leftPos + this.width - imageWidth, this.topPos, 0, 0, imageWidth, this.height, imageWidth, this.height);
+        }
     }
 
     @Override
@@ -92,6 +97,7 @@ public final class TextField extends Widget {
         if(this.isFocused && !this.isHidden){
             if(keyCode == 259 && this.text.length() >= 1){
                 this.removeLetter();
+                this.onTextChange();
             }
 
             //when right arrow pressed move caret to the right
@@ -105,16 +111,15 @@ public final class TextField extends Widget {
     }
 
     public void onCharTyped(char c){
-        if(this.isFocused && !this.isHidden){
-            this.onTextChange(c);
+        if(this.isFocused && !this.isHidden && this.doesTextFit()){
+            this.addLetter(c);
+            this.onTextChange();
         }
     }
 
-    private void onTextChange(char c) {
+    private void onTextChange() {
         if(this.textChangeAction != null)
             this.textChangeAction.onTextChange();
-
-       this.addLetter(c);
     }
 
     private void addLetter(char c){
@@ -128,20 +133,17 @@ public final class TextField extends Widget {
         this.text.deleteCharAt(this.caretPosition);
     }
 
-    private void moveCaret( boolean moveRight){
+    private void moveCaret(boolean moveRight){
         if(moveRight){
             this.caretXPosition += this.font.getStringWidth(Character.toString(this.text.charAt(this.text.length() - 1)));
             this.caretPosition++;
         }
         else{
-            //int index = this.text.length() == 1 ? 0 : this.text.length() - 1;
-            //this.caretXPosition -= this.font.getStringWidth(Character.toString(this.text.charAt(index)));
-            System.out.println(this.text.length() + " | " + this.caretPosition);
             this.caretXPosition -= this.font.getStringWidth(Character.toString(this.text.charAt(this.caretPosition - 1)));
             this.caretPosition--;
         }
 
-        System.out.println(this.caretPosition);
+        System.out.println(this.text.length() + " | " + this.caretPosition);
     }
 
     private boolean isMouseOver(){
@@ -149,10 +151,10 @@ public final class TextField extends Widget {
                 this.mousePosition.y > this.topPos && this.mousePosition.y < this.topPos + this.height;
     }
 
-    private boolean fitsTextInField(){
+    private boolean doesTextFit(){
         int textLengthInPx = this.font.getStringWidth(this.text.toString());
 
-        return textLengthInPx < this.width - this.height - 3;
+        return textLengthInPx < this.width - (this.hintIcon != null ? this.height : 0) - 10;
     }
 
 }
