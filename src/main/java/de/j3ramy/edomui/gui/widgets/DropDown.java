@@ -31,7 +31,7 @@ public final class DropDown extends Button {
         this.placeholder = placeholder;
         this.title = GuiUtils.getFormattedLabel(this.maxWordLength, this.placeholder);
 
-        this.setIsDropdownButton(true);
+        this.isDropDownButton = true;
     }
 
     public void setArrowColor(int arrowColor) {
@@ -118,16 +118,16 @@ public final class DropDown extends Button {
 
     private void renderArrow(MatrixStack matrixStack, int x, int y, boolean inverted){
         if(inverted){
-            AbstractGui.fill(matrixStack, x + 3, y, x + 5, y + 1, !this.enabled ? Color.GRAY :  this.arrowColor);
-            AbstractGui.fill(matrixStack, x + 2, y + 1, x + 6, y + 2, !this.enabled ? Color.GRAY : this.arrowColor);
-            AbstractGui.fill(matrixStack, x + 1, y + 2, x + 7, y + 3, !this.enabled ? Color.GRAY : this.arrowColor);
-            AbstractGui.fill(matrixStack, x, y + 3, x + 8, y + 4, !this.enabled ? Color.GRAY : this.arrowColor);
+            AbstractGui.fill(matrixStack, x + 3, y, x + 5, y + 1, !this.isEnabled ? Color.GRAY :  this.arrowColor);
+            AbstractGui.fill(matrixStack, x + 2, y + 1, x + 6, y + 2, !this.isEnabled ? Color.GRAY : this.arrowColor);
+            AbstractGui.fill(matrixStack, x + 1, y + 2, x + 7, y + 3, !this.isEnabled ? Color.GRAY : this.arrowColor);
+            AbstractGui.fill(matrixStack, x, y + 3, x + 8, y + 4, !this.isEnabled ? Color.GRAY : this.arrowColor);
         }
         else{
-            AbstractGui.fill(matrixStack, x, y, x + 8, y + 1, !this.enabled ? Color.GRAY :  this.arrowColor);
-            AbstractGui.fill(matrixStack, x + 1, y + 1, x + 7, y + 2, !this.enabled ? Color.GRAY : this.arrowColor);
-            AbstractGui.fill(matrixStack, x + 2, y + 2, x + 6, y + 3, !this.enabled ? Color.GRAY : this.arrowColor);
-            AbstractGui.fill(matrixStack, x + 3, y + 3, x + 5, y + 4, !this.enabled ? Color.GRAY : this.arrowColor);
+            AbstractGui.fill(matrixStack, x, y, x + 8, y + 1, !this.isEnabled ? Color.GRAY :  this.arrowColor);
+            AbstractGui.fill(matrixStack, x + 1, y + 1, x + 7, y + 2, !this.isEnabled ? Color.GRAY : this.arrowColor);
+            AbstractGui.fill(matrixStack, x + 2, y + 2, x + 6, y + 3, !this.isEnabled ? Color.GRAY : this.arrowColor);
+            AbstractGui.fill(matrixStack, x + 3, y + 3, x + 5, y + 4, !this.isEnabled ? Color.GRAY : this.arrowColor);
         }
 
     }
@@ -190,7 +190,7 @@ public final class DropDown extends Button {
             }
         }
 
-        if(this.isMouseOver() && this.enabled){
+        if(this.isMouseOver() && this.isEnabled){
             this.isUnfolded = !this.isUnfolded;
 
             if(this.isUnfolded)
@@ -242,7 +242,7 @@ public final class DropDown extends Button {
             this.height = h;
 
             this.borderThickness = 0;
-            this.setIsDropdownButton(true);
+            this.isDropDownButton = true;
         }
     }
 

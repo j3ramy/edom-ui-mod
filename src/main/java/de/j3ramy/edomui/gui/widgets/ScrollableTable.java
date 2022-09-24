@@ -17,7 +17,7 @@ public final class ScrollableTable extends Widget {
     private final boolean isFixedAttributeRow;
     private final List<TableRow> contents = new ArrayList<>(), contentFields = new ArrayList<>();
     private int selectedIndex = -1;
-    private boolean showTooltips = true;
+    public boolean showTooltips = true;
 
 
     public ScrollableTable(int x, int y, int width, int height, int elementHeight, boolean fixedAttributeRow){
@@ -26,10 +26,6 @@ public final class ScrollableTable extends Widget {
         this.maxVisibleListElements = elementHeight != 0 ? this.height / elementHeight : 0;
         this.elementHeight = elementHeight;
         this.isFixedAttributeRow = fixedAttributeRow;
-    }
-
-    public void setShowTooltips(boolean showTooltips) {
-        this.showTooltips = showTooltips;
     }
 
     public List<TableRow> getContents() {
@@ -135,7 +131,7 @@ public final class ScrollableTable extends Widget {
             if (this.contentFields.get(i) != null){
                 this.contentFields.get(i).render(matrixStack);
                 if(i != 0)
-                    this.contentFields.get(i).setBackgroundColor(i == this.selectedIndex ? this.contentFields.get(i).hoverBackgroundColor : this.contentFields.get(i).oldBackground);
+                    this.contentFields.get(i).backgroundColor = (i == this.selectedIndex ? this.contentFields.get(i).hoverBackgroundColor : this.contentFields.get(i).oldBackground);
             }
         }
     }
@@ -189,7 +185,6 @@ public final class ScrollableTable extends Widget {
 
     //----------------------------------------------------------------------------------------------------------------------------------------------
     public static class TableRow extends Button {
-        private static final int DIVIDE_BORDER_THICKNESS = 1;
         private final boolean isClickable;
         private final int initialYPos;
         private final ArrayList<String> content;
@@ -207,16 +202,12 @@ public final class ScrollableTable extends Widget {
             this.content = content;
             this.maxWordLength = (this.columnWidth * 2 - 12) / GuiUtils.LETTER_WIDTH; //GuiUtils.LETTER_SIZE = width of letter;
 
-            this.setBackgroundColor(backgroundColor);
-            this.setHoverBackgroundColor(hoverColor);
-            this.setHoverBorderColor(this.borderColor);
+            this.backgroundColor = backgroundColor;
+            this.hoverBackgroundColor = hoverColor;
+            this.hoverBorderColor = this.borderColor;
             this.borderThickness = 0;
 
             this.oldBackground = this.backgroundColor;
-        }
-
-        public void setBackgroundColor(int backgroundColor) {
-            this.backgroundColor = backgroundColor;
         }
 
         public void setIndex(int index){

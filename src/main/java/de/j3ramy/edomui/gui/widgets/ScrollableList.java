@@ -62,8 +62,8 @@ public final class ScrollableList extends Widget {
     }
 
     public void addElement(Button button){
-        this.contents.add(new ListOption(this.leftPos, this.topPos, this.width, this.elementHeight, button.getTitle(),
-                button.enabled, button.backgroundColor, button.hoverBackgroundColor,  button.clickAction));
+        this.contents.add(new ListOption(this.leftPos, this.topPos, this.width, this.elementHeight, button.title,
+                button.isEnabled, button.backgroundColor, button.hoverBackgroundColor,  button.clickAction));
 
         this.initList(0);
     }
@@ -113,7 +113,7 @@ public final class ScrollableList extends Widget {
     private void renderToolTip(MatrixStack matrixStack){
         if(this.isHovered() && this.showTooltips){
             if(this.getHoveredElement() != null){
-                Tooltip tooltip = new Tooltip(this.getHoveredElement().getContent(), null);
+                Tooltip tooltip = new Tooltip(this.getHoveredElement().title, null);
                 tooltip.update(this.mousePosition.x, this.mousePosition.y);
                 tooltip.render(matrixStack);
             }
@@ -124,7 +124,7 @@ public final class ScrollableList extends Widget {
         for (int i = 0; i < this.contentFields.size(); i++) {
             if (this.contentFields.get(i) != null){
                 this.contentFields.get(i).render(matrixStack);
-                this.contentFields.get(i).setBackgroundColor(i == this.selectedIndex ? this.contentFields.get(i).hoverBackgroundColor : this.contentFields.get(i).oldBackground);
+                this.contentFields.get(i).backgroundColor = (i == this.selectedIndex ? this.contentFields.get(i).hoverBackgroundColor : this.contentFields.get(i).oldBackground);
             }
         }
     }
@@ -184,36 +184,30 @@ public final class ScrollableList extends Widget {
     public static class ListOption extends Button {
         private final boolean isClickable;
         private final int initialYPos;
-        private final String content;
         private final int maxWordLength;
         private final int oldBackground;
 
         public ListOption(int x, int y, int width, int height, String content, boolean isClickable, int backgroundColor, int hoverColor, IClickable onclick){
             super(x, y, width, height , "", onclick);
 
+            //hide default button text
+            this.isTitleHidden = true;
+
             this.initialYPos = y;
             this.mousePosition = new Point();
             this.isClickable = isClickable;
-            this.content = content;
+            this.title = content;
             this.maxWordLength = (this.width * 2 - 12) / GuiUtils.LETTER_WIDTH;
 
-            this.setBackgroundColor(backgroundColor);
-            this.setHoverBackgroundColor(hoverColor);
+            this.backgroundColor = backgroundColor;
+            this.hoverBackgroundColor = hoverColor;
             this.borderThickness = 0;
 
             this.oldBackground = this.backgroundColor;
         }
 
-        public void setBackgroundColor(int backgroundColor) {
-            this.backgroundColor = backgroundColor;
-        }
-
         public void setIndex(int index){
             this.topPos = this.initialYPos + this.height * index;
-        }
-
-        public String getContent() {
-            return this.content;
         }
 
         public void render(MatrixStack matrixStack){
@@ -225,7 +219,7 @@ public final class ScrollableList extends Widget {
             //content
             GlStateManager.pushMatrix();
             GlStateManager.scalef(.5f, .5f, .5f);
-            Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.getFormattedLabel(this.maxWordLength, this.content), (this.leftPos + 3) * 2,
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, GuiUtils.getFormattedLabel(this.maxWordLength, this.title), (this.leftPos + 3) * 2,
                     (this.topPos + this.height / 2f - this.yOffset / 2f) * 2,  this.isMouseOver() && this.isClickable ? this.textColor : this.hoverTextColor);
 
             GlStateManager.popMatrix();

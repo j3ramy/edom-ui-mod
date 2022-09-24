@@ -8,16 +8,16 @@ import net.minecraft.client.gui.AbstractGui;
 
 public class Button extends Widget {
     protected final int yOffset;
-    protected int hoverBackgroundColor = Color.GRAY;
-    protected int hoverTextColor = Color.WHITE;
-    protected int hoverBorderColor = Color.DARK_GRAY;
+    public int hoverBackgroundColor = Color.GRAY;
+    public int hoverTextColor = Color.WHITE;
+    public int hoverBorderColor = Color.DARK_GRAY;
 
-    protected int disabledBackgroundColor = Color.DARK_GRAY;
-    protected int disabledTextColor = Color.GRAY;
-    protected int disabledBorderColor = Color.BLACK;
+    public int disabledBackgroundColor = Color.DARK_GRAY;
+    public int disabledTextColor = Color.GRAY;
+    public int disabledBorderColor = Color.BLACK;
 
-    protected String title;
-    protected boolean enabled = true, isCheckbox = false, isDropDownButton;
+    public String title;
+    public boolean isEnabled = true, isCheckbox, isDropDownButton, isTitleHidden;
     protected IClickable clickAction;
 
 
@@ -33,55 +33,6 @@ public class Button extends Widget {
         this.yOffset = GuiUtils.LETTER_HEIGHT / 2 + 1;
     }
 
-
-    public void setHoverBackgroundColor(int hoverBackgroundColor) {
-        this.hoverBackgroundColor = hoverBackgroundColor;
-    }
-
-    public void setHoverBorderColor(int hoverBorderColor) {
-        this.hoverBorderColor = hoverBorderColor;
-    }
-
-    public void setHoverTextColor(int hoverTextColor) {
-        this.hoverTextColor = hoverTextColor;
-    }
-
-    public void setDisabledBackgroundColor(int disabledBackgroundColor) {
-        this.disabledBackgroundColor = disabledBackgroundColor;
-    }
-
-    public void setDisabledBorderColor(int disabledBorderColor) {
-        this.disabledBorderColor = disabledBorderColor;
-    }
-
-    public void setDisabledTextColor(int disabledTextColor) {
-        this.disabledTextColor = disabledTextColor;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    protected void setIsDropdownButton(boolean isDropdownButton){
-        this.isDropDownButton = isDropdownButton;
-    }
-
-    public boolean isEnabled() {
-        return this.enabled;
-    }
-
-    public boolean isCheckbox() {
-        return this.isCheckbox;
-    }
-
-    public void setIsCheckbox(boolean checkbox) {
-        this.isCheckbox = checkbox;
-    }
-
-    public String getTitle() {
-        return this.title;
-    }
-
     @Override
     public void render(MatrixStack matrixStack) {
         if(this.isHidden)
@@ -89,7 +40,7 @@ public class Button extends Widget {
 
         super.render(matrixStack);
 
-        if(this.enabled){
+        if(this.isEnabled){
             if(this.isMouseOver()){
                 AbstractGui.fill(matrixStack, this.leftPos - this.borderThickness, this.topPos - this.borderThickness,
                         this.leftPos + this.width + this.borderThickness, this.topPos + this.height + this.borderThickness,
@@ -97,7 +48,7 @@ public class Button extends Widget {
 
                 AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.hoverBackgroundColor);
 
-                if(!this.isCheckbox())
+                if(!this.isCheckbox && !this.isTitleHidden)
                     Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
                         this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width / 2f - font.getStringWidth(this.title) / 2f,
                         this.topPos + this.height / 2f - yOffset,
@@ -110,7 +61,7 @@ public class Button extends Widget {
 
                 AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.backgroundColor);
 
-                if(!this.isCheckbox())
+                if(!this.isCheckbox && !this.isTitleHidden)
                     Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
                         this.isDropDownButton ? this.leftPos + 5 : this.leftPos + this.width / 2f - font.getStringWidth(this.title) / 2f,
                         this.topPos + this.height / 2f - yOffset,
@@ -124,7 +75,7 @@ public class Button extends Widget {
 
             AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height, this.disabledBackgroundColor);
 
-            if(!this.isCheckbox())
+            if(!this.isCheckbox && !this.isTitleHidden)
                 Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.title,
                     this.leftPos + this.width / 2f - font.getStringWidth(this.title) / 2f,
                     this.topPos + this.height / 2f - yOffset,
@@ -136,7 +87,7 @@ public class Button extends Widget {
         if(this.isHidden)
             return;
 
-        if(this.isMouseOver() && this.enabled)
+        if(this.isMouseOver() && this.isEnabled)
             this.onInteract();
     }
 
