@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import de.j3ramy.edomui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.widget.button.ImageButton;
 
 import javax.annotation.Nullable;
 
@@ -65,7 +64,7 @@ public final class Tooltip extends Widget{
         super.update(x, y);
 
         if(this.imageButton != null){
-            this.isHidden = !this.getButton().isMouseOver(this.mousePosition.x, this.mousePosition.y);
+            this.isHidden = !this.getButton().isMouseOver();
         }
     }
 }
