@@ -27,6 +27,9 @@ public final class ImageButton extends Button {
 
     @Override
     public void render(MatrixStack matrixStack) {
+        if(this.isHidden)
+            return;
+
         if(this.isRenderDefaultBackground){
             super.render(matrixStack);
         }

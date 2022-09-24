@@ -3,6 +3,7 @@ package de.j3ramy.edomui.gui.screen;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.j3ramy.edomui.gui.widgets.*;
 import de.j3ramy.edomui.gui.widgets.Button;
+import de.j3ramy.edomui.gui.widgets.TextField;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -25,24 +26,27 @@ public class CustomScreen extends Screen {
         super(new StringTextComponent(""));
     }
 
-    @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY) {
         if(this.isHidden)
             return;
 
-        super.render(matrixStack, this.mousePosition.x, this.mousePosition.y, partialTicks);
+        super.render(matrixStack, this.mousePosition.x, this.mousePosition.y, -1);
 
         for(Widget widget : this.widgets){
             if(widget != null && !(widget instanceof Tooltip)){
                 widget.render(matrixStack);
+                widget.update(mouseX, mouseY);
             }
         }
 
+        /*
         for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
             if(widget != null){
-                widget.render(matrixStack, mouseX, mouseY, partialTicks);
+                widget.render(matrixStack, mouseX, mouseY);
             }
         }
+
+         */
 
         for(Widget widget : this.widgets){
             if(widget instanceof Tooltip){
@@ -93,6 +97,10 @@ public class CustomScreen extends Screen {
                         }
 
                         if (widget instanceof Button) {
+                            widget.onClick();
+                        }
+
+                        if (widget instanceof TextField) {
                             widget.onClick();
                         }
                     }
@@ -150,9 +158,19 @@ public class CustomScreen extends Screen {
         if(this.isHidden)
             return;
 
+        /*
         for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
             if(widget instanceof TextFieldWidget)
                 widget.keyPressed(keyCode, -1, -1);
+        }
+
+         */
+
+        for(Widget widget : this.widgets)
+        {
+            if(widget instanceof TextField){
+                ((TextField) widget).onKeyPressed(keyCode);
+            }
         }
     }
 
@@ -160,11 +178,21 @@ public class CustomScreen extends Screen {
         if(this.isHidden)
             return;
 
+        /*
         for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
             if(widget instanceof TextFieldWidget){
                 if(widget.isFocused()){
                     widget.charTyped(c, -1);
                 }
+            }
+        }
+
+         */
+
+        for(Widget widget : this.widgets)
+        {
+            if(widget instanceof TextField){
+                ((TextField) widget).onCharTyped(c);
             }
         }
     }

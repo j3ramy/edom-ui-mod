@@ -15,7 +15,7 @@ import java.util.List;
 public final class ScrollableList extends Widget {
     private final int maxVisibleListElements, elementHeight;
     private final List<ListOption> contents = new ArrayList<>(), contentFields = new ArrayList<>();
-    private int selectedIndex = -1;
+    public int selectedIndex = -1;
     private boolean showTooltips = true;
 
 
@@ -85,14 +85,10 @@ public final class ScrollableList extends Widget {
         }
     }
 
-    public void clearSelectedIndex(){
-        this.selectedIndex = -1;
-    }
-
     public void clear(){
         this.contents.clear();
         this.contentFields.clear();
-        this.clearSelectedIndex();
+       this.selectedIndex = -1;
     }
 
     @Override

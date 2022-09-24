@@ -22,6 +22,9 @@ public final class Checkbox extends Button {
 
     @Override
     public void render(MatrixStack matrixStack) {
+        if(this.isHidden)
+            return;
+
         super.render(matrixStack);
 
         GlStateManager.pushMatrix();

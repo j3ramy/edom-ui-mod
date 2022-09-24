@@ -1,5 +1,9 @@
 package de.j3ramy.edomui;
 
+import de.j3ramy.edomui.debug.DebugScreen;
+import de.j3ramy.edomui.debug.ModContainers;
+import de.j3ramy.edomui.debug.ModItems;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -28,6 +32,9 @@ public class EdomUiMod
         // Register the doClientStuff method for modloading
         modEventBus.addListener(this::doClientStuff);
 
+        ModItems.register(modEventBus);
+        ModContainers.register(modEventBus);
+
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -40,7 +47,7 @@ public class EdomUiMod
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         event.enqueueWork(() -> {
-
+            ScreenManager.registerFactory(ModContainers.DEBUG_CONTAINER.get(), DebugScreen::new);
         });
 
     }
