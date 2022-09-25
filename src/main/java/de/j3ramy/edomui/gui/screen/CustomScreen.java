@@ -3,7 +3,7 @@ package de.j3ramy.edomui.gui.screen;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.j3ramy.edomui.gui.widgets.*;
 import de.j3ramy.edomui.gui.widgets.Button;
-import de.j3ramy.edomui.gui.widgets.TextFieldOnTextChange;
+import de.j3ramy.edomui.gui.widgets.TextField;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -100,7 +100,7 @@ public class CustomScreen extends Screen {
                             widget.onClick();
                         }
 
-                        if (widget instanceof TextFieldOnTextChange) {
+                        if (widget instanceof TextField) {
                             widget.onClick();
                         }
                     }
@@ -168,8 +168,8 @@ public class CustomScreen extends Screen {
 
         for(Widget widget : this.widgets)
         {
-            if(widget instanceof TextFieldOnTextChange){
-                ((TextFieldOnTextChange) widget).onKeyPressed(keyCode);
+            if(widget instanceof TextField){
+                ((TextField) widget).onKeyPressed(keyCode);
             }
         }
     }
@@ -191,8 +191,8 @@ public class CustomScreen extends Screen {
 
         for(Widget widget : this.widgets)
         {
-            if(widget instanceof TextFieldOnTextChange){
-                ((TextFieldOnTextChange) widget).onCharTyped(c);
+            if(widget instanceof TextField){
+                ((TextField) widget).onCharTyped(c);
             }
         }
     }

@@ -11,23 +11,24 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 
-public final class TextFieldOnTextChange extends Widget implements ITextFieldOnTextChange, ITextFieldOnPressEnter {
+public final class TextField extends Widget implements ITextFieldOnTextChange, ITextFieldOnPressEnter {
     private final ITextFieldOnTextChange onTextChangeAction;
     private final ITextFieldOnPressEnter onPressEnterAction;
     private final ResourceLocation hintIcon;
     private final String placeholder;
+    private final int hintIconMargin = 1;
 
     private int caretXPosition, caretPosition;
     private String visibleText = "";
 
     public int disabledBackgroundColor = Color.WHITE, disabledTextColor = Color.GRAY, disabledBorderColor = Color.DARK_GRAY;
-    public int allSelectedTextColor = Color.YELLOW, allSelectedBackgroundColor = Color.DARK_GRAY, maxLength = 5;
+    public int allSelectedTextColor = Color.YELLOW, allSelectedBackgroundColor = Color.DARK_GRAY, maxLength = 20;
 
     public StringBuilder text = new StringBuilder();
     public boolean isFocused, isEnabled = true, isSelectedAll = false;
 
-    public TextFieldOnTextChange(int x, int y, int width, int height, String placeholderText, ResourceLocation hintIcon,
-                                 @Nullable ITextFieldOnTextChange onTextChangeAction, @Nullable ITextFieldOnPressEnter onPressEnterAction){
+    public TextField(int x, int y, int width, int height, String placeholderText, ResourceLocation hintIcon,
+                     @Nullable ITextFieldOnTextChange onTextChangeAction, @Nullable ITextFieldOnPressEnter onPressEnterAction){
         super(x, y, width, height);
 
         this.placeholder = placeholderText;
@@ -38,16 +39,16 @@ public final class TextFieldOnTextChange extends Widget implements ITextFieldOnT
         this.textColor = Color.DARK_GRAY;
     }
 
-    public TextFieldOnTextChange(int x, int y, int width, int height, String placeholderText, @Nullable ITextFieldOnTextChange onTextChangeAction,
-                                 @Nullable ITextFieldOnPressEnter onPressEnterAction){
+    public TextField(int x, int y, int width, int height, String placeholderText, @Nullable ITextFieldOnTextChange onTextChangeAction,
+                     @Nullable ITextFieldOnPressEnter onPressEnterAction){
         this(x, y, width, height, placeholderText, null, onTextChangeAction, onPressEnterAction);
     }
 
-    public TextFieldOnTextChange(int x, int y, int width, int height, String placeholderText, ResourceLocation hintIcon){
+    public TextField(int x, int y, int width, int height, String placeholderText, @Nullable ResourceLocation hintIcon){
         this(x, y, width, height, placeholderText, hintIcon, null, null);
     }
 
-    public TextFieldOnTextChange(int x, int y, int width, int height, String placeholderText){
+    public TextField(int x, int y, int width, int height, String placeholderText){
         this(x, y, width, height, placeholderText, null, null, null);
     }
 
@@ -91,7 +92,12 @@ public final class TextFieldOnTextChange extends Widget implements ITextFieldOnT
         if(this.hintIcon != null){
             int imageWidth = this.height;
             Minecraft.getInstance().getTextureManager().bindTexture(this.hintIcon);
-            AbstractGui.blit(matrixStack, this.leftPos + this.width - imageWidth, this.topPos, 0, 0, imageWidth, this.height, imageWidth, this.height);
+
+            AbstractGui.blit(matrixStack, this.leftPos + this.width - imageWidth - this.hintIconMargin, this.topPos + this.hintIconMargin,
+                    0, 0, imageWidth - this.hintIconMargin * 2, this.height - hintIconMargin * 2,
+                    imageWidth - this.hintIconMargin * 2, this.height - this.hintIconMargin * 2);
+
+
         }
     }
 
@@ -161,17 +167,18 @@ public final class TextFieldOnTextChange extends Widget implements ITextFieldOnT
                 this.onTextChange();
             }
 
+            /*
             //when right arrow pressed move caret to the right
             if(keyCode == 262 && this.caretPosition < this.text.length()){
-                System.out.println("RIGHT");
                 this.caretPosition++;
             }
 
             //when left arrow pressed move caret to the left
             if(keyCode == 263 && this.caretPosition >= 1){
-                System.out.println("LEFT");
                 this.caretPosition--;
             }
+
+             */
         }
     }
 
@@ -215,7 +222,7 @@ public final class TextFieldOnTextChange extends Widget implements ITextFieldOnT
     private boolean doesTextFit(String text){
         int textLengthInPx = this.font.getStringWidth(text);
 
-        return textLengthInPx < this.width - (this.hintIcon != null ? this.height - 3 : 3) - 4;
+        return textLengthInPx < this.width - (this.hintIcon != null ? this.height - 3 - this.hintIconMargin : 3) - 4;
     }
 
     private boolean isCaretAtEnd(){
