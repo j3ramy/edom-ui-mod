@@ -1,12 +1,10 @@
 package de.j3ramy.edomui.gui.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.j3ramy.edomui.gui.widgets.*;
 import de.j3ramy.edomui.gui.widgets.Button;
 import de.j3ramy.edomui.gui.widgets.TextField;
+import de.j3ramy.edomui.gui.widgets.*;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.util.text.StringTextComponent;
 
 import java.awt.*;
@@ -18,7 +16,6 @@ public class CustomScreen extends Screen {
     public static CustomScreen screen;
 
     public final List<Widget> widgets = new ArrayList<>();
-    public final List<net.minecraft.client.gui.widget.Widget> mcWidgets = new ArrayList<>();
     protected final Point mousePosition = new Point();
     public boolean isHidden;
 
@@ -26,11 +23,16 @@ public class CustomScreen extends Screen {
         super(new StringTextComponent(""));
     }
 
+    @Override
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+
+        this.render(matrixStack, mouseX, mouseY);
+    }
+
     public void render(MatrixStack matrixStack, int mouseX, int mouseY) {
         if(this.isHidden)
             return;
-
-        super.render(matrixStack, this.mousePosition.x, this.mousePosition.y, -1);
 
         for(Widget widget : this.widgets){
             if(widget != null && !(widget instanceof Tooltip)){
@@ -38,15 +40,6 @@ public class CustomScreen extends Screen {
                 widget.update(mouseX, mouseY);
             }
         }
-
-        /*
-        for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
-            if(widget != null){
-                widget.render(matrixStack, mouseX, mouseY);
-            }
-        }
-
-         */
 
         for(Widget widget : this.widgets){
             if(widget instanceof Tooltip){
@@ -63,7 +56,8 @@ public class CustomScreen extends Screen {
         this.mousePosition.y = mouseY;
 
         for(Widget widget : this.widgets){
-            widget.update(mouseX, mouseY);
+            if(widget != null)
+                widget.update(mouseX, mouseY);
         }
     }
 
@@ -106,23 +100,6 @@ public class CustomScreen extends Screen {
                     }
                 }
             }
-
-            for (net.minecraft.client.gui.widget.Widget w : this.mcWidgets) {
-                if (w instanceof ImageButton) {
-                    if(w.isMouseOver(this.mousePosition.x, this.mousePosition.y)){
-                        w.onClick(this.mousePosition.x, this.mousePosition.y);
-                    }
-
-                }
-
-                if (w instanceof TextFieldWidget) {
-                    ((TextFieldWidget) w).setFocused2(false);
-
-                    if(w.isMouseOver(this.mousePosition.x, this.mousePosition.y)){
-                        w.mouseClicked(this.mousePosition.x, this.mousePosition.y, mouseButton);
-                    }
-                }
-            }
         }
         catch (ConcurrentModificationException ignored){}
     }
@@ -158,14 +135,6 @@ public class CustomScreen extends Screen {
         if(this.isHidden)
             return;
 
-        /*
-        for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
-            if(widget instanceof TextFieldWidget)
-                widget.keyPressed(keyCode, -1, -1);
-        }
-
-         */
-
         for(Widget widget : this.widgets)
         {
             if(widget instanceof TextField){
@@ -177,17 +146,6 @@ public class CustomScreen extends Screen {
     public void onCharTyped(char c){
         if(this.isHidden)
             return;
-
-        /*
-        for(net.minecraft.client.gui.widget.Widget widget : this.mcWidgets){
-            if(widget instanceof TextFieldWidget){
-                if(widget.isFocused()){
-                    widget.charTyped(c, -1);
-                }
-            }
-        }
-
-         */
 
         for(Widget widget : this.widgets)
         {
@@ -201,13 +159,8 @@ public class CustomScreen extends Screen {
         this.widgets.add(widget);
     }
 
-    public void addMcWidget(net.minecraft.client.gui.widget.Widget widget){
-        this.mcWidgets.add(widget);
-    }
-
     public void clearScreen(){
         this.widgets.clear();
-        this.mcWidgets.clear();
     }
 
     public boolean isPopUpVisible(){

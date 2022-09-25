@@ -8,12 +8,12 @@ import net.minecraft.client.gui.AbstractGui;
 import javax.annotation.Nullable;
 
 public final class Tooltip extends Widget{
-
-    private final String content;
     private final ImageButton imageButton;
 
+    public String content;
+
     public Tooltip(String content, ImageButton button){
-        super(0, 0, 0, 0);
+        super(-1000, 0, 0, 0);
         this.content = content;
         this.imageButton = button;
     }

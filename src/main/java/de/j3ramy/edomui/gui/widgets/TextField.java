@@ -18,14 +18,22 @@ public final class TextField extends Widget implements ITextFieldOnTextChange, I
     private final String placeholder;
     private final int hintIconMargin = 1;
 
+    private StringBuilder text = new StringBuilder();
     private int caretXPosition, caretPosition;
     private String visibleText = "";
 
     public int disabledBackgroundColor = Color.WHITE, disabledTextColor = Color.GRAY, disabledBorderColor = Color.DARK_GRAY;
     public int allSelectedTextColor = Color.YELLOW, allSelectedBackgroundColor = Color.DARK_GRAY, maxLength = 20;
-
-    public StringBuilder text = new StringBuilder();
     public boolean isFocused, isEnabled = true, isSelectedAll = false;
+
+    public String getText(){
+        return this.text.toString();
+    }
+
+    public void setText(String text){
+        this.text = new StringBuilder(text);
+        this.onTextChange();
+    }
 
     public TextField(int x, int y, int width, int height, String placeholderText, ResourceLocation hintIcon,
                      @Nullable ITextFieldOnTextChange onTextChangeAction, @Nullable ITextFieldOnPressEnter onPressEnterAction){
