@@ -16,6 +16,8 @@ public final class Tooltip extends Widget{
         super(-1000, 0, 0, 0);
         this.content = content;
         this.imageButton = button;
+
+        this.isHidden = true;
     }
 
     @Nullable
