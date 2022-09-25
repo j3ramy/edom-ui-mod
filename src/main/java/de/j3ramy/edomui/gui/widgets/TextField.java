@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import de.j3ramy.edomui.utils.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 
 public final class TextField extends Widget {
@@ -15,14 +16,14 @@ public final class TextField extends Widget {
     private final String placeholder;
     private final ITextField textChangeAction;
 
-    private int caretXPosition = 0, caretPosition;
+    private int caretXPosition, caretPosition;
+    private String visibleText = "";
 
-    public int disabledBackgroundColor = Color.WHITE;
-    public int disabledTextColor = Color.GRAY;
-    public int disabledBorderColor = Color.DARK_GRAY;
+    public int disabledBackgroundColor = Color.WHITE, disabledTextColor = Color.GRAY, disabledBorderColor = Color.DARK_GRAY;
+    public int allSelectedTextColor = Color.YELLOW, allSelectedBackgroundColor = Color.DARK_GRAY;
 
     public StringBuilder text = new StringBuilder();
-    public boolean isFocused, isEnabled = true;
+    public boolean isFocused, isEnabled = true, isSelectedAll = false;
 
     public TextField(int x, int y, int width, int height, String placeholderText, ResourceLocation hintIcon, ITextField textChangeAction){
         super(x, y, width, height);
@@ -53,6 +54,7 @@ public final class TextField extends Widget {
 
         super.render(matrixStack);
 
+        //background
         AbstractGui.fill(matrixStack, this.leftPos - this.borderThickness, this.topPos - this.borderThickness,
                 this.leftPos + this.width + this.borderThickness, this.topPos + this.height + this.borderThickness,
                 this.isEnabled ? this.borderColor : this.disabledBorderColor);
@@ -60,16 +62,28 @@ public final class TextField extends Widget {
         AbstractGui.fill(matrixStack, this.leftPos, this.topPos, this.leftPos + this.width, this.topPos + this.height,
                 this.isEnabled ? this.backgroundColor : this.disabledBackgroundColor);
 
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.text.toString().isEmpty() ? this.placeholder : this.text.toString(),
-                this.leftPos + 3, this.topPos + this.height / 2f - this.height / 4f,
-                this.text.toString().isEmpty() || !this.isEnabled ? this.disabledTextColor : this.textColor);
+        //text
+        if(this.isSelectedAll){
+            AbstractGui.fill(matrixStack, this.leftPos + 1, this.topPos + 1, this.leftPos + this.width - 1, this.topPos + this.height - 1,
+                    this.allSelectedBackgroundColor);
 
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.text.toString().isEmpty() ? this.placeholder : this.visibleText,
+                    this.leftPos + 3, this.topPos + this.height / 2f - this.height / 4f, this.allSelectedTextColor);
+        }
+        else{
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, this.text.toString().isEmpty() ? this.placeholder : this.visibleText,
+                    this.leftPos + 3, this.topPos + this.height / 2f - this.height / 4f,
+                    this.text.toString().isEmpty() || !this.isEnabled ? this.disabledTextColor : this.textColor);
+        }
+
+        //caret
         if(this.isFocused){
             AbstractGui.fill(matrixStack, this.leftPos + 3 + this.caretXPosition, this.topPos + 3,
                     this.leftPos + 3 + this.caretXPosition + 1, this.topPos + this.height - 3,
                     this.textColor);
         }
 
+        //hint icon
         if(this.hintIcon != null){
             int imageWidth = this.height;
             Minecraft.getInstance().getTextureManager().bindTexture(this.hintIcon);
@@ -79,11 +93,24 @@ public final class TextField extends Widget {
 
     @Override
     public void update(int x, int y) {
+        if(!this.isEnabled)
+            return;
+
         super.update(x, y);
+
+        if(this.doesTextFit()){
+            this.visibleText = this.text.toString();
+        }
+        else{
+            this.visibleText = this.text.substring(this.caretPosition);
+        }
     }
 
     @Override
     public void onClick() {
+        if(!this.isEnabled)
+            return;
+
         if(!this.isMouseOver()){
             this.isFocused = false;
         }
@@ -94,14 +121,24 @@ public final class TextField extends Widget {
     }
 
     public void onKeyPressed(int keyCode){
-        if(this.isFocused && !this.isHidden){
-            if(keyCode == 259 && this.text.length() >= 1){
+        if(this.isEnabled && this.isFocused && !this.isHidden){
+            //select complete text
+            if(Screen.isSelectAll(keyCode) && this.text.length() > 0){
+                this.isSelectedAll = true;
+            }
+
+            //if text all selected and backspace (259) or delete (261) pressed
+            if(this.isSelectedAll && keyCode == 259 || keyCode == 261)
+                this.clear();
+
+            //remove letter when backspace
+            if(keyCode == 259 && this.text.length() >= 1 && this.caretPosition > 0){
                 this.removeLetter();
                 this.onTextChange();
             }
 
             //when right arrow pressed move caret to the right
-            if(keyCode == 262 && this.caretPosition < this.font.getStringWidth(this.text.toString()) && this.caretPosition < this.text.length())
+            if(keyCode == 262 && this.caretPosition < this.text.length())
                 this.moveCaret(true);
 
             //when left arrow pressed move caret to the left
@@ -111,9 +148,14 @@ public final class TextField extends Widget {
     }
 
     public void onCharTyped(char c){
-        if(this.isFocused && !this.isHidden && this.doesTextFit()){
-            this.addLetter(c);
-            this.onTextChange();
+        if(this.isEnabled && this.isFocused && !this.isHidden){
+            if(this.isSelectedAll)
+                this.clear();
+
+            if(this.doesTextFit()){
+                this.addLetter(c);
+                this.onTextChange();
+            }
         }
     }
 
@@ -128,7 +170,6 @@ public final class TextField extends Widget {
     }
 
     private void removeLetter(){
-        //PROBLEM: When caret moved to left and delete until beginning -> crash because index is one too high
         this.moveCaret(false);
         this.text.deleteCharAt(this.caretPosition);
     }
@@ -143,7 +184,15 @@ public final class TextField extends Widget {
             this.caretPosition--;
         }
 
-        System.out.println(this.text.length() + " | " + this.caretPosition);
+        this.isSelectedAll = false;
+    }
+
+    private void clear(){
+        this.text = new StringBuilder();
+        this.visibleText = "";
+        this.caretPosition = 0;
+        this.caretXPosition = 0;
+        this.isSelectedAll = false;
     }
 
     private boolean isMouseOver(){
@@ -157,5 +206,12 @@ public final class TextField extends Widget {
         return textLengthInPx < this.width - (this.hintIcon != null ? this.height : 0) - 10;
     }
 
+    private boolean isCaretAtEnd(){
+        return this.caretPosition == this.text.length();
+    }
+
+    private boolean isCaretAtStart(){
+        return this.caretPosition == 0;
+    }
 }
 

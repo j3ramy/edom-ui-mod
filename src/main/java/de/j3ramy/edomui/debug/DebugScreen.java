@@ -19,7 +19,7 @@ public class DebugScreen extends ContainerScreen<DebugContainer> {
         super.init();
 
         CustomScreen.screen.addWidget(new TextField(10, 10, 70, 14, "Search...", ()->{
-            System.out.println("TEXT CHANGED");
+
         }));
     }
 
