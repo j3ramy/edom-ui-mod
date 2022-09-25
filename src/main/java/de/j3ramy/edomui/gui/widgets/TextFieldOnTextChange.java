@@ -1,50 +1,54 @@
 package de.j3ramy.edomui.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import de.j3ramy.edomui.interfaces.ITextFieldOnPressEnter;
+import de.j3ramy.edomui.interfaces.ITextFieldOnTextChange;
 import de.j3ramy.edomui.utils.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 
-public final class TextField extends Widget {
-    public interface ITextField{
-        void onTextChange();
-    }
+import javax.annotation.Nullable;
 
+public final class TextFieldOnTextChange extends Widget implements ITextFieldOnTextChange, ITextFieldOnPressEnter {
+    private final ITextFieldOnTextChange onTextChangeAction;
+    private final ITextFieldOnPressEnter onPressEnterAction;
     private final ResourceLocation hintIcon;
     private final String placeholder;
-    private final ITextField textChangeAction;
 
     private int caretXPosition, caretPosition;
     private String visibleText = "";
 
     public int disabledBackgroundColor = Color.WHITE, disabledTextColor = Color.GRAY, disabledBorderColor = Color.DARK_GRAY;
-    public int allSelectedTextColor = Color.YELLOW, allSelectedBackgroundColor = Color.DARK_GRAY;
+    public int allSelectedTextColor = Color.YELLOW, allSelectedBackgroundColor = Color.DARK_GRAY, maxLength = 5;
 
     public StringBuilder text = new StringBuilder();
     public boolean isFocused, isEnabled = true, isSelectedAll = false;
 
-    public TextField(int x, int y, int width, int height, String placeholderText, ResourceLocation hintIcon, ITextField textChangeAction){
+    public TextFieldOnTextChange(int x, int y, int width, int height, String placeholderText, ResourceLocation hintIcon,
+                                 @Nullable ITextFieldOnTextChange onTextChangeAction, @Nullable ITextFieldOnPressEnter onPressEnterAction){
         super(x, y, width, height);
 
         this.placeholder = placeholderText;
         this.hintIcon = hintIcon;
-        this.textChangeAction = textChangeAction;
+        this.onTextChangeAction = onTextChangeAction;
+        this.onPressEnterAction = onPressEnterAction;
 
         this.textColor = Color.DARK_GRAY;
     }
 
-    public TextField(int x, int y, int width, int height, String placeholderText, ResourceLocation hintIcon){
-        this(x, y, width, height, placeholderText, hintIcon, null);
+    public TextFieldOnTextChange(int x, int y, int width, int height, String placeholderText, @Nullable ITextFieldOnTextChange onTextChangeAction,
+                                 @Nullable ITextFieldOnPressEnter onPressEnterAction){
+        this(x, y, width, height, placeholderText, null, onTextChangeAction, onPressEnterAction);
     }
 
-    public TextField(int x, int y, int width, int height, String placeholderText, ITextField textChangeAction){
-        this(x, y, width, height, placeholderText, null, textChangeAction);
+    public TextFieldOnTextChange(int x, int y, int width, int height, String placeholderText, ResourceLocation hintIcon){
+        this(x, y, width, height, placeholderText, hintIcon, null, null);
     }
 
-    public TextField(int x, int y, int width, int height, String placeholderText){
-        this(x, y, width, height, placeholderText, null, null);
+    public TextFieldOnTextChange(int x, int y, int width, int height, String placeholderText){
+        this(x, y, width, height, placeholderText, null, null, null);
     }
 
     @Override
@@ -91,6 +95,7 @@ public final class TextField extends Widget {
         }
     }
 
+    private int maxCaretPosition;
     @Override
     public void update(int x, int y) {
         if(!this.isEnabled)
@@ -98,12 +103,15 @@ public final class TextField extends Widget {
 
         super.update(x, y);
 
-        if(this.doesTextFit()){
+        if(this.doesTextFit(this.text.toString())){
             this.visibleText = this.text.toString();
+            this.maxCaretPosition = this.caretPosition;
         }
-        else{
-            this.visibleText = this.text.substring(this.caretPosition);
+        else if(this.isCaretAtEnd()){
+            this.visibleText = this.text.substring(this.text.length() - this.maxCaretPosition);
         }
+
+        this.caretXPosition = this.font.getStringWidth(this.visibleText);
     }
 
     @Override
@@ -120,6 +128,18 @@ public final class TextField extends Widget {
         }
     }
 
+    @Override
+    public void onTextChange() {
+        if(this.onTextChangeAction != null)
+            this.onTextChangeAction.onTextChange();
+    }
+
+    @Override
+    public void onPressEnter() {
+        if(this.onPressEnterAction != null)
+            this.onPressEnterAction.onPressEnter();
+    }
+
     public void onKeyPressed(int keyCode){
         if(this.isEnabled && this.isFocused && !this.isHidden){
             //select complete text
@@ -131,6 +151,10 @@ public final class TextField extends Widget {
             if(this.isSelectedAll && keyCode == 259 || keyCode == 261)
                 this.clear();
 
+            //call onPressEnter-event when enter pressed
+            if(keyCode == 257)
+                this.onPressEnter();
+
             //remove letter when backspace
             if(keyCode == 259 && this.text.length() >= 1 && this.caretPosition > 0){
                 this.removeLetter();
@@ -138,53 +162,41 @@ public final class TextField extends Widget {
             }
 
             //when right arrow pressed move caret to the right
-            if(keyCode == 262 && this.caretPosition < this.text.length())
-                this.moveCaret(true);
+            if(keyCode == 262 && this.caretPosition < this.text.length()){
+                System.out.println("RIGHT");
+                this.caretPosition++;
+            }
 
             //when left arrow pressed move caret to the left
-            if(keyCode == 263 && this.caretPosition >= 1)
-                this.moveCaret(false);
-        }
-    }
-
-    public void onCharTyped(char c){
-        if(this.isEnabled && this.isFocused && !this.isHidden){
-            if(this.isSelectedAll)
-                this.clear();
-
-            if(this.doesTextFit()){
-                this.addLetter(c);
-                this.onTextChange();
+            if(keyCode == 263 && this.caretPosition >= 1){
+                System.out.println("LEFT");
+                this.caretPosition--;
             }
         }
     }
 
-    private void onTextChange() {
-        if(this.textChangeAction != null)
-            this.textChangeAction.onTextChange();
+    public void onCharTyped(char c){
+        if(this.isEnabled && this.isFocused && !this.isHidden && this.text.length() < this.maxLength){
+            if(this.isSelectedAll)
+                this.clear();
+
+            this.addLetter(c);
+            this.onTextChange();
+        }
     }
 
     private void addLetter(char c){
-        this.text.insert(this.caretPosition, c);
-        this.moveCaret(true);
+        if(this.isCaretAtEnd())
+            this.text.append(c);
+        else
+            this.text.insert(this.caretPosition + 1, c);
+
+        this.caretPosition++;
     }
 
     private void removeLetter(){
-        this.moveCaret(false);
-        this.text.deleteCharAt(this.caretPosition);
-    }
-
-    private void moveCaret(boolean moveRight){
-        if(moveRight){
-            this.caretXPosition += this.font.getStringWidth(Character.toString(this.text.charAt(this.text.length() - 1)));
-            this.caretPosition++;
-        }
-        else{
-            this.caretXPosition -= this.font.getStringWidth(Character.toString(this.text.charAt(this.caretPosition - 1)));
-            this.caretPosition--;
-        }
-
-        this.isSelectedAll = false;
+        this.text.deleteCharAt(this.caretPosition - 1);
+        this.caretPosition--;
     }
 
     private void clear(){
@@ -200,18 +212,14 @@ public final class TextField extends Widget {
                 this.mousePosition.y > this.topPos && this.mousePosition.y < this.topPos + this.height;
     }
 
-    private boolean doesTextFit(){
-        int textLengthInPx = this.font.getStringWidth(this.text.toString());
+    private boolean doesTextFit(String text){
+        int textLengthInPx = this.font.getStringWidth(text);
 
-        return textLengthInPx < this.width - (this.hintIcon != null ? this.height : 0) - 10;
+        return textLengthInPx < this.width - (this.hintIcon != null ? this.height - 3 : 3) - 4;
     }
 
     private boolean isCaretAtEnd(){
         return this.caretPosition == this.text.length();
-    }
-
-    private boolean isCaretAtStart(){
-        return this.caretPosition == 0;
     }
 }
 

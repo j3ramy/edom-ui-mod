@@ -2,7 +2,7 @@ package de.j3ramy.edomui.debug;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.j3ramy.edomui.gui.screen.CustomScreen;
-import de.j3ramy.edomui.gui.widgets.TextField;
+import de.j3ramy.edomui.gui.widgets.TextFieldOnTextChange;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -18,8 +18,10 @@ public class DebugScreen extends ContainerScreen<DebugContainer> {
     protected void init() {
         super.init();
 
-        CustomScreen.screen.addWidget(new TextField(10, 10, 70, 14, "Search...", ()->{
-
+        CustomScreen.screen.addWidget(new TextFieldOnTextChange(10, 10, 70, 14, "Search...", ()->{
+            System.out.println("ON TEXT CHANGE");
+        }, ()->{
+            System.out.println("ON PRESS ENTER");
         }));
     }
 
