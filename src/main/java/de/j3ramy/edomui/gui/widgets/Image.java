@@ -22,8 +22,10 @@ public final class Image extends Widget {
 
         super.render(matrixStack);
 
-        Minecraft.getInstance().getTextureManager().bindTexture(this.textureLoc);
-        AbstractGui.blit(matrixStack, this.leftPos, this.topPos, 0, 0, this.width, this.height, this.width, this.height);
+        if(this.textureLoc != null){
+            Minecraft.getInstance().getTextureManager().bindTexture(this.textureLoc);
+            AbstractGui.blit(matrixStack, this.leftPos, this.topPos, 0, 0, this.width, this.height, this.width, this.height);
+        }
     }
 
     @Override

@@ -2,7 +2,7 @@ package de.j3ramy.edomui.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-import de.j3ramy.edomui.EdomUiMod;
+import de.j3ramy.edomui.Main;
 import de.j3ramy.edomui.utils.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -38,9 +38,8 @@ public final class Checkbox extends Button {
         GlStateManager.popMatrix();
 
         if(this.isChecked){
-            Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation(EdomUiMod.MOD_ID, "textures/gui/widgets/checkbox_check.png"));
+            Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation(Main.MOD_ID, "textures/gui/icons/check.png"));
             AbstractGui.blit(matrixStack, this.leftPos, this.topPos, 0, 0, this.width, this.height, this.width, this.height);
         }
     }
-
 }

@@ -1,6 +1,8 @@
 package de.j3ramy.edomui.gui.widgets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import de.j3ramy.edomui.Main;
+import de.j3ramy.edomui.enums.TextFieldType;
 import de.j3ramy.edomui.interfaces.ITextFieldOnPressEnter;
 import de.j3ramy.edomui.interfaces.ITextFieldOnTextChange;
 import de.j3ramy.edomui.utils.Color;
@@ -10,21 +12,26 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 
 public final class TextField extends Widget implements ITextFieldOnTextChange, ITextFieldOnPressEnter {
+    private final static ResourceLocation showPasswordIcon = new ResourceLocation(Main.MOD_ID,"textures/gui/icons/show.png");
+    private final static ResourceLocation hidePasswordIcon = new ResourceLocation(Main.MOD_ID,"textures/gui/icons/hide.png");
+
     private final ITextFieldOnTextChange onTextChangeAction;
     private final ITextFieldOnPressEnter onPressEnterAction;
-    private final ResourceLocation hintIcon;
+    private final TextFieldType type;
     private final String placeholder;
-    private final int hintIconMargin = 1;
+    private final int fieldIconMargin = 1;
 
     private StringBuilder text = new StringBuilder();
+    private ResourceLocation fieldIcon;
     private int caretXPosition, caretPosition;
     private String visibleText = "";
 
-    public int disabledBackgroundColor = Color.WHITE, disabledTextColor = Color.GRAY, disabledBorderColor = Color.DARK_GRAY;
+    public int disabledBackgroundColor = Color.GRAY, disabledTextColor = Color.GRAY, disabledBorderColor = Color.BLACK;
     public int allSelectedTextColor = Color.YELLOW, allSelectedBackgroundColor = Color.DARK_GRAY, maxLength = 20;
-    public boolean isFocused, isEnabled = true, isSelectedAll = false;
+    public boolean isFocused, isEnabled = true, isSelectedAll = false, isPasswordVisible;
 
     public String getText(){
         return this.text.toString();
@@ -35,31 +42,45 @@ public final class TextField extends Widget implements ITextFieldOnTextChange, I
         this.onTextChange();
     }
 
-    public TextField(int x, int y, int width, int height, String placeholderText, ResourceLocation hintIcon,
-                     @Nullable ITextFieldOnTextChange onTextChangeAction, @Nullable ITextFieldOnPressEnter onPressEnterAction){
+    public TextField(int x, int y, int width, int height, String placeholderText, ResourceLocation fieldIcon,
+                     @Nullable ITextFieldOnTextChange onTextChangeAction, @Nullable ITextFieldOnPressEnter onPressEnterAction, TextFieldType type){
         super(x, y, width, height);
 
+        this.type = type;
         this.placeholder = placeholderText;
-        this.hintIcon = hintIcon;
         this.onTextChangeAction = onTextChangeAction;
         this.onPressEnterAction = onPressEnterAction;
 
         this.textColor = Color.DARK_GRAY;
+
+        if(type == TextFieldType.PASSWORD){
+            this.isPasswordVisible = false;
+            this.fieldIcon = showPasswordIcon;
+        }
+        else{
+            this.fieldIcon = fieldIcon;
+        }
     }
 
     public TextField(int x, int y, int width, int height, String placeholderText, @Nullable ITextFieldOnTextChange onTextChangeAction,
-                     @Nullable ITextFieldOnPressEnter onPressEnterAction){
-        this(x, y, width, height, placeholderText, null, onTextChangeAction, onPressEnterAction);
+                     @Nullable ITextFieldOnPressEnter onPressEnterAction, TextFieldType type){
+        this(x, y, width, height, placeholderText, null, onTextChangeAction, onPressEnterAction, type);
     }
 
-    public TextField(int x, int y, int width, int height, String placeholderText, @Nullable ResourceLocation hintIcon){
-        this(x, y, width, height, placeholderText, hintIcon, null, null);
+    public TextField(int x, int y, int width, int height, String placeholderText, @Nullable ResourceLocation fieldIcon, TextFieldType type){
+        this(x, y, width, height, placeholderText, fieldIcon, null, null, type);
+    }
+
+    public TextField(int x, int y, int width, int height, String placeholderText, TextFieldType type){
+        this(x, y, width, height, placeholderText, null, null, null, type);
     }
 
     public TextField(int x, int y, int width, int height, String placeholderText){
-        this(x, y, width, height, placeholderText, null, null, null);
+        this(x, y, width, height, placeholderText, null, null, null, TextFieldType.TEXT);
     }
 
+    private final Rectangle iconArea = new Rectangle(this.leftPos + this.width - this.height - this.fieldIconMargin,
+            this.topPos + this.fieldIconMargin, this.height - this.fieldIconMargin * 2, this.height - fieldIconMargin * 2);
     @Override
     public void render(MatrixStack matrixStack){
         if(this.isHidden)
@@ -96,16 +117,12 @@ public final class TextField extends Widget implements ITextFieldOnTextChange, I
                     this.textColor);
         }
 
-        //hint icon
-        if(this.hintIcon != null){
-            int imageWidth = this.height;
-            Minecraft.getInstance().getTextureManager().bindTexture(this.hintIcon);
+        //icon
+        if(this.fieldIcon != null){
+            Minecraft.getInstance().getTextureManager().bindTexture(this.fieldIcon);
 
-            AbstractGui.blit(matrixStack, this.leftPos + this.width - imageWidth - this.hintIconMargin, this.topPos + this.hintIconMargin,
-                    0, 0, imageWidth - this.hintIconMargin * 2, this.height - hintIconMargin * 2,
-                    imageWidth - this.hintIconMargin * 2, this.height - this.hintIconMargin * 2);
-
-
+            AbstractGui.blit(matrixStack, this.iconArea.x, this.iconArea.y, 0, 0, this.iconArea.width, this.iconArea.height,
+                    this.iconArea.width, this.iconArea.height);
         }
     }
 
@@ -117,15 +134,9 @@ public final class TextField extends Widget implements ITextFieldOnTextChange, I
 
         super.update(x, y);
 
-        if(this.doesTextFit(this.text.toString())){
-            this.visibleText = this.text.toString();
-            this.maxCaretPosition = this.caretPosition;
-        }
-        else if(this.isCaretAtEnd()){
-            this.visibleText = this.text.substring(this.text.length() - this.maxCaretPosition);
-        }
-
         this.caretXPosition = this.font.getStringWidth(this.visibleText);
+
+        this.updateVisibleText();
     }
 
     @Override
@@ -139,6 +150,10 @@ public final class TextField extends Widget implements ITextFieldOnTextChange, I
         else{
             super.onClick();
             this.isFocused = true;
+        }
+
+        if(this.type == TextFieldType.PASSWORD && this.iconArea.contains(new Point(this.mousePosition.x, this.mousePosition.y))){
+            this.isPasswordVisible = !this.isPasswordVisible;
         }
     }
 
@@ -200,7 +215,39 @@ public final class TextField extends Widget implements ITextFieldOnTextChange, I
         }
     }
 
+    private void updateVisibleText(){
+        if(this.doesTextFit(this.text.toString())){
+            this.visibleText = this.text.toString();
+            this.maxCaretPosition = this.caretPosition;
+        }
+        else if(this.isCaretAtEnd()){
+            this.visibleText = this.text.substring(this.text.length() - this.maxCaretPosition);
+        }
+
+        if(this.type == TextFieldType.PASSWORD){
+            this.updatePasswordText();
+        }
+    }
+
+    private void updatePasswordText(){
+        this.fieldIcon = this.isPasswordVisible ? hidePasswordIcon : showPasswordIcon;
+
+        if(this.isPasswordVisible)
+            this.visibleText = this.text.substring(this.text.length() - this.maxCaretPosition);
+        else{
+            StringBuilder starText = new StringBuilder();
+            for(int i = 0; i < this.visibleText.length(); i++){
+                starText.append("*");
+            }
+
+            this.visibleText = starText.toString();
+        }
+    }
+
     private void addLetter(char c){
+        if(this.type == TextFieldType.NUMBER && !Character.isDigit(c))
+            return;
+
         if(this.isCaretAtEnd())
             this.text.append(c);
         else
@@ -230,7 +277,7 @@ public final class TextField extends Widget implements ITextFieldOnTextChange, I
     private boolean doesTextFit(String text){
         int textLengthInPx = this.font.getStringWidth(text);
 
-        return textLengthInPx < this.width - (this.hintIcon != null ? this.height - 3 - this.hintIconMargin : 3) - 4;
+        return textLengthInPx < this.width - (this.fieldIcon != null ? this.height - 3 - this.fieldIconMargin : 3) - (this.type == TextFieldType.PASSWORD ? 6 : 4);
     }
 
     private boolean isCaretAtEnd(){

@@ -12,15 +12,15 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod(EdomUiMod.MOD_ID)
-public class EdomUiMod
+@Mod(Main.MOD_ID)
+public class Main
 {
     public static final String MOD_ID = "edomui";
 
     // Directly reference a log4j logger.
     //private static final Logger LOGGER = LogManager.getLogger();
 
-    public EdomUiMod() {
+    public Main() {
         // Register the setup method for modloading
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 

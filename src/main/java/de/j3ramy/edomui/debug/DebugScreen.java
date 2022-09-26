@@ -1,12 +1,12 @@
 package de.j3ramy.edomui.debug;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.j3ramy.edomui.EdomUiMod;
+import de.j3ramy.edomui.enums.TextFieldType;
 import de.j3ramy.edomui.gui.screen.CustomScreen;
+import de.j3ramy.edomui.gui.widgets.Checkbox;
 import de.j3ramy.edomui.gui.widgets.TextField;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 public class DebugScreen extends ContainerScreen<DebugContainer> {
@@ -20,7 +20,8 @@ public class DebugScreen extends ContainerScreen<DebugContainer> {
     protected void init() {
         super.init();
 
-        CustomScreen.screen.addWidget(new TextField(10, 10, 70, 14, "Search...", new ResourceLocation(EdomUiMod.MOD_ID, "textures/gui/widgets/checkbox_check.png")));
+        CustomScreen.screen.addWidget(new TextField(10, 10, 70, 14, "Password", TextFieldType.NUMBER));
+        CustomScreen.screen.addWidget(new Checkbox(10, 30, 10, 10, "Test"));
     }
 
     @Override

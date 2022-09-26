@@ -1,15 +1,15 @@
 package de.j3ramy.edomui.debug;
 
-import de.j3ramy.edomui.EdomUiMod;
+import de.j3ramy.edomui.Main;
 import de.j3ramy.edomui.gui.screen.CustomScreen;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = EdomUiMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = Main.MOD_ID)
 public class ModEvents {
     @SubscribeEvent
-    public static void onMouseClickEvent(GuiScreenEvent.MouseClickedEvent event){
+    public static void onMouseClickEvent(GuiScreenEvent.MouseClickedEvent.Pre event){
         if(CustomScreen.screen != null)
             CustomScreen.screen.onClick(event.getButton());
     }
