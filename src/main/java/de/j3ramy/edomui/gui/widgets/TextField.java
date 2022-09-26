@@ -79,8 +79,7 @@ public final class TextField extends Widget implements ITextFieldOnTextChange, I
         this(x, y, width, height, placeholderText, null, null, null, TextFieldType.TEXT);
     }
 
-    private final Rectangle iconArea = new Rectangle(this.leftPos + this.width - this.height - this.fieldIconMargin,
-            this.topPos + this.fieldIconMargin, this.height - this.fieldIconMargin * 2, this.height - fieldIconMargin * 2);
+    private Rectangle iconArea;
     @Override
     public void render(MatrixStack matrixStack){
         if(this.isHidden)
@@ -119,6 +118,9 @@ public final class TextField extends Widget implements ITextFieldOnTextChange, I
 
         //icon
         if(this.fieldIcon != null){
+            this.iconArea = new Rectangle(this.leftPos + this.width - this.height - this.fieldIconMargin,
+                    this.topPos + this.fieldIconMargin, this.height - this.fieldIconMargin * 2, this.height - fieldIconMargin * 2);
+
             Minecraft.getInstance().getTextureManager().bindTexture(this.fieldIcon);
 
             AbstractGui.blit(matrixStack, this.iconArea.x, this.iconArea.y, 0, 0, this.iconArea.width, this.iconArea.height,
