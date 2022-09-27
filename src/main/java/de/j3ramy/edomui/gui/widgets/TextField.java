@@ -38,11 +38,13 @@ public final class TextField extends Widget implements ITextFieldOnTextChange, I
     }
 
     public void setText(String text){
-        this.clear();
+        if(!text.isEmpty()){
+            this.clear();
 
-        for(int i = 0; i < this.maxLength; i++){
-            this.addLetter(text.charAt(i));
-            this.updateVisibleText();
+            for(int i = 0; i < this.maxLength; i++){
+                this.addLetter(text.charAt(i));
+                this.updateVisibleText();
+            }
         }
     }
 
