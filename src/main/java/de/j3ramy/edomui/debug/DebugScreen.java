@@ -20,7 +20,9 @@ public class DebugScreen extends ContainerScreen<DebugContainer> {
     protected void init() {
         super.init();
 
-        CustomScreen.screen.addWidget(new TextField(10, 10, 70, 14, "Password", TextFieldType.NUMBER));
+        TextField textField;
+        CustomScreen.screen.addWidget(textField = new TextField(10, 10, 70, 14, "Password", TextFieldType.TEXT));
+        textField.setText("Test1234567890ABCDEF");
         CustomScreen.screen.addWidget(new Checkbox(10, 30, 10, 10, "Test"));
     }
 

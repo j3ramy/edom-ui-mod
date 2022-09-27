@@ -38,8 +38,12 @@ public final class TextField extends Widget implements ITextFieldOnTextChange, I
     }
 
     public void setText(String text){
-        this.text = new StringBuilder(text);
-        this.onTextChange();
+        this.clear();
+
+        for(int i = 0; i < this.maxLength; i++){
+            this.addLetter(text.charAt(i));
+            this.updateVisibleText();
+        }
     }
 
     public TextField(int x, int y, int width, int height, String placeholderText, ResourceLocation fieldIcon,
@@ -265,6 +269,7 @@ public final class TextField extends Widget implements ITextFieldOnTextChange, I
 
     private void clear(){
         this.text = new StringBuilder();
+
         this.visibleText = "";
         this.caretPosition = 0;
         this.caretXPosition = 0;
