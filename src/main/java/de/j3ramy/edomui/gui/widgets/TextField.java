@@ -41,7 +41,7 @@ public final class TextField extends Widget implements ITextFieldOnTextChange, I
         if(!text.isEmpty()){
             this.clear();
 
-            for(int i = 0; i < this.maxLength; i++){
+            for(int i = 0; i < (text.length() < this.maxLength ? text.length() : this.maxLength - 1); i++){
                 this.addLetter(text.charAt(i));
                 this.updateVisibleText();
             }
